@@ -312,10 +312,10 @@
         if (!deviceUserId) {
             // Buat ID unik Acak: Anon-XXXXX
             const randomString = Math.random().toString(36).substring(2, 7).toUpperCase();
-            deviceUserId = 'Anon-' + randomString;
+            deviceUserId = 'Anonim-' + randomString;
             localStorage.setItem('arinex_anon_id', deviceUserId);
         }
-        document.getElementById('user-identity').innerText = "Kamu: " + deviceUserId;
+        document.getElementById('user-identity').innerText = "You : " + deviceUserId;
 
 
         // 1. SITEM ANTI-COPY (Tetap)
