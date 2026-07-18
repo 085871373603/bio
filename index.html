@@ -141,16 +141,49 @@
         #close-btn { background: #c0392b; margin-top: auto; }
         .back-btn { background: #2980b9; }
 
-        /* Form Komentar Custom */
+        /* Form Komentar Custom - DIPERBARUI */
         .chat-input {
-            width: 100%; height: 100px; border-radius: 10px; padding: 12px;
+            width: 100%; height: 80px; border-radius: 10px; padding: 12px;
             background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.3);
-            resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; margin-bottom: 10px;
+            resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; margin-bottom: 5px;
         }
         .chat-input:focus { outline: none; border-color: #3498db; }
+        
+        #reply-indicator {
+            font-size: 12px; color: #f1c40f; margin-bottom: 5px; display: none;
+            background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        #cancel-reply { cursor: pointer; color: #e74c3c; font-weight: bold; }
+
+        /* Desain Chat Box Baru (Support Balasan & Reaksi) */
         .chat-box {
             background: rgba(255,255,255,0.08); padding: 12px; border-radius: 10px;
             margin-bottom: 8px; border-left: 3px solid #3498db; font-size: 13px;
+            position: relative;
+        }
+        .chat-box.reply {
+            margin-left: 20px; border-left: 3px solid #2ecc71; background: rgba(255,255,255,0.05);
+        }
+        .chat-header {
+            font-size: 11px; font-weight: bold; color: #bdc3c7; margin-bottom: 5px;
+            display: flex; justify-content: space-between;
+        }
+        .user-id { color: #3498db; }
+        .chat-box.reply .user-id { color: #2ecc71; }
+        
+        .chat-actions {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 10px;
+        }
+        .reactions { display: flex; gap: 8px; }
+        .reaction-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px; padding: 3px 8px; font-size: 11px; color: white; cursor: pointer;
+            display: flex; align-items: center; gap: 3px; transition: 0.2s;
+        }
+        .reaction-btn:hover, .reaction-btn:active { background: rgba(255,255,255,0.3); }
+        .btn-balas {
+            background: none; border: none; color: #f1c40f; font-size: 12px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
@@ -194,23 +227,20 @@
                 <h3 style="margin-top: 0; text-align: center; margin-bottom: 20px;">Tabel</h3>
                 <ul class="menu-list">
 
-
                   
                     <li><button data-title="The Assembly" data-content="<h1>PROSPEKTUS: COMPILE 4.73</h1><hr><h2>1. Latar Belakang Masalah &amp; Penyelesaian</h2><p><b>Analisis Kondisi Nyata:</b><br>Berdasarkan modul <i>Lean Startup</i> oleh Eric Ries, pemborosan terbesar pengusaha pemula adalah membangun produk/ruang fisik berskala besar tanpa memvalidasi apakah ada pasar yang menginginkannya. Mengutip pengusaha Bob Sadino, &quot;Bisnis yang bagus adalah yang dibuka, bukan yang ditanyakan terus.&quot; Dalam lanskap urban dikota besar, masalah utamanya adalah tingginya beban <i>overhead</i> yang sering membunuh kedai kopi independen pada tahun pertama.</p><p><b>Penyelesaian:</b><br>Compile 4.73 mengadopsi prinsip <i>Minimum Viable Product (MVP)</i>—fokus pada <i>micro-space</i> (lapak teras 2x2 meter) yang memangkas beban sewa hingga 80%, mengoptimalkan kecepatan saji, dan menghilangkan biaya pekerja (<i>sweat equity</i> oleh pendiri di tahap awal).</p><h2>2. Konsep Bisnis</h2><p>Compile 4.73 adalah entitas F&amp;B yang beroperasi seperti mesin presisi. Ini adalah stasiun <i>grab-and-go</i> yang mengutamakan kualitas kopi esensial dengan perputaran pelanggan yang cepat. Fokus pada retensi pelanggan melalui konsistensi rasa, bukan fasilitas fisik.</p><h2>3. Sistem Informasi (Integrasi, Keamanan, &amp; Akurasi)</h2><p>Sistem dibangun secara mandiri menggunakan arsitektur <i>Serverless</i>. Fokus utama adalah pada integritas data agar bisnis tetap terkontrol meski dijalankan oleh karyawan:</p><ul><li><b>Keamanan &amp; Anti-Manipulasi:</b> Menggunakan <i>Rule-Based Authentication</i> di level <i>database</i>. Tidak ada opsi &quot;Edit/Hapus Transaksi&quot; bagi kasir; setiap koreksi harus melalui <i>log</i> admin permanen guna mencegah manipulasi/fraud.</li><li><b>Inventory &amp; Repacking:</b> Sistem membagi inventori menjadi <b>Bahan Baku Original (ORI)</b> dan <b>Bahan Baku Siap Pakai (RPC/Repack)</b>. Fitur <i>Repacking</i> mengonversi satuan besar ke porsi jual. Saat terjual, sistem memotong stok RPC. Jika ada kehilangan/kerusakan, fitur <b>Waste Management</b> wajib digunakan untuk mencatat pemusnahan barang sebagai beban operasional.</li><li><b>Real-time Stock Opname (SO):</b> Jika ditemukan selisih, sistem melakukan <b>Adjustment Otomatis</b> yang mengompensasi selisih tersebut ke laporan HPP harian, memastikan inventori selalu sinkron.</li><li><b>Manajemen F&amp;B &amp; Kalkulasi HPP:</b> Sistem menghitung HPP secara dinamis. Setiap Menu Jual memiliki <i>Recipe Base</i> yang terikat pada stok RPC. Saat menu terjual, HPP dihitung berdasarkan biaya rata-rata bahan baku (termasuk proporsi <i>waste</i>), sehingga laporan laba kotor selalu akurat.</li><li><b>Sistem Setoran Kasir (Variance Control):</b> Saat tutup buku (<i>End of Day</i>), sistem mengunci nominal uang fisik yang wajib disetor. Jika terdapat <b>Variance</b> (selisih uang kas), sistem menandai selisih tersebut sebagai utang karyawan yang wajib dilunasi.</li><li><b>Cloud &amp; Purchase Order (PO):</b> Sistem memiliki modul <b>Auto-PO</b>, yang secara otomatis menciptakan draf <i>Purchase Order</i> berdasarkan <i>re-order point</i>, dihitung dari gelombang keluar barang (<i>flow</i> rata-rata) dan tren produk.</li><li><b>Analisis Pasar &amp; Laporan:</b> Sistem menghasilkan laporan keuangan dan modul <b>Analisis Produk</b>. Dashboard otomatis mengklasifikasikan menu menjadi <i>Fast-Moving</i> (laris) dan <i>Slow-Moving</i> (tidak laris) berdasarkan data 1 bulan terakhir untuk rekomendasi strategis.</li></ul><h2>4. Risiko dan Manajemen Risiko</h2><p>Menerapkan matriks manajemen risiko standar korporasi untuk memitigasi operasional bahan baku (JIT Inventory), finansial sewa lapak, dan persaingan harga.</p><h2>5. Rincian Anggaran (Kapitalisasi Rp 12.000.000)</h2><table border='1' cellpadding='5' style='border-collapse: collapse; width: 100%; border-color: rgba(255,255,255,0.3); font-size:12px;'><thead><tr style='background: rgba(255,255,255,0.1);'><th>Komponen</th><th>Alokasi (Rp)</th></tr></thead><tbody><tr><td><b>Sewa Lapak (3bln)</b></td><td>1.800.000</td></tr><tr><td><b>Booth &amp; Infrastruktur</b></td><td>2.500.000</td></tr><tr><td><b>Alat Produksi</b></td><td>4.000.000</td></tr><tr><td><b>Fasilitas</b></td><td>1.000.000</td></tr><tr><td><b>Bahan Baku Awal</b></td><td>1.100.000</td></tr><tr><td><b>Promosi</b></td><td>500.000</td></tr><tr><td><b>Cadangan</b></td><td>1.100.000</td></tr></tbody></table><h2>6. Manajemen Keuangan</h2><p>Asumsi <b>Rp 0 Pemasukan selama Triwulan Pertama</b>. Total kebutuhan operasional 3 bulan (listrik, keamanan, gaji karyawan paruh waktu) adalah Rp 4.000.000. Dengan dana cadangan Rp 3.500.000, <i>founder</i> mengantisipasi kekurangan kecil dengan penyesuaian biaya sewa atau subsidi pribadi.</p><h2>7. Manajemen Operasional</h2><p>Menggunakan prinsip <i>Kaizen</i>, Kalibrasi Pagi (<i>dial-in</i> kopi), akuntansi disiplin (pemisahan kas kasir &amp; pribadi), dan <i>Zero Waste</i>.</p><h2>8. Promosi</h2><p>Taktik <i>Customer Acquisition Cost (CAC)</i> agresif (Buy 1 Get 1) untuk membeli <i>data palate</i> pasar dan memaksa orang mencoba produk.</p><h2>9. Plan B</h2><p>Pivot ke B2B (produksi massal botol literan) dengan sistem konsinyasi jika pendapatan bulan ke-2 gagal menutupi biaya operasional.</p><h2>10. Tindakan Wajib &amp; Pantangan</h2><p>Input POS real-time, rotasi FIFO, dan eksekusi Plan B adalah wajib. Larangan keras: Mixing funds (uang kas untuk pribadi), merubah HPP manual, dan meninggalkan mesin POS tanpa kunci.</p>">1. The Assembly</button></li>
 
-
-
                   
                     <li><button data-title="Behavioral Approach" data-content="Antara Nurani dan Bertahan Hidup<br><br>Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan takdir tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.">2. Behavioral Approach</button></li>
-                    
+
+
+                  
                     <li><button data-title="Sebelum Esok" data-content="<h2 style='margin-top:0;'>Bayang-Bayang Obsesi di Tengah Tuntutan Sosial</h2><p>Layar gawai dan etalase kehidupan orang lain sering kali memancarkan ilusi yang menyilaukan. Di tengah masyarakat modern yang serba cepat, nilai seseorang kerap kali direduksi menjadi seberapa besar pencapaian material yang bisa mereka pamerkan. Dari sinilah lahir sebuah fenomena sosial yang menggerogoti dari dalam: gengsi yang bermutasi menjadi obsesi.</p><h3>Analisis Masalah: Keterasingan Diri dan Hancurnya Batasan</h3><p>Tuntutan untuk terlihat sukses dan mapan menciptakan tekanan psikologis yang luar biasa. Ketika gengsi mengambil alih, standar kebahagiaan tidak lagi ditentukan oleh diri sendiri, melainkan oleh pandangan orang lain. Dalam titik ini, obsesi yang berlebihan mulai bekerja bagai racun yang perlahan melumpuhkan akal sehat.</p><ul><li><b>Keluar dari Dirinya Sendiri (Alienasi Diri):</b> Demi memenuhi ekspektasi sosial, seseorang mulai memakai topeng. Mereka memaksa diri menjalani gaya hidup, mengambil keputusan, atau memburu status yang sebenarnya bertentangan dengan kapasitas dan keinginan sejati mereka. Mereka menjadi asing di dalam tubuh mereka sendiri, memainkan peran sebagai orang lain yang dianggap ideal oleh masyarakat. Jati diri, ketenangan batin, dan kebahagiaan sederhana perlahan mati kelaparan.</li><li><b>Menabrak Aturan dan Etika:</b> Ketika obsesi akan status dan pencapaian sudah menutupi mata, proses perlahan kehilangan maknanya. Mentalitas jalan pintas mulai tumbuh. Demi memuaskan dahaga akan gengsi, garis batas antara yang benar dan yang salah menjadi sangat kabur. Aturan, baik itu norma sosial, kode etik, maupun integritas pribadi, tidak lagi dipandang sebagai pedoman, melainkan sebagai penghalang yang harus diterabas. Pada tahap ini, obsesi membenarkan segala cara, mengorbankan moralitas demi ilusi kemenangan.</li></ul><h3>Persiapan untuk Besok: Mengkalibrasi Ulang Realitas</h3><p>Malam ini adalah batas waktu sebelum roda tuntutan kembali berputar esok hari. Agar tidak terus terseret dalam pusaran obsesi yang merusak, persiapan yang dibutuhkan bukanlah strategi untuk berlari lebih cepat, melainkan keberanian untuk berhenti sejenak.</p><ul><li><b>Mendekonstruksi Gengsi:</b> Sadari bahwa pandangan orang lain adalah hal yang berada di luar kendali kita. Membayar harga mahal (baik secara finansial, moral, maupun mental) hanya untuk membeli decak kagum yang sementara adalah sebuah investasi yang sia-sia.</li><li><b>Menemukan Kembali Akar Jati Diri:</b> Bertanya kembali pada diri sendiri dengan jujur: Apakah yang sedang saya kejar ini benar-benar yang saya butuhkan, atau sekadar yang ingin saya pamerkan? Menerima kondisi realitas saat ini tanpa rasa malu adalah langkah pertama untuk kembali ke dalam diri sendiri.</li><li><b>Memperbaiki Kompas Moral:</b> Menyadari bahwa pencapaian yang diraih dengan mengorbankan aturan dan integritas pada akhirnya hanya akan membawa kehampaan dan kecemasan yang baru. Proses yang jujur jauh lebih berharga daripada hasil yang manipulatif.</li></ul><h3>Pesan Motivasi untuk Besok</h3><blockquote style='font-style: italic; background: rgba(255,255,255,0.1); padding: 10px; border-left: 4px solid #3498db; margin-left: 0;'>&quot;Kesuksesan sejati tidak diukur dari seberapa riuh tepuk tangan orang lain, melainkan dari seberapa damai kau bisa menatap pantulan dirimu sendiri di cermin.&quot;</blockquote><p>Esok adalah lembaran yang baru. Jangan biarkan gengsi mendikte setiap keputusanmu, dan jangan biarkan obsesi merampas kewarasan serta nuranimu. Hiduplah di atas tanah realitas yang kokoh. Melangkahlah dengan integritas dan kejujuran. Ingatlah, tidak ada garis finis yang sepadan jika kau harus kehilangan dirimu sendiri di sepanjang jalan.</p><p>Bernapaslah. Lepaskan beban ekspektasi yang bukan milikmu. Hadapi esok hari sebagai dirimu yang paling sejati.</p>">3. Sebelum Esok</button></li>
 
+
+                  
                     <li><a href="dashboard.html">4. Dashboard</a></li>
-
-                  
-                    <li><a href="chat.html">5.In Restroom</a></li>
-
-                  
+                    <li><a href="chat.html">5. In Restroom</a></li>
                     <li><button id="open-anonim-btn">7. Interaksi (anonim)</button></li>
                 </ul>
                 <button id="close-btn" class="action-btn">Tutup</button>
@@ -227,13 +257,21 @@
             <div id="comment-view">
                 <h3 style="text-align: center; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Komentar Anonim</h3>
                 
-                <div class="scroll-area" style="display: flex; flex-direction: column;">
+                <div class="scroll-area" id="chat-scroll-area" style="display: flex; flex-direction: column;">
+                    <!-- Indikator Balas Pesan -->
+                    <div id="reply-indicator" style="display: none;">
+                        <span id="reply-text">Membalas UserID</span>
+                        <span id="cancel-reply">✖</span>
+                    </div>
+
                     <!-- Form Input -->
-                    <textarea id="chat-input" class="chat-input" placeholder="Tulis..."></textarea>
+                    <textarea id="chat-input" class="chat-input" placeholder="Tulis komentar..."></textarea>
                     <button id="send-chat-btn" style="background: #27ae60;" class="action-btn">Kirim</button>
                     <div id="send-status" style="text-align: center; margin-top: 5px; font-size: 12px; color: #2ecc71; display: none;">Terkirim!</div>
 
-                    <h4 style="margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">komentar</h4>
+                    <h4 style="margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">
+                        Komentar Masuk (<span id="user-identity" style="color:#3498db; font-size:12px;"></span>)
+                    </h4>
                     
                     <!-- Area Munculnya Pesan -->
                     <div id="chat-list" style="display: flex; flex-direction: column;">
@@ -249,10 +287,10 @@
 
     <!-- Script Firebase & Logika Aplikasi -->
     <script type="module">
+        // Tambahan import 'update' dan 'increment' untuk sistem reaksi
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+        import { getDatabase, ref, push, onValue, serverTimestamp, update, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
-        // Konfigurasi Firebase BARU (profil-db4e9)
         const firebaseConfig = {
             apiKey: "AIzaSyAxf2w0makvkXAD1zBMSJyV4ZD0f05FvDc",
             authDomain: "profil-db4e9.firebaseapp.com",
@@ -267,7 +305,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app); 
 
-        // 1. SITEM ANTI-COPY
+        // --------------------------------------------------------
+        // SISTEM GENERATE & SIMPAN ID DEVICE
+        // --------------------------------------------------------
+        let deviceUserId = localStorage.getItem('arinex_anon_id');
+        if (!deviceUserId) {
+            // Buat ID unik Acak: Anon-XXXXX
+            const randomString = Math.random().toString(36).substring(2, 7).toUpperCase();
+            deviceUserId = 'Anon-' + randomString;
+            localStorage.setItem('arinex_anon_id', deviceUserId);
+        }
+        document.getElementById('user-identity').innerText = "Kamu: " + deviceUserId;
+
+
+        // 1. SITEM ANTI-COPY (Tetap)
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', event => {
             if (event.ctrlKey && (event.key === 'c' || event.key === 'C' || event.key === 'x' || event.key === 'X' || event.key === 'a' || event.key === 'A')) {
@@ -275,151 +326,205 @@
             }
         });
 
-        // 2. Kunang-kunang Malam
+        // 2 & 3 & 4 & 5 (Visuals & Menu Sama Seperti Sebelumnya)
         const canvas = document.getElementById('fireflies');
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
         let height = canvas.height = window.innerHeight;
         const flies = [];
-
         for (let i = 0; i < 40; i++) {
-            flies.push({
-                x: Math.random() * width, y: Math.random() * height,
-                r: Math.random() * 2 + 0.5,
-                dx: Math.random() * 1 - 0.5, dy: Math.random() * 1 - 0.5,
-                opacity: Math.random()
-            });
+            flies.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2 + 0.5, dx: Math.random() * 1 - 0.5, dy: Math.random() * 1 - 0.5, opacity: Math.random() });
         }
         function drawFireflies() {
             ctx.clearRect(0, 0, width, height);
             flies.forEach(f => {
-                ctx.beginPath();
-                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(200, 230, 255, ${Math.abs(Math.sin(f.opacity))})`;
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 230, 255, ${Math.abs(Math.sin(f.opacity))})`; ctx.fill();
                 f.x += f.dx; f.y += f.dy; f.opacity += 0.03;
-                if(f.x < 0 || f.x > width) f.dx *= -1;
-                if(f.y < 0 || f.y > height) f.dy *= -1;
+                if(f.x < 0 || f.x > width) f.dx *= -1; if(f.y < 0 || f.y > height) f.dy *= -1;
             });
             requestAnimationFrame(drawFireflies);
         }
         drawFireflies();
-        window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
 
-        // 3. Logika Video
         const bgVideo = document.getElementById('bg-video');
         const startOverlay = document.getElementById('start-overlay');
-
         startOverlay.addEventListener('click', () => {
-            startOverlay.style.opacity = '0';
-            setTimeout(() => startOverlay.style.display = 'none', 500);
-            bgVideo.muted = false;
-            bgVideo.play().catch(e => console.log("Video autoplay diblokir.", e));
+            startOverlay.style.opacity = '0'; setTimeout(() => startOverlay.style.display = 'none', 500);
+            bgVideo.muted = false; bgVideo.play().catch(e => console.log(e));
         });
-
         bgVideo.addEventListener('ended', () => {
-            bgVideo.style.opacity = '0';
-            bgVideo.style.transform = 'translate(-50%, -50%) scale(0.9)';
-            setTimeout(() => { bgVideo.style.display = 'none'; }, 1500);
+            bgVideo.style.opacity = '0'; bgVideo.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            setTimeout(() => bgVideo.style.display = 'none', 1500);
         });
 
-        // 4. Efek Percikan Air
-        document.addEventListener('pointerdown', function(e) {
-            if(e.target.closest('#popup-menu') || e.target.closest('#menu-btn') || e.target.closest('#bg-video')) return;
-            const ripple = document.createElement('div');
-            ripple.classList.add('ripple');
-            ripple.style.left = `${e.clientX}px`; ripple.style.top = `${e.clientY}px`;
-            document.body.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-        });
-
-        // 5. NAVIGASI POPUP MULTI-VIEW
         const popupMenu = document.getElementById('popup-menu');
-        const menuView = document.getElementById('menu-view');
-        const readView = document.getElementById('read-view');
-        const commentView = document.getElementById('comment-view');
-
-        document.getElementById('menu-btn').addEventListener('click', () => { 
-            popupMenu.classList.add('active'); 
-            menuView.style.display = 'flex'; 
-            readView.style.display = 'none'; 
-            commentView.style.display = 'none';
-        });
-
+        const menuView = document.getElementById('menu-view'), readView = document.getElementById('read-view'), commentView = document.getElementById('comment-view');
+        document.getElementById('menu-btn').addEventListener('click', () => { popupMenu.classList.add('active'); menuView.style.display = 'flex'; readView.style.display = 'none'; commentView.style.display = 'none'; });
         document.getElementById('close-btn').addEventListener('click', () => popupMenu.classList.remove('active'));
         
         document.querySelectorAll('button[data-content]').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.getElementById('read-title').textContent = this.getAttribute('data-title');
                 document.getElementById('content-display').innerHTML = this.getAttribute('data-content');
-                menuView.style.display = 'none'; 
-                readView.style.display = 'flex'; 
-                document.getElementById('content-display').scrollTop = 0;
+                menuView.style.display = 'none'; readView.style.display = 'flex'; document.getElementById('content-display').scrollTop = 0;
             });
         });
+        document.getElementById('open-anonim-btn').addEventListener('click', () => { menuView.style.display = 'none'; commentView.style.display = 'flex'; });
+        document.querySelectorAll('.back-btn').forEach(btn => { btn.addEventListener('click', () => { readView.style.display = 'none'; commentView.style.display = 'none'; menuView.style.display = 'flex'; }); });
 
-        document.getElementById('open-anonim-btn').addEventListener('click', () => {
-            menuView.style.display = 'none';
-            commentView.style.display = 'flex';
-        });
-
-        document.querySelectorAll('.back-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                readView.style.display = 'none'; 
-                commentView.style.display = 'none';
-                menuView.style.display = 'flex'; 
-            });
-        });
-
-        // 6. LOGIKA FIREBASE: KIRIM & BACA KOMENTAR
+        // --------------------------------------------------------
+        // LOGIKA FIREBASE BARU: BALASAN & REAKSI
+        // --------------------------------------------------------
         const chatInput = document.getElementById('chat-input');
         const sendChatBtn = document.getElementById('send-chat-btn');
         const chatList = document.getElementById('chat-list');
         const sendStatus = document.getElementById('send-status');
         
-        const chatRef = ref(db, 'pesan_anonim');
+        const replyIndicator = document.getElementById('reply-indicator');
+        const replyText = document.getElementById('reply-text');
+        const cancelReplyBtn = document.getElementById('cancel-reply');
 
+        const chatRef = ref(db, 'pesan_anonim');
+        
+        let parentMessageId = null; // Menyimpan ID pesan yang sedang dibalas
+
+        // Batalkan Balasan
+        cancelReplyBtn.addEventListener('click', () => {
+            parentMessageId = null;
+            replyIndicator.style.display = 'none';
+            chatInput.placeholder = "Tulis komentar...";
+        });
+
+        // Kirim Pesan (Komentar Baru atau Balasan)
         sendChatBtn.addEventListener('click', () => {
             const pesanText = chatInput.value.trim();
             if(pesanText !== "") {
                 sendChatBtn.textContent = "Mengirim...";
                 sendChatBtn.disabled = true;
 
-                push(chatRef, {
+                const payload = {
+                    userId: deviceUserId,
                     teks: pesanText,
-                    waktu: serverTimestamp()
-                }).then(() => {
+                    waktu: serverTimestamp(),
+                    parentId: parentMessageId, // Jika null, berarti komentar utama
+                    reactions: { wow: 0, super: 0, haha: 0 } // Struktur awal reaksi
+                };
+
+                push(chatRef, payload).then(() => {
                     chatInput.value = ""; 
                     sendStatus.style.display = "block"; 
                     setTimeout(() => sendStatus.style.display = "none", 3000);
+                    
+                    // Reset State Balasan
+                    parentMessageId = null;
+                    replyIndicator.style.display = 'none';
+                    chatInput.placeholder = "Tulis komentar...";
                 }).catch((error) => {
-                    alert("Gagal mengirim pesan. Periksa koneksi atau rules database.");
-                    console.error(error);
+                    alert("Gagal mengirim pesan.");
                 }).finally(() => {
-                    sendChatBtn.textContent = "Kirim Pesan";
+                    sendChatBtn.textContent = "Kirim";
                     sendChatBtn.disabled = false;
                 });
             }
         });
 
+        // Baca dan Render Pesan
         onValue(chatRef, (snapshot) => {
             chatList.innerHTML = ""; 
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 
-                const keys = Object.keys(data).reverse();
-                
-                keys.forEach(key => {
-                    const pesan = data[key].teks;
-                    const chatBox = document.createElement('div');
-                    chatBox.className = 'chat-box';
-                    chatBox.textContent = pesan;
-                    chatList.appendChild(chatBox);
+                // Pisahkan komentar utama dan balasan
+                const mainComments = [];
+                const repliesMap = {};
+
+                Object.keys(data).forEach(key => {
+                    const msg = { id: key, ...data[key] };
+                    
+                    // Pastikan reaksi tidak undefined
+                    if(!msg.reactions) msg.reactions = { wow: 0, super: 0, haha: 0 };
+
+                    if (!msg.parentId) {
+                        mainComments.push(msg);
+                    } else {
+                        if (!repliesMap[msg.parentId]) repliesMap[msg.parentId] = [];
+                        repliesMap[msg.parentId].push(msg);
+                    }
+                });
+
+                // Tampilkan komentar utama terbaru di atas
+                mainComments.reverse().forEach(mainMsg => {
+                    chatList.appendChild(createMessageDOM(mainMsg, false));
+                    
+                    // Tampilkan balasannya di bawah komentar utama
+                    if (repliesMap[mainMsg.id]) {
+                        repliesMap[mainMsg.id].forEach(replyMsg => {
+                            chatList.appendChild(createMessageDOM(replyMsg, true));
+                        });
+                    }
                 });
             } else {
-                chatList.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:13px;'>Belum ada pesan yang masuk. Jadilah yang pertama!</p>";
+                chatList.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:13px;'>Belum ada komentar.</p>";
             }
         });
+
+        // Fungsi Pembuat Elemen Chat
+        function createMessageDOM(msg, isReply) {
+            const box = document.createElement('div');
+            box.className = isReply ? 'chat-box reply' : 'chat-box';
+            
+            // Format Pengirim (Jika itu kita sendiri, beri tanda 'Kamu')
+            const displayName = (msg.userId === deviceUserId) ? `${msg.userId} (Kamu)` : msg.userId;
+
+            box.innerHTML = `
+                <div class="chat-header">
+                    <span class="user-id">${displayName}</span>
+                </div>
+                <div class="chat-text">${msg.teks}</div>
+                <div class="chat-actions">
+                    <div class="reactions">
+                        <button class="reaction-btn" data-type="wow" data-id="${msg.id}">😮 ${msg.reactions.wow || 0}</button>
+                        <button class="reaction-btn" data-type="super" data-id="${msg.id}">❤️ ${msg.reactions.super || 0}</button>
+                        <button class="reaction-btn" data-type="haha" data-id="${msg.id}">😂 ${msg.reactions.haha || 0}</button>
+                    </div>
+                    ${!isReply ? `<button class="btn-balas" data-id="${msg.id}" data-user="${msg.userId}">Balas</button>` : ''}
+                </div>
+            `;
+
+            // Event Listener Tombol Balas (Hanya ada di Komentar Utama)
+            if (!isReply) {
+                box.querySelector('.btn-balas').addEventListener('click', (e) => {
+                    const btn = e.target;
+                    parentMessageId = btn.getAttribute('data-id');
+                    const targetUser = btn.getAttribute('data-user');
+                    
+                    replyIndicator.style.display = 'flex';
+                    replyText.innerText = `Membalas ${targetUser}`;
+                    chatInput.placeholder = "Tulis balasanmu...";
+                    
+                    // Scroll layar ke text area
+                    document.getElementById('chat-scroll-area').scrollTop = 0;
+                    chatInput.focus();
+                });
+            }
+
+            // Event Listener Tombol Reaksi
+            box.querySelectorAll('.reaction-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const reactionType = e.currentTarget.getAttribute('data-type');
+                    const messageId = e.currentTarget.getAttribute('data-id');
+                    
+                    // Update ke Firebase menggunakan increment (+1)
+                    const reactionRef = ref(db, `pesan_anonim/${messageId}/reactions`);
+                    update(reactionRef, {
+                        [reactionType]: increment(1)
+                    });
+                });
+            });
+
+            return box;
+        }
 
     </script>
 </body>
