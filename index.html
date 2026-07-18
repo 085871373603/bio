@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ARINEX.id</title>
+    <style>
+        /* SITEM ANTI-COPY (Melarang seleksi teks) */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none; 
+        }
+
+        /* Lock System & Mobile Friendly */
+        body, html {
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #060814, #131a33, #21294a, #111425);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Layar Awal Pembuka Audio/Video */
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 100;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; cursor: pointer; transition: opacity 0.5s;
+        }
+        #start-overlay h2 { margin: 0; animation: pulse 1.5s infinite alternate; }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Video Latar */
+        #bg-video {
+            position: fixed; top: 40%; left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%; max-height: 40vh;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            z-index: 15;
+            background-color: black;
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        /* Bulan Bercahaya */
+        #moon {
+            position: absolute; top: 15%; left: 50%;
+            width: 110px; height: 110px;
+            background: radial-gradient(circle at 35% 35%, #fdfdfd, #e2e5de, #a9aca6);
+            border-radius: 50%;
+            box-shadow: 0 0 60px 15px rgba(255, 255, 255, 0.5), inset -10px -10px 20px rgba(0,0,0,0.2);
+            transform: translateX(-50%);
+            animation: moonAnim 8s infinite alternate ease-in-out;
+            z-index: 1;
+        }
+        @keyframes moonAnim {
+            0% { transform: translate(-50%, 0) scale(1); box-shadow: 0 0 60px 15px rgba(255, 255, 255, 0.5); }
+            100% { transform: translate(-50%, 15px) scale(0.97); box-shadow: 0 0 80px 25px rgba(255, 255, 255, 0.7); }
+        }
+
+        /* Bukit & Siluet */
+        #landscape {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 35vh;
+            z-index: 3; pointer-events: none;
+        }
+
+        /* Canvas untuk Kunang-kunang */
+        #fireflies {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2; pointer-events: none;
+        }
+
+        /* Efek Percikan Air */
+        .ripple {
+            position: absolute; border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 50%;
+            transform: translate(-50%, -50%); animation: rippleAnim 0.6s linear forwards;
+            pointer-events: none; z-index: 10;
+        }
+        @keyframes rippleAnim {
+            0% { width: 0; height: 0; opacity: 1; border-width: 4px; }
+            100% { width: 150px; height: 150px; opacity: 0; border-width: 1px; }
+        }
+
+        /* Tombol Menu Utama */
+        #menu-btn {
+            position: absolute; top: 20px; right: 20px; padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 20px;
+            font-size: 16px; font-weight: bold; cursor: pointer; z-index: 5; transition: transform 0.2s;
+        }
+        #menu-btn:active { transform: scale(0.9); }
+
+        /* Popup Transparan */
+        #popup-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 20; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #popup-menu.active { opacity: 1; visibility: visible; }
+
+        .popup-content {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px;
+            width: 90%; max-width: 500px; height: 85vh; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transform: translateY(50px) scale(0.9); transition: transform 0.4s; color: white; display: flex; flex-direction: column; box-sizing: border-box;
+        }
+        #popup-menu.active .popup-content { transform: translateY(0) scale(1); }
+
+        /* Tampilan Navigasi Internal Popup */
+        #menu-view, #read-view, #comment-view { display: flex; flex-direction: column; height: 100%; }
+        #read-view, #comment-view { display: none; }
+
+        .menu-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow-y: auto; }
+        .menu-list li { margin-bottom: 12px; }
+        .menu-list button, .menu-list a {
+            width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: white;
+            font-size: 15px; text-align: left; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; transition: background 0.3s;
+        }
+        .menu-list button:hover, .menu-list a:hover { background: rgba(255,255,255,0.15); }
+
+        /* Area Membaca & Komentar (Scrollable) */
+        #read-title { text-align: center; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        #content-display, .scroll-area {
+            flex-grow: 1; overflow-y: auto; padding-right: 10px; margin-bottom: 15px; font-size: 14px;
+            line-height: 1.7; text-align: justify; touch-action: pan-y; -webkit-overflow-scrolling: touch;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+
+        .action-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 15px; margin-top: 10px;}
+        #close-btn { background: #c0392b; margin-top: auto; }
+        .back-btn { background: #2980b9; }
+
+        /* Form Komentar Custom */
+        .chat-input {
+            width: 100%; height: 100px; border-radius: 10px; padding: 12px;
+            background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.3);
+            resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; margin-bottom: 10px;
+        }
+        .chat-input:focus { outline: none; border-color: #3498db; }
+        .chat-box {
+            background: rgba(255,255,255,0.08); padding: 12px; border-radius: 10px;
+            margin-bottom: 8px; border-left: 3px solid #3498db; font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Layar Pembuka -->
+    <div id="start-overlay">
+        <h2>Mulai</h2>
+        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">tap</p>
+    </div>
+
+    <!-- Video Element -->
+    <video id="bg-video" playsinline>
+        <source src="iklan.mp4" type="video/mp4">
+    </video>
+
+    <!-- Bulan & Kunang-kunang -->
+    <div id="moon"></div>
+    <canvas id="fireflies"></canvas>
+
+    <!-- Siluet Bukit & Manusia -->
+    <div id="landscape">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <path d="M0,70 Q100,30 200,60 L200,100 L0,100 Z" fill="#030408"/>
+            <g transform="translate(115, 33)">
+                <circle cx="-5" cy="8" r="4" fill="#030408"/>
+                <path d="M-8,12 Q-15,22 -8,32 L2,32 Q5,20 -3,12 Z" fill="#030408"/>
+                <path d="M-8,30 Q-20,20 -15,32 L-10,34 Z" fill="#030408"/>
+            </g>
+        </svg>
+    </div>
+
+    <button id="menu-btn">Menu ☰</button>
+
+    <!-- Popup Menu -->
+    <div id="popup-menu">
+        <div class="popup-content">
+            
+            <!-- TAMPILAN 1: DAFTAR MENU -->
+            <div id="menu-view">
+                <h3 style="margin-top: 0; text-align: center; margin-bottom: 20px;">Tabel</h3>
+                <ul class="menu-list">
+
+
+                  
+                    <li><button data-title="The Assembly" data-content="<h1>PROSPEKTUS: COMPILE 4.73</h1><hr><h2>1. Latar Belakang Masalah &amp; Penyelesaian</h2><p><b>Analisis Kondisi Nyata:</b><br>Berdasarkan modul <i>Lean Startup</i> oleh Eric Ries, pemborosan terbesar pengusaha pemula adalah membangun produk/ruang fisik berskala besar tanpa memvalidasi apakah ada pasar yang menginginkannya. Mengutip pengusaha Bob Sadino, &quot;Bisnis yang bagus adalah yang dibuka, bukan yang ditanyakan terus.&quot; Dalam lanskap urban dikota besar, masalah utamanya adalah tingginya beban <i>overhead</i> yang sering membunuh kedai kopi independen pada tahun pertama.</p><p><b>Penyelesaian:</b><br>Compile 4.73 mengadopsi prinsip <i>Minimum Viable Product (MVP)</i>—fokus pada <i>micro-space</i> (lapak teras 2x2 meter) yang memangkas beban sewa hingga 80%, mengoptimalkan kecepatan saji, dan menghilangkan biaya pekerja (<i>sweat equity</i> oleh pendiri di tahap awal).</p><h2>2. Konsep Bisnis</h2><p>Compile 4.73 adalah entitas F&amp;B yang beroperasi seperti mesin presisi. Ini adalah stasiun <i>grab-and-go</i> yang mengutamakan kualitas kopi esensial dengan perputaran pelanggan yang cepat. Fokus pada retensi pelanggan melalui konsistensi rasa, bukan fasilitas fisik.</p><h2>3. Sistem Informasi (Integrasi, Keamanan, &amp; Akurasi)</h2><p>Sistem dibangun secara mandiri menggunakan arsitektur <i>Serverless</i>. Fokus utama adalah pada integritas data agar bisnis tetap terkontrol meski dijalankan oleh karyawan:</p><ul><li><b>Keamanan &amp; Anti-Manipulasi:</b> Menggunakan <i>Rule-Based Authentication</i> di level <i>database</i>. Tidak ada opsi &quot;Edit/Hapus Transaksi&quot; bagi kasir; setiap koreksi harus melalui <i>log</i> admin permanen guna mencegah manipulasi/fraud.</li><li><b>Inventory &amp; Repacking:</b> Sistem membagi inventori menjadi <b>Bahan Baku Original (ORI)</b> dan <b>Bahan Baku Siap Pakai (RPC/Repack)</b>. Fitur <i>Repacking</i> mengonversi satuan besar ke porsi jual. Saat terjual, sistem memotong stok RPC. Jika ada kehilangan/kerusakan, fitur <b>Waste Management</b> wajib digunakan untuk mencatat pemusnahan barang sebagai beban operasional.</li><li><b>Real-time Stock Opname (SO):</b> Jika ditemukan selisih, sistem melakukan <b>Adjustment Otomatis</b> yang mengompensasi selisih tersebut ke laporan HPP harian, memastikan inventori selalu sinkron.</li><li><b>Manajemen F&amp;B &amp; Kalkulasi HPP:</b> Sistem menghitung HPP secara dinamis. Setiap Menu Jual memiliki <i>Recipe Base</i> yang terikat pada stok RPC. Saat menu terjual, HPP dihitung berdasarkan biaya rata-rata bahan baku (termasuk proporsi <i>waste</i>), sehingga laporan laba kotor selalu akurat.</li><li><b>Sistem Setoran Kasir (Variance Control):</b> Saat tutup buku (<i>End of Day</i>), sistem mengunci nominal uang fisik yang wajib disetor. Jika terdapat <b>Variance</b> (selisih uang kas), sistem menandai selisih tersebut sebagai utang karyawan yang wajib dilunasi.</li><li><b>Cloud &amp; Purchase Order (PO):</b> Sistem memiliki modul <b>Auto-PO</b>, yang secara otomatis menciptakan draf <i>Purchase Order</i> berdasarkan <i>re-order point</i>, dihitung dari gelombang keluar barang (<i>flow</i> rata-rata) dan tren produk.</li><li><b>Analisis Pasar &amp; Laporan:</b> Sistem menghasilkan laporan keuangan dan modul <b>Analisis Produk</b>. Dashboard otomatis mengklasifikasikan menu menjadi <i>Fast-Moving</i> (laris) dan <i>Slow-Moving</i> (tidak laris) berdasarkan data 1 bulan terakhir untuk rekomendasi strategis.</li></ul><h2>4. Risiko dan Manajemen Risiko</h2><p>Menerapkan matriks manajemen risiko standar korporasi untuk memitigasi operasional bahan baku (JIT Inventory), finansial sewa lapak, dan persaingan harga.</p><h2>5. Rincian Anggaran (Kapitalisasi Rp 12.000.000)</h2><table border='1' cellpadding='5' style='border-collapse: collapse; width: 100%; border-color: rgba(255,255,255,0.3); font-size:12px;'><thead><tr style='background: rgba(255,255,255,0.1);'><th>Komponen</th><th>Alokasi (Rp)</th></tr></thead><tbody><tr><td><b>Sewa Lapak (3bln)</b></td><td>1.800.000</td></tr><tr><td><b>Booth &amp; Infrastruktur</b></td><td>2.500.000</td></tr><tr><td><b>Alat Produksi</b></td><td>4.000.000</td></tr><tr><td><b>Fasilitas</b></td><td>1.000.000</td></tr><tr><td><b>Bahan Baku Awal</b></td><td>1.100.000</td></tr><tr><td><b>Promosi</b></td><td>500.000</td></tr><tr><td><b>Cadangan</b></td><td>1.100.000</td></tr></tbody></table><h2>6. Manajemen Keuangan</h2><p>Asumsi <b>Rp 0 Pemasukan selama Triwulan Pertama</b>. Total kebutuhan operasional 3 bulan (listrik, keamanan, gaji karyawan paruh waktu) adalah Rp 4.000.000. Dengan dana cadangan Rp 3.500.000, <i>founder</i> mengantisipasi kekurangan kecil dengan penyesuaian biaya sewa atau subsidi pribadi.</p><h2>7. Manajemen Operasional</h2><p>Menggunakan prinsip <i>Kaizen</i>, Kalibrasi Pagi (<i>dial-in</i> kopi), akuntansi disiplin (pemisahan kas kasir &amp; pribadi), dan <i>Zero Waste</i>.</p><h2>8. Promosi</h2><p>Taktik <i>Customer Acquisition Cost (CAC)</i> agresif (Buy 1 Get 1) untuk membeli <i>data palate</i> pasar dan memaksa orang mencoba produk.</p><h2>9. Plan B</h2><p>Pivot ke B2B (produksi massal botol literan) dengan sistem konsinyasi jika pendapatan bulan ke-2 gagal menutupi biaya operasional.</p><h2>10. Tindakan Wajib &amp; Pantangan</h2><p>Input POS real-time, rotasi FIFO, dan eksekusi Plan B adalah wajib. Larangan keras: Mixing funds (uang kas untuk pribadi), merubah HPP manual, dan meninggalkan mesin POS tanpa kunci.</p>">1. The Assembly</button></li>
+
+
+
+                  
+                    <li><button data-title="Behavioral Approach" data-content="Antara Nurani dan Bertahan Hidup<br><br>Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan takdir tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.">2. Behavioral Approach</button></li>
+                    
+                    <li><button data-title="Sebelum Esok" data-content="<h2 style='margin-top:0;'>Bayang-Bayang Obsesi di Tengah Tuntutan Sosial</h2><p>Layar gawai dan etalase kehidupan orang lain sering kali memancarkan ilusi yang menyilaukan. Di tengah masyarakat modern yang serba cepat, nilai seseorang kerap kali direduksi menjadi seberapa besar pencapaian material yang bisa mereka pamerkan. Dari sinilah lahir sebuah fenomena sosial yang menggerogoti dari dalam: gengsi yang bermutasi menjadi obsesi.</p><h3>Analisis Masalah: Keterasingan Diri dan Hancurnya Batasan</h3><p>Tuntutan untuk terlihat sukses dan mapan menciptakan tekanan psikologis yang luar biasa. Ketika gengsi mengambil alih, standar kebahagiaan tidak lagi ditentukan oleh diri sendiri, melainkan oleh pandangan orang lain. Dalam titik ini, obsesi yang berlebihan mulai bekerja bagai racun yang perlahan melumpuhkan akal sehat.</p><ul><li><b>Keluar dari Dirinya Sendiri (Alienasi Diri):</b> Demi memenuhi ekspektasi sosial, seseorang mulai memakai topeng. Mereka memaksa diri menjalani gaya hidup, mengambil keputusan, atau memburu status yang sebenarnya bertentangan dengan kapasitas dan keinginan sejati mereka. Mereka menjadi asing di dalam tubuh mereka sendiri, memainkan peran sebagai orang lain yang dianggap ideal oleh masyarakat. Jati diri, ketenangan batin, dan kebahagiaan sederhana perlahan mati kelaparan.</li><li><b>Menabrak Aturan dan Etika:</b> Ketika obsesi akan status dan pencapaian sudah menutupi mata, proses perlahan kehilangan maknanya. Mentalitas jalan pintas mulai tumbuh. Demi memuaskan dahaga akan gengsi, garis batas antara yang benar dan yang salah menjadi sangat kabur. Aturan, baik itu norma sosial, kode etik, maupun integritas pribadi, tidak lagi dipandang sebagai pedoman, melainkan sebagai penghalang yang harus diterabas. Pada tahap ini, obsesi membenarkan segala cara, mengorbankan moralitas demi ilusi kemenangan.</li></ul><h3>Persiapan untuk Besok: Mengkalibrasi Ulang Realitas</h3><p>Malam ini adalah batas waktu sebelum roda tuntutan kembali berputar esok hari. Agar tidak terus terseret dalam pusaran obsesi yang merusak, persiapan yang dibutuhkan bukanlah strategi untuk berlari lebih cepat, melainkan keberanian untuk berhenti sejenak.</p><ul><li><b>Mendekonstruksi Gengsi:</b> Sadari bahwa pandangan orang lain adalah hal yang berada di luar kendali kita. Membayar harga mahal (baik secara finansial, moral, maupun mental) hanya untuk membeli decak kagum yang sementara adalah sebuah investasi yang sia-sia.</li><li><b>Menemukan Kembali Akar Jati Diri:</b> Bertanya kembali pada diri sendiri dengan jujur: Apakah yang sedang saya kejar ini benar-benar yang saya butuhkan, atau sekadar yang ingin saya pamerkan? Menerima kondisi realitas saat ini tanpa rasa malu adalah langkah pertama untuk kembali ke dalam diri sendiri.</li><li><b>Memperbaiki Kompas Moral:</b> Menyadari bahwa pencapaian yang diraih dengan mengorbankan aturan dan integritas pada akhirnya hanya akan membawa kehampaan dan kecemasan yang baru. Proses yang jujur jauh lebih berharga daripada hasil yang manipulatif.</li></ul><h3>Pesan Motivasi untuk Besok</h3><blockquote style='font-style: italic; background: rgba(255,255,255,0.1); padding: 10px; border-left: 4px solid #3498db; margin-left: 0;'>&quot;Kesuksesan sejati tidak diukur dari seberapa riuh tepuk tangan orang lain, melainkan dari seberapa damai kau bisa menatap pantulan dirimu sendiri di cermin.&quot;</blockquote><p>Esok adalah lembaran yang baru. Jangan biarkan gengsi mendikte setiap keputusanmu, dan jangan biarkan obsesi merampas kewarasan serta nuranimu. Hiduplah di atas tanah realitas yang kokoh. Melangkahlah dengan integritas dan kejujuran. Ingatlah, tidak ada garis finis yang sepadan jika kau harus kehilangan dirimu sendiri di sepanjang jalan.</p><p>Bernapaslah. Lepaskan beban ekspektasi yang bukan milikmu. Hadapi esok hari sebagai dirimu yang paling sejati.</p>">3. Sebelum Esok</button></li>
+
+                    <li><a href="dashboard.html">4. Dashboard</a></li>
+
+                  
+                    <li><a href="chat.html">5.In Restroom</a></li>
+
+                  
+                    <li><button id="open-anonim-btn">7. Interaksi (anonim)</button></li>
+                </ul>
+                <button id="close-btn" class="action-btn">Tutup</button>
+            </div>
+
+            <!-- TAMPILAN 2: MEMBACA TEKS -->
+            <div id="read-view">
+                <h3 id="read-title">Judul Bab</h3>
+                <div id="content-display"></div>
+                <button class="back-btn action-btn">Kembali ke Menu</button>
+            </div>
+
+            <!-- TAMPILAN 3: INTERAKSI ANONIM (FIREBASE) -->
+            <div id="comment-view">
+                <h3 style="text-align: center; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Komentar Anonim</h3>
+                
+                <div class="scroll-area" style="display: flex; flex-direction: column;">
+                    <!-- Form Input -->
+                    <textarea id="chat-input" class="chat-input" placeholder="Tulis..."></textarea>
+                    <button id="send-chat-btn" style="background: #27ae60;" class="action-btn">Kirim</button>
+                    <div id="send-status" style="text-align: center; margin-top: 5px; font-size: 12px; color: #2ecc71; display: none;">Terkirim!</div>
+
+                    <h4 style="margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">komentar</h4>
+                    
+                    <!-- Area Munculnya Pesan -->
+                    <div id="chat-list" style="display: flex; flex-direction: column;">
+                        <p style="text-align:center; opacity:0.5; font-size:12px;">Memuat pesan...</p>
+                    </div>
+                </div>
+
+                <button class="back-btn action-btn">Kembali ke Menu</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Firebase & Logika Aplikasi -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+        // Konfigurasi Firebase BARU (profil-db4e9)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxf2w0makvkXAD1zBMSJyV4ZD0f05FvDc",
+            authDomain: "profil-db4e9.firebaseapp.com",
+            databaseURL: "https://profil-db4e9-default-rtdb.firebaseio.com",
+            projectId: "profil-db4e9",
+            storageBucket: "profil-db4e9.firebasestorage.app",
+            messagingSenderId: "897423797460",
+            appId: "1:897423797460:web:88b1ef8537397c023d1f41",
+            measurementId: "G-G1Y4QE8J06"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app); 
+
+        // 1. SITEM ANTI-COPY
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', event => {
+            if (event.ctrlKey && (event.key === 'c' || event.key === 'C' || event.key === 'x' || event.key === 'X' || event.key === 'a' || event.key === 'A')) {
+                event.preventDefault();
+            }
+        });
+
+        // 2. Kunang-kunang Malam
+        const canvas = document.getElementById('fireflies');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        const flies = [];
+
+        for (let i = 0; i < 40; i++) {
+            flies.push({
+                x: Math.random() * width, y: Math.random() * height,
+                r: Math.random() * 2 + 0.5,
+                dx: Math.random() * 1 - 0.5, dy: Math.random() * 1 - 0.5,
+                opacity: Math.random()
+            });
+        }
+        function drawFireflies() {
+            ctx.clearRect(0, 0, width, height);
+            flies.forEach(f => {
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 230, 255, ${Math.abs(Math.sin(f.opacity))})`;
+                ctx.fill();
+                f.x += f.dx; f.y += f.dy; f.opacity += 0.03;
+                if(f.x < 0 || f.x > width) f.dx *= -1;
+                if(f.y < 0 || f.y > height) f.dy *= -1;
+            });
+            requestAnimationFrame(drawFireflies);
+        }
+        drawFireflies();
+        window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
+
+        // 3. Logika Video
+        const bgVideo = document.getElementById('bg-video');
+        const startOverlay = document.getElementById('start-overlay');
+
+        startOverlay.addEventListener('click', () => {
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            bgVideo.muted = false;
+            bgVideo.play().catch(e => console.log("Video autoplay diblokir.", e));
+        });
+
+        bgVideo.addEventListener('ended', () => {
+            bgVideo.style.opacity = '0';
+            bgVideo.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            setTimeout(() => { bgVideo.style.display = 'none'; }, 1500);
+        });
+
+        // 4. Efek Percikan Air
+        document.addEventListener('pointerdown', function(e) {
+            if(e.target.closest('#popup-menu') || e.target.closest('#menu-btn') || e.target.closest('#bg-video')) return;
+            const ripple = document.createElement('div');
+            ripple.classList.add('ripple');
+            ripple.style.left = `${e.clientX}px`; ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // 5. NAVIGASI POPUP MULTI-VIEW
+        const popupMenu = document.getElementById('popup-menu');
+        const menuView = document.getElementById('menu-view');
+        const readView = document.getElementById('read-view');
+        const commentView = document.getElementById('comment-view');
+
+        document.getElementById('menu-btn').addEventListener('click', () => { 
+            popupMenu.classList.add('active'); 
+            menuView.style.display = 'flex'; 
+            readView.style.display = 'none'; 
+            commentView.style.display = 'none';
+        });
+
+        document.getElementById('close-btn').addEventListener('click', () => popupMenu.classList.remove('active'));
+        
+        document.querySelectorAll('button[data-content]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('read-title').textContent = this.getAttribute('data-title');
+                document.getElementById('content-display').innerHTML = this.getAttribute('data-content');
+                menuView.style.display = 'none'; 
+                readView.style.display = 'flex'; 
+                document.getElementById('content-display').scrollTop = 0;
+            });
+        });
+
+        document.getElementById('open-anonim-btn').addEventListener('click', () => {
+            menuView.style.display = 'none';
+            commentView.style.display = 'flex';
+        });
+
+        document.querySelectorAll('.back-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                readView.style.display = 'none'; 
+                commentView.style.display = 'none';
+                menuView.style.display = 'flex'; 
+            });
+        });
+
+        // 6. LOGIKA FIREBASE: KIRIM & BACA KOMENTAR
+        const chatInput = document.getElementById('chat-input');
+        const sendChatBtn = document.getElementById('send-chat-btn');
+        const chatList = document.getElementById('chat-list');
+        const sendStatus = document.getElementById('send-status');
+        
+        const chatRef = ref(db, 'pesan_anonim');
+
+        sendChatBtn.addEventListener('click', () => {
+            const pesanText = chatInput.value.trim();
+            if(pesanText !== "") {
+                sendChatBtn.textContent = "Mengirim...";
+                sendChatBtn.disabled = true;
+
+                push(chatRef, {
+                    teks: pesanText,
+                    waktu: serverTimestamp()
+                }).then(() => {
+                    chatInput.value = ""; 
+                    sendStatus.style.display = "block"; 
+                    setTimeout(() => sendStatus.style.display = "none", 3000);
+                }).catch((error) => {
+                    alert("Gagal mengirim pesan. Periksa koneksi atau rules database.");
+                    console.error(error);
+                }).finally(() => {
+                    sendChatBtn.textContent = "Kirim Pesan";
+                    sendChatBtn.disabled = false;
+                });
+            }
+        });
+
+        onValue(chatRef, (snapshot) => {
+            chatList.innerHTML = ""; 
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                const keys = Object.keys(data).reverse();
+                
+                keys.forEach(key => {
+                    const pesan = data[key].teks;
+                    const chatBox = document.createElement('div');
+                    chatBox.className = 'chat-box';
+                    chatBox.textContent = pesan;
+                    chatList.appendChild(chatBox);
+                });
+            } else {
+                chatList.innerHTML = "<p style='text-align:center; opacity:0.5; font-size:13px;'>Belum ada pesan yang masuk. Jadilah yang pertama!</p>";
+            }
+        });
+
+    </script>
+</body>
+</html>

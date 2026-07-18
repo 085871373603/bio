@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rana Arifin</title>
+    <!-- Font Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icon FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-main: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --accent: #facc15; /* Warna kuning ala lampu ide / kopi */
+            --accent-hover: #eab308;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* FITUR ANTI COPAS */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Header / Profil Pojok --- */
+        .top-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+
+        .profile-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        section { padding: 60px 0 30px 0; }
+
+        /* --- Hero --- */
+        .hero {
+            padding-top: 100px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 30px;
+        }
+        
+        .hero h1 { font-size: 2.5rem; margin-bottom: 5px; }
+        .hero h2 { font-size: 1.1rem; color: var(--accent); margin-bottom: 20px; font-weight: 500; }
+        .hero p { color: var(--text-muted); font-size: 1rem; margin-bottom: 15px; }
+
+        /* --- Section Titles --- */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: inline-block;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        /* --- Grid & Cards --- */
+        .grid-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #444;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            border-left-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .card p { color: var(--text-muted); font-size: 0.9rem; }
+        
+        .tag {
+            display: inline-block;
+            background: #333;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: var(--accent);
+        }
+
+        /* --- Kontak --- */
+        .contact-box {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 50px;
+            border: 1px solid #333;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-wa { background-color: #25D366; color: #121212; }
+        .btn-demo { background-color: #444; color: #fff; }
+        .btn-demo:hover { background-color: var(--accent); color: #121212; }
+
+        footer { text-align: center; padding: 20px; color: #666; font-size: 0.8rem; }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;"> <!-- Mematikan klik kanan -->
+
+    <!-- Foto Profil Pojok Kiri Atas -->
+    <div class="top-header">
+        <!-- Ganti URL gambar di bawah ini dengan foto Anda nanti -->
+        <img src="logo1.png" alt="Foto Profil" class="profile-pic">
+        <span class="profile-name">Rana Arifin</span>
+    </div>
+
+    <!-- Perkenalan -->
+    <section class="hero container">
+        <h1>Saya Rana Arifin!</h1>
+        <h2>Pemula yang Hobi Begadang</h2>
+        <p>
+            Sehari-hari saya berkutat di dunia operasional retail. Dari sana, saya sering mengamati sistem manajemen jaringan rerail dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
+        </p>
+        <p>
+            Akhirnya, saya terjun belajar program secara otodidak. Saya belum ahli, masih sering nyasar di StackOverflow, dan kadang *error* 1 baris nyarinya sampai besok pagi. Tapi ya namanya juga belajar, perlahan tapi pasti!
+        </p>
+    </section>
+
+    <!-- Skill / Pemahaman -->
+    <section class="container">
+        <h2 class="section-title">Pemahaman (Bukan Ahli Ya..)</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham, ada yang cuma numpang kenal.</p>
+        
+        <div class="grid-list">
+            <div class="card">
+                <h3><i class="fa-solid fa-server"></i> Database</h3>
+                <p><b>phpMyAdmin</b> & <b>Firebase Auth</b>. Bisa nyimpan data dengan aman. Asal jangan suruh ngembaliin database yang udah kehapus permanen aja.</p>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fa-brands fa-html5"></i> Front-End</h3>
+                <p><b>HTML</b> & <b>JavaScript</b>. Bisa bikin tombol dan form. Kadang tombolnya nggak jalan, tapi secara visual mantap.</p>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fa-brands fa-php"></i> Back-End</h3>
+                <p><b>PHP</b> (Pemberi Harapan Palsu... eh, Hypertext Preprocessor). Masih terus diulik biar logikanya makin lancar.</p>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fa-solid fa-pen-nib"></i> Graphic Design</h3>
+                <p><b>Canva, Figma, CSS</b>. Lumayan jago bikin tampilan web jadi cakep, selama <i>div</i>-nya nggak berantakan ke mana-mana.</p>
+            </div>
+
+            <div class="card">
+                <h3><i class="fa-solid fa-microchip"></i> Program Mesin</h3>
+                <p><b>C, C++</b>. Sedang mencoba ngobrol sama mesin CNC. Kadang mesinnya nurut, kadang mesinnya cuek😓.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projek -->
+    <section class="container" style="padding-top: 0;">
+        <h2 class="section-title">Proyek (Belajar)</h2>
+        
+        <div class="grid-list">
+            <div class="card">
+                <h3>Sistem Informasi & Manajemen Retail</h3>
+                <p>Terinspirasi dari kompleksnya operasional retail. Ngurusin stok dan data penjualan biar rapi dan nggak bikin pusing <i>(yang pusing karyawannya hhee)</i>🤭.</p>
+                <!-- Tautan dialihkan ke paymentsis.html -->
+                <a href="paymentsis.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
+            </div>
+
+            <div class="card">
+                <h3>Sistem Informasi & Manajemen F&B</h3>
+                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar 1 cup yang di jual RAW nya hilang 10 cup</p>
+                <!-- Tautan dialihkan ke payment2.html -->
+                <a href="payment2.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
+            </div>
+
+            <div class="card">
+                <h3>Website Profil & Formulir</h3>
+                <p>Buat nampilin portofolio dan ngumpulin data. Formulirnya buat input data ya, bukan buat curhat.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pemahaman Lain (Bonus) -->
+    <section class="container" style="padding-top: 0;">
+        <h2 class="section-title">Pemahaman Lainnya</h2>
+        <div class="card">
+            <h3><i class="fa-solid fa-mug-hot"></i> Sedikit Tahu Tentang Kopi</h3>
+            <p>Bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi campuran jagung. Lumayan penting buat modal melek pas lagi *debugging* di tengah malam.</p>
+        </div>
+    </section>
+
+    <!-- Kontak -->
+    <section class="container" id="kontak">
+        <div class="contact-box">
+            <h2 class="section-title" style="border: none;">Hayu Ngobrol</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting BUKAN MAU PINJAM DULU SERATUS. Ini murni niat suci mau ngajak silaturahmi sambil ngopi, Gas langsung ke kontak di bawah.
+            </p>
+            
+            <div class="btn-group">
+                <a href="https://wa.me/6285871373602" target="_blank" class="btn btn-wa">
+                    <i class="fa-brands fa-whatsapp"></i> whatsapp
+                </a>
+                <a href="mailto:ranaarifin1@gmail.com" class="btn btn-demo" style="background: #333; color: white;">
+                    <i class="fa-solid fa-envelope"></i> Email
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Ranaarifin.</p>
+    </footer>
+
+    <!-- Script tambahan untuk memblokir shortcut keyboard (Ctrl+C, Ctrl+A, dll) -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            // Blokir Ctrl+C, Ctrl+U (View Source), Ctrl+S (Save), F12 (Inspect Element)
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+            }
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
