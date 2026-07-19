@@ -2,24 +2,24 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- Mencegah Zoom Layar -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Mengunci Layar & Anti Zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>Rana Arifin</title>
-    <!-- Font Poppins -->
+    <!-- Font Poppins untuk kesan Profesional & Elegan -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Icon FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-grad-1: #0f172a;
-            --bg-grad-2: #1e3a8a;
-            --surface-color: rgba(30, 41, 59, 0.7);
-            --surface-border: rgba(255, 255, 255, 0.1);
+            /* Palet Warna Nyaman di Mata (Tidak Silau) */
+            --bg-base: #020617; /* Slate sangat gelap */
+            --glass-bg: rgba(30, 41, 59, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
-            --text-muted: #cbd5e1;
-            --accent: #00e5ff; /* Cyan Neon */
-            --accent-hover: #00b8d4;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8; /* Soft Cyan (elegan, tidak neon/silau) */
+            --accent-glow: rgba(56, 189, 248, 0.4);
         }
 
         * {
@@ -27,46 +27,50 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            /* Mencegah ukuran font diubah otomatis oleh browser HP */
             -webkit-text-size-adjust: none;
             text-size-adjust: none;
         }
 
-        /* FITUR ANTI COPAS & KUNCI LAYAR */
+        /* --- FITUR ANTI COPAS & ILUSTRASI BACKGROUND --- */
         body {
-            /* Tema Biru Keren dengan Pola Ilustrasi */
-            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.2) 0%, transparent 50%),
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
-            background-attachment: fixed;
-            
+            background-color: var(--bg-base);
             color: var(--text-main);
             line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
             
-            /* Kunci Seleksi */
+            /* Kunci Interaksi */
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
-            
-            /* Kunci Layar (Mencegah efek membal/pull-to-refresh di HP) */
-            overscroll-behavior: none;
+            overscroll-behavior: none; /* Anti-bounce di HP */
         }
 
-        /* Mencegah gambar di-drag */
+        /* Ilustrasi Latar Belakang Geometris & Glowing Orbs (CSS Only) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         img {
             -webkit-user-drag: none;
-            pointer-events: none; /* Opsional: membuat gambar tidak bisa di-klik sama sekali */
+            pointer-events: none;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 25px;
             position: relative;
             z-index: 1;
         }
@@ -74,48 +78,53 @@
         /* --- Header / Profil Pojok --- */
         .top-header {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 25px;
+            left: 25px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 8px 15px;
+            gap: 15px;
+            background: var(--glass-bg);
+            padding: 8px 20px 8px 10px;
             border-radius: 50px;
-            border: 1px solid var(--surface-border);
-            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         .profile-pic {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent);
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            padding: 2px;
         }
 
         .profile-name {
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--accent);
+            color: var(--text-main);
             letter-spacing: 0.5px;
         }
 
-        section { padding: 80px 0 30px 0; }
+        section { padding: 90px 0 40px 0; }
 
         /* --- Hero --- */
         .hero {
-            padding-top: 120px;
-            border-bottom: 1px dashed rgba(255,255,255,0.2);
-            padding-bottom: 40px;
+            padding-top: 140px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 50px;
             text-align: center;
         }
         
         .hero h1 { 
             font-size: 2.8rem; 
-            margin-bottom: 5px; 
-            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+            margin-bottom: 10px; 
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .hero h2 { 
@@ -123,36 +132,44 @@
             color: var(--accent); 
             margin-bottom: 25px; 
             font-weight: 500;
-            background: rgba(0, 229, 255, 0.1);
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
         }
         
         .hero p { 
             color: var(--text-muted); 
-            font-size: 1rem; 
-            margin-bottom: 15px; 
-            max-width: 600px;
+            font-size: 1.05rem; 
+            margin-bottom: 18px; 
+            max-width: 650px;
             margin-left: auto;
             margin-right: auto;
         }
 
         /* --- Section Titles --- */
         .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-title i {
+            color: var(--accent);
         }
 
         .section-title::after {
             content: "";
             flex-grow: 1;
             height: 1px;
-            background: linear-gradient(90deg, var(--accent), transparent);
+            background: linear-gradient(90deg, var(--glass-border), transparent);
             margin-left: 15px;
         }
 
@@ -161,69 +178,102 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .card {
-            background: var(--surface-color);
+            background: var(--glass-bg);
             padding: 25px;
-            border-radius: 12px;
-            border: 1px solid var(--surface-border);
-            border-top: 2px solid var(--accent);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            border-top: 2px solid rgba(56, 189, 248, 0.3); /* Aksen tipis di atas */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             transition: all 0.3s ease;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Efek cahaya halus saat di-hover */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s;
+        }
+        .card:hover::before { left: 150%; }
+        
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(0, 229, 255, 0.2);
-            border-top-color: #fff;
+            border-top-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .card h3 { 
-            font-size: 1.2rem; 
+            font-size: 1.15rem; 
             margin-bottom: 12px; 
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            color: var(--text-main);
         }
         
         .card h3 i {
             color: var(--accent);
-            background: rgba(0, 229, 255, 0.1);
-            padding: 8px;
-            border-radius: 8px;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
         }
 
-        .card p { color: var(--text-muted); font-size: 0.95rem; }
+        .card p { 
+            color: var(--text-muted); 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+        }
+        .card p b {
+            color: #fff;
+            font-weight: 500;
+        }
         
         .tag {
-            display: inline-block;
-            background: rgba(0, 229, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
             margin-top: 15px;
             color: var(--accent);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            pointer-events: auto; /* Mengizinkan klik tombol meski drag dimatikan */
+            text-decoration: none;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            transition: all 0.2s;
+            pointer-events: auto; /* Agar link tetap bisa di klik */
+        }
+        .tag:hover {
+            background: var(--accent);
+            color: var(--bg-base);
         }
 
         /* --- Kontak --- */
         .contact-box {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-            border-radius: 16px;
-            padding: 40px 30px;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+            border-radius: 20px;
+            padding: 45px 30px;
             text-align: center;
             margin-bottom: 50px;
-            border: 1px solid var(--surface-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
         }
 
         .contact-box .section-title {
             justify-content: center;
+            margin-bottom: 15px;
         }
         
         .contact-box .section-title::after { display: none; }
@@ -232,61 +282,83 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 25px;
+            margin-top: 30px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 12px 28px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s;
             pointer-events: auto;
         }
 
         .btn-wa { 
-            background-color: #00e5ff; 
-            color: #0f172a; 
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+            background-color: var(--accent); 
+            color: var(--bg-base); 
+            box-shadow: 0 4px 15px var(--accent-glow);
         }
         
         .btn-wa:hover {
-            background-color: #00b8d4;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            background-color: #fff;
+            transform: translateY(-2px);
         }
 
         .btn-demo { 
-            background-color: rgba(255,255,255,0.1); 
-            color: #fff; 
-            border: 1px solid rgba(255,255,255,0.2);
+            background-color: transparent; 
+            color: var(--text-main); 
+            border: 1px solid var(--glass-border);
         }
         
         .btn-demo:hover { 
-            background-color: var(--accent); 
-            color: #0f172a; 
+            background-color: rgba(255,255,255,0.1); 
+            transform: translateY(-2px);
         }
 
-        footer { text-align: center; padding: 20px; color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+        footer { 
+            text-align: center; 
+            padding: 25px; 
+            color: var(--text-muted); 
+            font-size: 0.85rem; 
+            border-top: 1px solid var(--glass-border);
+        }
 
+        /* --- Pencegahan Cetak/Print (Anti Save as PDF / Print Screen Layout) --- */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* Responsif */
         @media (max-width: 600px) {
             .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 0.95rem; }
             .btn { width: 100%; justify-content: center; }
-            .top-header { position: relative; top: 0; left: 0; justify-content: center; border-radius: 0; border: none; border-bottom: 1px solid var(--surface-border); }
-            .hero { padding-top: 40px; }
+            .top-header { 
+                position: relative; 
+                top: 0; left: 0; 
+                justify-content: center; 
+                border-radius: 0; 
+                border: none; 
+                border-bottom: 1px solid var(--glass-border);
+                background: transparent;
+                box-shadow: none;
+                margin-bottom: -60px;
+                padding: 15px;
+            }
+            .hero { padding-top: 100px; }
+            section { padding: 60px 0 20px 0; }
         }
     </style>
 </head>
-<!-- Mematikan klik kanan, seleksi, dan drag via atribut -->
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"> 
 
-    <!-- Foto Profil -->
+    <!-- Foto Profil Pojok Kiri Atas -->
     <div class="top-header">
         <img src="profil2.jpeg" alt="Foto Profil" class="profile-pic">
         <span class="profile-name">Rana Arifin</span>
@@ -307,7 +379,7 @@
     <!-- Skill / Pemahaman -->
     <section class="container">
         <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> Pemahaman (Bukan Ahli Ya..)</h2>
-        <p style="color: var(--text-muted); margin-bottom: 25px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham, ada yang cuma numpang kenal.</p>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham, ada yang cuma numpang kenal.</p>
         
         <div class="grid-list">
             <div class="card">
@@ -350,7 +422,7 @@
 
             <div class="card">
                 <h3>Sistem Informasi & Manajemen F&B</h3>
-                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar 1 cup yang dijual RAW-nya hilang 10 cup.</p>
+                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar 1 cup yang di jual RAW nya hilang 10 cup</p>
                 <a href="payment2.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
             </div>
 
@@ -374,9 +446,9 @@
     <!-- Kontak -->
     <section class="container" id="kontak">
         <div class="contact-box">
-            <h2 class="section-title" style="border: none;">Hayu Ngobrol</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 15px;">
-                Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting <b>BUKAN MAU PINJAM DULU SERATUS.</b> Ini murni niat suci mau ngajak silaturahmi sambil ngopi. Gas langsung ke kontak di bawah.
+            <h2 class="section-title" style="border: none;"><i class="fa-regular fa-comments"></i> Hayu Ngobrol</h2>
+            <p style="color: var(--text-muted); font-size: 1rem;">
+                Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting <b>BUKAN MAU PINJAM DULU SERATUS.</b> Ini murni niat suci mau ngajak silaturahmi sambil ngopi, Gas langsung ke kontak di bawah.
             </p>
             
             <div class="btn-group">
@@ -391,14 +463,14 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 Ranaarifin. All Rights Reserved.</p>
+        <p>&copy; 2026 Ranaarifin.</p>
     </footer>
 
-    <!-- Script Pengunci Total -->
+    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL -->
     <script>
-        // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, dll)
+        // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, Ctrl+U, PrintScreen dll)
         document.addEventListener('keydown', function(e) {
-            // F12 (Inspect)
+            // F12 (Inspect Element)
             if (e.key === 'F12' || e.keyCode === 123) {
                 e.preventDefault();
                 return false;
@@ -408,22 +480,27 @@
                 e.preventDefault();
                 return false;
             }
-            // Ctrl + U (View Source), Ctrl + S (Save), Ctrl + C (Copy), Ctrl + A (Select All)
-            if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A')) {
+            // Ctrl + U (View Source), Ctrl + S (Save), Ctrl + C (Copy), Ctrl + A (Select All), Ctrl + P (Print)
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'p' || e.key === 'P')) {
                 e.preventDefault();
                 return false;
             }
         });
 
-        // 2. Blokir Klik Kanan (Context Menu) tambahan
+        // 2. Blokir Klik Kanan (Context Menu)
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
 
-        // 3. Mencegah touch and hold (untuk HP) memunculkan menu copy/save
-        window.addEventListener('touchstart', function(e) {
-            // Opsional: Jika ingin memblokir touch-hold total (hati-hati bisa mengganggu scroll)
-            // Biarkan CSS -webkit-touch-callout yang menangani ini.
+        // 3. Deteksi tombol Print Screen (PrtScn) & blur layar sesaat sebagai efek jera
+        document.addEventListener('keyup', (e) => {
+            if (e.key == 'PrintScreen') {
+                navigator.clipboard.writeText(''); // Mencoba mengosongkan clipboard
+                document.body.style.filter = 'blur(10px)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 2000);
+            }
         });
     </script>
 </body>
