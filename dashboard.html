@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Mencegah Zoom Layar -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rana Arifin</title>
     <!-- Font Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,12 +12,14 @@
     
     <style>
         :root {
-            --bg-color: #121212;
-            --surface-color: #1e1e1e;
-            --text-main: #f5f5f5;
-            --text-muted: #a0a0a0;
-            --accent: #facc15; /* Warna kuning ala lampu ide / kopi */
-            --accent-hover: #eab308;
+            --bg-grad-1: #0f172a;
+            --bg-grad-2: #1e3a8a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --accent: #00e5ff; /* Cyan Neon */
+            --accent-hover: #00b8d4;
         }
 
         * {
@@ -24,22 +27,48 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            /* Mencegah ukuran font diubah otomatis oleh browser HP */
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
         }
 
-        /* FITUR ANTI COPAS */
+        /* FITUR ANTI COPAS & KUNCI LAYAR */
         body {
-            background-color: var(--bg-color);
+            /* Tema Biru Keren dengan Pola Ilustrasi */
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.2) 0%, transparent 50%),
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+            background-attachment: fixed;
+            
             color: var(--text-main);
             line-height: 1.7;
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10 and IE 11 */
-            user-select: none; /* Standard syntax */
+            
+            /* Kunci Seleksi */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            
+            /* Kunci Layar (Mencegah efek membal/pull-to-refresh di HP) */
+            overscroll-behavior: none;
+        }
+
+        /* Mencegah gambar di-drag */
+        img {
+            -webkit-user-drag: none;
+            pointer-events: none; /* Opsional: membuat gambar tidak bisa di-klik sama sekali */
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 0 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* --- Header / Profil Pojok --- */
@@ -50,124 +79,215 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 8px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--surface-border);
+            backdrop-filter: blur(10px);
         }
 
         .profile-pic {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
         }
 
         .profile-name {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: var(--text-main);
+            color: var(--accent);
+            letter-spacing: 0.5px;
         }
 
-        section { padding: 60px 0 30px 0; }
+        section { padding: 80px 0 30px 0; }
 
         /* --- Hero --- */
         .hero {
-            padding-top: 100px;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 30px;
+            padding-top: 120px;
+            border-bottom: 1px dashed rgba(255,255,255,0.2);
+            padding-bottom: 40px;
+            text-align: center;
         }
         
-        .hero h1 { font-size: 2.5rem; margin-bottom: 5px; }
-        .hero h2 { font-size: 1.1rem; color: var(--accent); margin-bottom: 20px; font-weight: 500; }
-        .hero p { color: var(--text-muted); font-size: 1rem; margin-bottom: 15px; }
+        .hero h1 { 
+            font-size: 2.8rem; 
+            margin-bottom: 5px; 
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+        
+        .hero h2 { 
+            font-size: 1.1rem; 
+            color: var(--accent); 
+            margin-bottom: 25px; 
+            font-weight: 500;
+            background: rgba(0, 229, 255, 0.1);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .hero p { 
+            color: var(--text-muted); 
+            font-size: 1rem; 
+            margin-bottom: 15px; 
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
         /* --- Section Titles --- */
         .section-title {
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: var(--accent);
-            display: inline-block;
-            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            margin-left: 15px;
         }
 
         /* --- Grid & Cards --- */
         .grid-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 40px;
         }
 
         .card {
             background: var(--surface-color);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 3px solid #444;
-            transition: transform 0.2s;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--surface-border);
+            border-top: 2px solid var(--accent);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
 
         .card:hover {
-            border-left-color: var(--accent);
-            transform: translateX(5px);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(0, 229, 255, 0.2);
+            border-top-color: #fff;
         }
 
-        .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
-        .card p { color: var(--text-muted); font-size: 0.9rem; }
+        .card h3 { 
+            font-size: 1.2rem; 
+            margin-bottom: 12px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card h3 i {
+            color: var(--accent);
+            background: rgba(0, 229, 255, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
         
         .tag {
             display: inline-block;
-            background: #333;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-top: 10px;
+            background: rgba(0, 229, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 15px;
             color: var(--accent);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            pointer-events: auto; /* Mengizinkan klik tombol meski drag dimatikan */
         }
 
         /* --- Kontak --- */
         .contact-box {
-            background-color: var(--surface-color);
-            border-radius: 12px;
-            padding: 30px;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 16px;
+            padding: 40px 30px;
             text-align: center;
             margin-bottom: 50px;
-            border: 1px solid #333;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
+
+        .contact-box .section-title {
+            justify-content: center;
+        }
+        
+        .contact-box .section-title::after { display: none; }
 
         .btn-group {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 25px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 25px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            pointer-events: auto;
         }
 
-        .btn-wa { background-color: #25D366; color: #121212; }
-        .btn-demo { background-color: #444; color: #fff; }
-        .btn-demo:hover { background-color: var(--accent); color: #121212; }
+        .btn-wa { 
+            background-color: #00e5ff; 
+            color: #0f172a; 
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+        
+        .btn-wa:hover {
+            background-color: #00b8d4;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+        }
 
-        footer { text-align: center; padding: 20px; color: #666; font-size: 0.8rem; }
+        .btn-demo { 
+            background-color: rgba(255,255,255,0.1); 
+            color: #fff; 
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .btn-demo:hover { 
+            background-color: var(--accent); 
+            color: #0f172a; 
+        }
+
+        footer { text-align: center; padding: 20px; color: rgba(255,255,255,0.4); font-size: 0.85rem; }
 
         @media (max-width: 600px) {
-            .hero h1 { font-size: 2rem; }
+            .hero h1 { font-size: 2.2rem; }
             .btn { width: 100%; justify-content: center; }
+            .top-header { position: relative; top: 0; left: 0; justify-content: center; border-radius: 0; border: none; border-bottom: 1px solid var(--surface-border); }
+            .hero { padding-top: 40px; }
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Mematikan klik kanan -->
+<!-- Mematikan klik kanan, seleksi, dan drag via atribut -->
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"> 
 
-    <!-- Foto Profil Pojok Kiri Atas -->
+    <!-- Foto Profil -->
     <div class="top-header">
-        <!-- Ganti URL gambar di bawah ini dengan foto Anda nanti -->
         <img src="profil2.jpeg" alt="Foto Profil" class="profile-pic">
         <span class="profile-name">Rana Arifin</span>
     </div>
@@ -175,9 +295,9 @@
     <!-- Perkenalan -->
     <section class="hero container">
         <h1>Saya Rana Arifin!</h1>
-        <h2>Pemula yang Hobi Begadang</h2>
+        <h2><i class="fa-solid fa-code"></i> Pemula yang Hobi Begadang</h2>
         <p>
-            Sehari-hari saya berkutat di dunia operasional retail. Dari sana, saya sering mengamati sistem manajemen jaringan rerail dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
+            Sehari-hari saya berkutat di dunia operasional retail. Dari sana, saya sering mengamati sistem manajemen jaringan retail dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
         </p>
         <p>
             Akhirnya, saya terjun belajar program secara otodidak. Saya belum ahli, masih sering nyasar di StackOverflow, dan kadang *error* 1 baris nyarinya sampai besok pagi. Tapi ya namanya juga belajar, perlahan tapi pasti!
@@ -186,12 +306,12 @@
 
     <!-- Skill / Pemahaman -->
     <section class="container">
-        <h2 class="section-title">Pemahaman (Bukan Ahli Ya..)</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham, ada yang cuma numpang kenal.</p>
+        <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> Pemahaman (Bukan Ahli Ya..)</h2>
+        <p style="color: var(--text-muted); margin-bottom: 25px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham, ada yang cuma numpang kenal.</p>
         
         <div class="grid-list">
             <div class="card">
-                <h3><i class="fa-solid fa-server"></i> Database</h3>
+                <h3><i class="fa-solid fa-database"></i> Database</h3>
                 <p><b>phpMyAdmin</b> & <b>Firebase Auth</b>. Bisa nyimpan data dengan aman. Asal jangan suruh ngembaliin database yang udah kehapus permanen aja.</p>
             </div>
             
@@ -212,27 +332,25 @@
 
             <div class="card">
                 <h3><i class="fa-solid fa-microchip"></i> Program Mesin</h3>
-                <p><b>C, C++</b>. Sedang mencoba ngobrol sama mesin CNC. Kadang mesinnya nurut, kadang mesinnya cuek😓.</p>
+                <p><b>C, C++</b>. Sedang mencoba ngobrol sama mesin CNC. Kadang mesinnya nurut, kadang mesinnya cuek 😓.</p>
             </div>
         </div>
     </section>
 
     <!-- Projek -->
     <section class="container" style="padding-top: 0;">
-        <h2 class="section-title">Proyek (Belajar)</h2>
+        <h2 class="section-title"><i class="fa-solid fa-rocket"></i> Proyek (Belajar)</h2>
         
         <div class="grid-list">
             <div class="card">
                 <h3>Sistem Informasi & Manajemen Retail</h3>
-                <p>Terinspirasi dari kompleksnya operasional retail. Ngurusin stok dan data penjualan biar rapi dan nggak bikin pusing <i>(yang pusing karyawannya hhee)</i>🤭.</p>
-                <!-- Tautan dialihkan ke paymentsis.html -->
+                <p>Terinspirasi dari kompleksnya operasional retail. Ngurusin stok dan data penjualan biar rapi dan nggak bikin pusing <i>(yang pusing karyawannya hhee)</i> 🤭.</p>
                 <a href="paymentsis.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
             </div>
 
             <div class="card">
                 <h3>Sistem Informasi & Manajemen F&B</h3>
-                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar 1 cup yang di jual RAW nya hilang 10 cup</p>
-                <!-- Tautan dialihkan ke payment2.html -->
+                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar 1 cup yang dijual RAW-nya hilang 10 cup.</p>
                 <a href="payment2.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
             </div>
 
@@ -245,26 +363,27 @@
 
     <!-- Pemahaman Lain (Bonus) -->
     <section class="container" style="padding-top: 0;">
-        <h2 class="section-title">Pemahaman Lainnya</h2>
-        <div class="card">
+        <h2 class="section-title"><i class="fa-solid fa-star"></i> Pemahaman Lainnya</h2>
+        <div class="card" style="max-width: 100%;">
             <h3><i class="fa-solid fa-mug-hot"></i> Sedikit Tahu Tentang Kopi</h3>
             <p>Bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi campuran jagung. Lumayan penting buat modal melek pas lagi *debugging* di tengah malam.</p>
         </div>
     </section>
-<br>
+    <br>
+    
     <!-- Kontak -->
     <section class="container" id="kontak">
         <div class="contact-box">
             <h2 class="section-title" style="border: none;">Hayu Ngobrol</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">
-                Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting <b>BUKAN MAU PINJAM DULU SERATUS.</b> Ini murni niat suci mau ngajak silaturahmi sambil ngopi, Gas langsung ke kontak di bawah.
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 15px;">
+                Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting <b>BUKAN MAU PINJAM DULU SERATUS.</b> Ini murni niat suci mau ngajak silaturahmi sambil ngopi. Gas langsung ke kontak di bawah.
             </p>
             
             <div class="btn-group">
                 <a href="https://wa.me/6285871373603" target="_blank" class="btn btn-wa">
                     <i class="fa-brands fa-whatsapp"></i> Whatsapp
                 </a>
-                <a href="mailto:ranaarifin1@gmail.com" class="btn btn-demo" style="background: #333; color: white;">
+                <a href="mailto:ranaarifin1@gmail.com" class="btn btn-demo">
                     <i class="fa-solid fa-envelope"></i> Email
                 </a>
             </div>
@@ -272,19 +391,39 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 Ranaarifin.</p>
+        <p>&copy; 2026 Ranaarifin. All Rights Reserved.</p>
     </footer>
 
-    <!-- Script tambahan untuk memblokir shortcut keyboard (Ctrl+C, Ctrl+A, dll) -->
+    <!-- Script Pengunci Total -->
     <script>
+        // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, dll)
         document.addEventListener('keydown', function(e) {
-            // Blokir Ctrl+C, Ctrl+U (View Source), Ctrl+S (Save), F12 (Inspect Element)
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) {
+            // F12 (Inspect)
+            if (e.key === 'F12' || e.keyCode === 123) {
                 e.preventDefault();
+                return false;
             }
-            if (e.key === 'F12') {
+            // Ctrl + Shift + I/J/C (Developer Tools)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
                 e.preventDefault();
+                return false;
             }
+            // Ctrl + U (View Source), Ctrl + S (Save), Ctrl + C (Copy), Ctrl + A (Select All)
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 2. Blokir Klik Kanan (Context Menu) tambahan
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 3. Mencegah touch and hold (untuk HP) memunculkan menu copy/save
+        window.addEventListener('touchstart', function(e) {
+            // Opsional: Jika ingin memblokir touch-hold total (hati-hati bisa mengganggu scroll)
+            // Biarkan CSS -webkit-touch-callout yang menangani ini.
         });
     </script>
 </body>
