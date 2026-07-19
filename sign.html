@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sertifikat Tanda Tangan Elektronik - Secured</title>
+    <style>
+        /* =========================================
+           SISTEM KEAMANAN & RESET BORDER
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            max-width: 100%; 
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            -khtml-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
+            margin: 0;
+            padding: 0;
+        }
+
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #111827; 
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        /* =========================================
+           LAYAR KUNCI OTENTIKASI (LOCK SCREEN)
+           ========================================= */
+        #auth-lock-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(17, 24, 39, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.5s ease;
+        }
+
+        .auth-box {
+            background: #1f2937;
+            border: 1px solid #374151;
+            padding: 40px 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-box h2 { color: #f3f4f6; margin-bottom: 10px; font-size: 1.5rem; letter-spacing: 0.05em; }
+        .auth-box p { color: #9ca3af; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5; }
+        
+        .token-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+            background: #111827;
+            color: #10b981;
+            font-family: monospace;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .token-input:focus { border-color: #10b981; }
+
+        .btn-unlock {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: #10b981;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: background 0.2s;
+        }
+        .btn-unlock:hover { background: #059669; }
+
+        /* =========================================
+           DESAIN DOKUMEN UTAMA
+           ========================================= */
+        .document-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 210mm; 
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-top: 8px solid #1e3a8a; 
+            padding: 40px;
+            position: relative;
+            overflow: hidden; 
+            display: none; /* Disembunyikan sampai token valid */
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #10b981;
+            padding: 6px 16px;
+            border-radius: 9999px; 
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .status-badge::before { content: ''; display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px #10b981; }
+        .doc-id { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: #6b7280; margin-bottom: 30px; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; }
+        .header-section { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
+        .logo { width: 80px; height: 80px; object-fit: contain; pointer-events: none; }
+        .title-wrapper h1 { font-size: 2rem; color: #111827; font-weight: 800; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.02em; }
+        .title-wrapper p { font-size: 0.95rem; color: #4b5563; margin-top: 5px; font-weight: 500; }
+        .description { font-size: 1.05rem; line-height: 1.7; color: #374151; margin-bottom: 30px; text-align: justify; }
+
+        .details-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 25px; margin-bottom: 30px; }
+        .details-card h2 { font-size: 1.25rem; color: #1e3a8a; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .grid-info { display: grid; grid-template-columns: 160px 1fr; gap: 15px; margin-bottom: 20px; }
+        .grid-info .label { font-weight: 600; color: #64748b; font-size: 0.95rem; }
+        .grid-info .value { font-weight: 600; color: #0f172a; font-size: 0.95rem; word-break: break-word; }
+
+        .hash-container { margin-top: 25px; }
+        .hash-label { display: block; font-weight: 700; color: #111827; margin-bottom: 10px; font-size: 0.95rem; }
+
+        /* KOTAK HASH BER-SCROLL */
+        .hash-box {
+            background-color: #ffff;
+            border: 1px solid #808080;
+            border-radius: 6px;
+            padding: 15px;
+            color: #808080;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            word-break: break-all; 
+            overflow-wrap: break-word;
+            line-height: 1.5;
+            max-height: 100px; 
+            overflow-y: auto;  
+        }
+
+        .hash-box::-webkit-scrollbar { width: 8px; }
+        .hash-box::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .hash-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .hash-box::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .footer { text-align: center; padding-top: 25px; border-top: 1px solid #e5e7eb; font-size: 0.85rem; color: #9ca3af; font-weight: 500; }
+
+        /* OVERLAY BLOKIR (Screenshot) */
+        #block-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000000; color: #ef4444; z-index: 999999;
+            flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
+        }
+        #block-overlay h1 { font-size: 2.5rem; margin-bottom: 15px; font-weight: 900; }
+        #block-overlay p { font-size: 1.1rem; color: #f3f4f6; max-width: 500px; margin: 0 auto; line-height: 1.5; }
+        .blurred { filter: blur(20px) grayscale(100%); opacity: 0.1; pointer-events: none; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .document-container { padding: 25px 20px; }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .logo { width: 60px; height: 60px; }
+            .title-wrapper h1 { font-size: 1.5rem; }
+            .grid-info { grid-template-columns: 1fr; gap: 5px; margin-bottom: 15px; }
+            .hash-box { font-size: 0.9rem; padding: 12px; }
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;" ondragstart="return false;" ondrop="return false;">
+
+    <!-- OVERLAY LAYAR KUNCI UTAMA -->
+    <div id="auth-lock-screen">
+        <div class="auth-box">
+            <div style="font-size: 3.5rem; margin-bottom: 15px;">🔒</div>
+            <h2>DOKUMEN TERKUNCI</h2>
+            <p id="lock-status-text">Memverifikasi izin akses dengan server...</p>
+            
+            <input type="text" id="manual-token" class="token-input" placeholder="Masukkan token akses / hash..." autocomplete="off">
+            <button id="btn-unlock" class="btn-unlock">Verifikasi Akses</button>
+            <p id="auth-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 15px; display: none;">Otentikasi Gagal. Token tidak valid.</p>
+        </div>
+    </div>
+
+    <!-- OVERLAY ANTI-SCREENSHOT -->
+    <div id="block-overlay">
+        <div style="font-size: 4rem; margin-bottom: 15px;">🛡️</div>
+        <h1>AKSES DITOLAK</h1>
+        <p>Aktivitas tangkapan layar, penyalinan, atau inspeksi elemen terdeteksi.</p>
+    </div>
+
+    <!-- KONTEN DOKUMEN -->
+    <div class="document-container" id="document-content">
+        <div class="status-badge">Terverifikasi Sah</div>
+        <div class="doc-id">ID DOKUMEN: ARINEX-DOC-2026-07-20-001</div>
+
+        <div class="header-section">
+            <img src="arinexfoundation.png" class="logo" alt="Logo" />
+            <div class="title-wrapper">
+                <h1>Sertifikat E-Signature</h1>
+                <p>Legalitas & Integritas Penandatanganan Digital Terenkripsi</p>
+            </div>
+        </div>
+
+        <p class="description">
+            Dokumen ini mengklarifikasi dan menjamin bahwa data elektronik yang tertaut telah ditandatangani secara digital. Proses ini diamankan menggunakan algoritma kriptografi standar industri (SHA-256). Segala bentuk modifikasi pada dokumen asli akan secara otomatis membatalkan keabsahan tanda tangan ini di mata hukum.
+        </p>
+
+        <div class="details-card">
+            <h2>Rincian Otentikasi Digital</h2>
+            
+            <div class="grid-info">
+                <span class="label">Entitas Penerbit</span>
+                <span class="value">Arinex Foundation</span>
+                
+                <span class="label">Waktu Pengesahan</span>
+                <span class="value" id="timestamp-text">Memuat data...</span>
+                
+                <span class="label">Tingkat Keamanan</span>
+                <span class="value">SHA-256 & Proteksi Akses Token</span>
+            </div>
+
+            <div class="hash-container">
+                <span class="hash-label">SIDIK JARI DIGITAL (Digital Fingerprint):</span>
+                <div class="hash-box" id="digital-signature-hash">Memuat...</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Dilindungi oleh Sistem Anti-Penyangkalan (Non-Repudiation).<br>
+            &copy; 2026 Arinex Foundation. Seluruh Hak Cipta Dilindungi.
+        </div>
+    </div>
+
+    <!-- SCRIPT BLOKIR & KEAMANAN -->
+    <script>
+        const blockOverlay = document.getElementById('block-overlay');
+        const docContent = document.getElementById('document-content');
+        function triggerLockdown() { blockOverlay.style.display = 'flex'; docContent.style.display = 'none'; document.getElementById('auth-lock-screen').style.display = 'none'; }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'PrintScreen' || e.key === 'F12') { if(e.key === 'PrintScreen') navigator.clipboard.writeText(''); e.preventDefault(); triggerLockdown(); }
+            if (e.ctrlKey && ['c', 'p', 's', 'u'].includes(e.key.toLowerCase()) || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))) { e.preventDefault(); triggerLockdown(); }
+            if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) { e.preventDefault(); triggerLockdown(); }
+        });
+        document.addEventListener('keyup', (e) => { if (e.key === 'PrintScreen') { navigator.clipboard.writeText(''); triggerLockdown(); } });
+        
+        window.addEventListener('blur', () => { if(docContent.style.display === 'block') docContent.classList.add('blurred'); });
+        window.addEventListener('focus', () => { docContent.classList.remove('blurred'); });
+        document.addEventListener('visibilitychange', () => { document.hidden ? docContent.classList.add('blurred') : docContent.classList.remove('blurred'); });
+    </script>
+
+    <!-- SCRIPT FIREBASE & LOGIKA OTENTIKASI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxf2w0makvkXAD1zBMSJyV4ZD0f05FvDc",
+            authDomain: "profil-db4e9.firebaseapp.com",
+            databaseURL: "https://profil-db4e9-default-rtdb.firebaseio.com",
+            projectId: "profil-db4e9",
+            storageBucket: "profil-db4e9.firebasestorage.app",
+            messagingSenderId: "897423797460",
+            appId: "1:897423797460:web:88b1ef8537397c023d1f41",
+            measurementId: "G-G1Y4QE8J06"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        // Elemen Layar Kunci
+        const lockScreen = document.getElementById('auth-lock-screen');
+        const lockStatusText = document.getElementById('lock-status-text');
+        const inputToken = document.getElementById('manual-token');
+        const btnUnlock = document.getElementById('btn-unlock');
+        const errorMsg = document.getElementById('auth-error');
+        const mainContent = document.getElementById('document-content');
+
+        let validHashFromServer = "";
+
+        // Mengambil data dari Firebase
+        get(child(ref(db), 'signatures/-OxvRRo0qCvoq4oUJ4-7')).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                if (typeof data === 'object' && data !== null) {
+                    validHashFromServer = data.hash || data.signature || data.digitalFingerprint || JSON.stringify(data);
+                    document.getElementById('timestamp-text').innerText = data.timestamp || data.waktu || 'Waktu terekam otomatis';
+                } else {
+                    validHashFromServer = data;
+                    document.getElementById('timestamp-text').innerText = "2026-07-20 02:13:46 WIB";
+                }
+
+                document.getElementById('digital-signature-hash').innerText = validHashFromServer;
+
+                // ==========================================
+                // LOGIKA VERIFIKASI URL & QR SCANNER
+                // ==========================================
+                const urlParams = new URLSearchParams(window.location.search);
+                const tokenFromUrl = urlParams.get('token');
+
+                // Jika diakses melalui link QR yang benar (membawa token)
+                if (tokenFromUrl === validHashFromServer) {
+                    bukaGembok();
+                } else {
+                    lockStatusText.innerText = "Akses ditolak. Silakan pindai QR Code resmi untuk membuka dokumen ini otomatis, atau masukkan token manual di bawah.";
+                }
+
+            } else {
+                lockStatusText.innerText = "Sistem gagal menemukan data dokumen di database.";
+                lockStatusText.style.color = "#ef4444";
+            }
+        }).catch((error) => {
+            lockStatusText.innerText = "Koneksi ke database keamanan gagal.";
+            lockStatusText.style.color = "#ef4444";
+        });
+
+        // Logika Tombol Input Manual (Untuk Testing Lokal)
+        btnUnlock.addEventListener('click', () => {
+            if (inputToken.value.trim() === validHashFromServer && validHashFromServer !== "") {
+                bukaGembok();
+            } else {
+                errorMsg.style.display = 'block';
+                inputToken.style.borderColor = '#ef4444';
+            }
+        });
+
+        // Fungsi Animasi Buka Kunci
+        function bukaGembok() {
+            lockScreen.style.opacity = '0';
+            setTimeout(() => {
+                lockScreen.style.display = 'none';
+                mainContent.style.display = 'block'; // Menampilkan dokumen
+            }, 500); // Sinkron dengan durasi transisi CSS
+        }
+    </script>
+</body>
+</html>
