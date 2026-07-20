@@ -804,13 +804,15 @@
             });
             const qrDataUrl = qr.toDataURL('image/png');
 
-            // HANYA LOAD LOGO ARINEXFOUNDATION2.png (Sesuai Permintaan)
+            // LOAD LOGO, QR CODE, & GEMBOK.PNG
             Promise.allSettled([
                 loadImage("arinexfoundation2.png"),
-                loadImage(qrDataUrl)
+                loadImage(qrDataUrl),
+                loadImage("gembok.png")
             ]).then(results => {
                 const logo2 = results[0].status === 'fulfilled' ? results[0].value : null;
                 const qrCodeImg = results[1].status === 'fulfilled' ? results[1].value : null;
+                const gembokImg = results[2].status === 'fulfilled' ? results[2].value : null;
 
                 // 3. Watermark Background (Tengah Layar)
                 if (logo2) {
@@ -925,25 +927,27 @@
                 ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
                 ctx.fillText(statusKepribadian, 500, 625);
 
-                // 9. Penempatan QR Code (Kiri Bawah)
+                // 9. E-Signature & QR Code (Dipindahkan ke Kanan Bawah)
                 if (qrCodeImg) {
-                    ctx.drawImage(qrCodeImg, 70, 520, 100, 100);
+                    const centerX = 870; // Titik tengah peletakan di sebelah kanan
+                    
+                    // Gambar QR Code (X dihitung dari tengah dikurangi setengah lebar agar senter)
+                    ctx.drawImage(qrCodeImg, centerX - 50, 490, 100, 100);
+                    
+                    // Gambar Ikon Gembok (jika termuat)
+                    if (gembokImg) {
+                        ctx.drawImage(gembokImg, centerX - 8, 595, 16, 16); // Ikon ukuran 16x16px
+                    }
+
+                    // Teks Validasi E-Signature
                     ctx.fillStyle = "#64748b";
                     ctx.font = "bold 11px 'Segoe UI', Arial, sans-serif";
                     ctx.textAlign = "center";
-                    ctx.fillText("SIGNATUR-VALIDATION", 120, 635);
+                    ctx.fillText("SIGNATUR-VALIDATION", centerX, 625);
+                    
                     ctx.font = "10px 'Segoe UI', Arial, sans-serif";
-                    ctx.fillText(userData.token, 120, 650); // Menampilkan Token Text
+                    ctx.fillText(userData.token, centerX, 640);
                 }
-
-                // 10. Tanda Tangan Digital (Kanan Bawah)
-
-
-
-
-
-
-                
 
                 btn.innerText = originalText;
                 btn.disabled = false;
