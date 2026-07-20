@@ -586,7 +586,8 @@
 
         let testDuration = 15 * 60; // 15 menit
         let timerInterval;
-        let userData = { name: "", age: "", email: "", scorePU: 0, scoreLA: 0, scoreTKP: 0, totalScore: 0 };
+        // MENAMBAHKAN VARIABEL TOKEN PADA USERDATA
+        let userData = { name: "", age: "", email: "", scorePU: 0, scoreLA: 0, scoreTKP: 0, totalScore: 0, token: "" };
 
         // --- Fungsi Modal S&K ---
         function openTermsModal() {
@@ -707,6 +708,10 @@
         function submitTest() {
             clearInterval(timerInterval);
             
+            // 1. BUAT TOKEN UNIK E-SIGNATURE DISINI (SEBELUM DATA DIKIRIM)
+            let randomHash = Math.random().toString(36).substring(2, 10).toUpperCase();
+            userData.token = "ARNX-" + new Date().getTime() + "-" + randomHash;
+            
             questions.forEach(q => {
                 const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
                 const answer = selected ? selected.value : null;
@@ -723,6 +728,7 @@
                 }
             });
 
+            // 2. SIMPAN TOKEN KE FIREBASE BESERTA HASIL TES
             if (window.saveToFirebase) {
                 window.saveToFirebase({
                     nama: userData.name,
@@ -731,6 +737,7 @@
                     nilai_pengetahuan_umum: userData.scorePU,
                     nilai_logika: userData.scoreLA,
                     nilai_kepribadian: userData.scoreTKP,
+                    token_dokumen: userData.token, // <- Token kini masuk ke Database!
                     waktu_selesai: new Date().toISOString()
                 });
             }
@@ -887,9 +894,8 @@
                 baseUrl = window.location.origin;
             }
 
-            // Membuat Token Unik dan Aman (Kombinasi waktu & hash acak)
-            let randomHash = Math.random().toString(36).substring(2, 10).toUpperCase();
-            let documentToken = "ARNX-" + new Date().getTime() + "-" + randomHash;
+            // 3. GUNAKAN TOKEN YANG SUDAH DIBUAT SAAT SUBMIT TES
+            let documentToken = userData.token;
             let targetSignUrl = `${baseUrl}/sign.html?token=${documentToken}`;
 
             // Generate QR Code langsung di browser (Mengatasi masalah blank/tidak tampil)
