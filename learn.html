@@ -488,7 +488,7 @@
                 <label class="checkbox-container">
                     <input type="checkbox" id="agreeTerms" required>
                     <div class="checkbox-text">
-                        Saya telah membaca, dan menyetujui seluruh <a href="javascript:void(0)" onclick="openTermsModal()">Syarat & Ketentuan</a> pelaksanaan evaluasi dan undian Arinex Foundation.
+                        Saya telah membaca, dan menyetujui seluruh <a href="javascript:void(0)" onclick="openTermsModal()">Syarat & Ketentuan</a> pelaksanaan evaluasi.
                     </div>
                 </label>
 
@@ -516,7 +516,7 @@
                     <h2>Evaluasi Selesai!</h2>
                     <p id="thank-you-msg"></p>
                 </div>
-                <button id="btn-download" onclick="downloadResultPDF()">Unduh Hasil Tes (PDF HD)</button>
+                <button id="btn-download" onclick="downloadResultPDF()">Download Hasil Tes</button>
             </div>
             
             <!-- 5. Already Taken Area -->
@@ -648,7 +648,7 @@
             }
 
             if (!isAgreed) {
-                alert("Anda harus menyetujui Syarat & Ketentuan untuk mengikuti evaluasi.");
+                alert("Anda belum menyetujui Syarat & Ketentuan untuk mengikuti evaluasi.");
                 return;
             }
 
@@ -691,7 +691,7 @@
                 
                 if (testDuration <= 0) {
                     clearInterval(timerInterval);
-                    alert("Waktu habis! Jawaban Anda Akan di kumpulkan Otomatis");
+                    alert("Waktu habis! Jawaban Anda Akan di Submit Otomatis");
                     submitTest();
                 }
             }, 1000);
@@ -845,11 +845,11 @@
                 ctx.fillStyle = "#0f172a";
                 ctx.font = "bold 34px 'Segoe UI', Arial, sans-serif";
                 ctx.textAlign = "center";
-                ctx.fillText("SERTIFIKAT HASIL EVALUASI", 500, 220);
+                ctx.fillText("LAPORAN HASIL EVALUASI", 500, 220);
 
                 ctx.fillStyle = "#475569";
                 ctx.font = "italic 18px 'Segoe UI', Arial, sans-serif";
-                ctx.fillText("Diberikan dengan hormat kepada:", 500, 260);
+                ctx.fillText("Nama :", 500, 260);
 
                 // Nama Peserta
                 ctx.fillStyle = "#1e40af"; // Biru profesional
