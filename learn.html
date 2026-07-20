@@ -460,7 +460,7 @@
                 <div class="promo-banner">
                     <div class="promo-icon">🎁</div>
                     <div class="promo-text">
-                        <strong>Kesempatan Mendapat Undian Spesial!</strong>
+                        <strong>Dapatkan Undian Spesial!</strong>
                         <p>Selesaikan evaluasi ini dan dapatkan kesempatan memenangkan <b>Voucher Belanja di Alfamart & Alfagift senilai Rp 25.000</b> yang akan diundi untuk 100 orang pemenang beruntung.</p>
                     </div>
                 </div>
@@ -489,7 +489,7 @@
                 <label class="checkbox-container">
                     <input type="checkbox" id="agreeTerms" required>
                     <div class="checkbox-text">
-                        Saya telah membaca, memahami, dan menyetujui seluruh <a href="javascript:void(0)" onclick="openTermsModal()">Syarat & Ketentuan</a> pelaksanaan evaluasi dan undian Arinex Foundation.
+                        Saya telah membaca, dan menyetujui seluruh <a href="javascript:void(0)" onclick="openTermsModal()">Syarat & Ketentuan</a> pelaksanaan evaluasi dan undian Arinex Foundation.
                     </div>
                 </label>
 
@@ -526,7 +526,7 @@
                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z"></path></svg>
                 </div>
                 <h2 style="color: var(--danger);">Akses Ditolak</h2>
-                <p>Sistem mencatat bahwa Anda telah menyelesaikan tes ini. Untuk menjaga integritas data, setiap perangkat hanya diizinkan untuk melakukan satu kali evaluasi.</p>
+                <p>Anda telah menyelesaikan tes ini. Untuk menjaga integritas data, setiap Orang hanya diizinkan untuk melakukan satu kali evaluasi.</p>
             </div>
 
         </div>
@@ -699,7 +699,7 @@
                 
                 if (testDuration <= 0) {
                     clearInterval(timerInterval);
-                    alert("Waktu habis! Jawaban Anda otomatis dikumpulkan oleh sistem.");
+                    alert("Waktu habis! Jawaban Anda Akan di kumpulkan Otomatis");
                     submitTest();
                 }
             }, 1000);
@@ -750,7 +750,7 @@
             document.getElementById("thank-you-msg").innerHTML = `
                 Terima kasih yang sebesar-besarnya, <b>${userData.name}</b>, atas dedikasi Anda meluangkan waktu.<br><br>
                 Seluruh rangkaian jawaban Anda telah berhasil dienkripsi dan disimpan ke dalam pangkalan data kami.<br> <br>
-                <em>Pemberitahuan pemenang undian Voucher Rp 25.000 akan di Undi dan di Distribusikan langsunh oleh <a href="https://alfagift.id/" target="_blank"><b>alfagift.id</b></a> Pada tgl <b>30 Juli 2026</b> Melalui email <b>${userData.email}</b> jika Anda terpilih.</em>
+                <em>Pemberitahuan pemenang undian Voucher Rp 25.000 akan di Undi Pada tanggal: <b>01 Agustus 2026</b> dan di Distribusikan langsung oleh <a href="https://alfagift.id/" target="_blank"><b>alfagift.id</b></a> Pada: <b>Hari Berikutnya</b> Melalui email <b>${userData.email}</b> jika Anda terpilih.</em>
             `;
         }
 
