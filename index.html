@@ -80,25 +80,69 @@
 
         /* Efek Percikan Air */
         .ripple {
-            position: absolute; border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 50%;
-            transform: translate(-50%, -50%); animation: rippleAnim 0.6s linear forwards;
-            pointer-events: none; z-index: 10;
+            position: absolute; border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 50%;
+            transform: translate(-50%, -50%); animation: rippleAnim 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            pointer-events: none; z-index: 9999;
         }
         @keyframes rippleAnim {
             0% { width: 0; height: 0; opacity: 1; border-width: 4px; }
             100% { width: 150px; height: 150px; opacity: 0; border-width: 1px; }
         }
 
-        /* Tombol Menu Utama */
+        /* TOMBOL MENU & MEDIA KONTROL TAMPILAN AWAL */
         #menu-btn {
             position: absolute; top: 20px; right: 20px; padding: 10px 20px;
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 20px;
-            font-size: 16px; font-weight: bold; cursor: pointer; z-index: 5; transition: transform 0.2s;
+            font-size: 16px; font-weight: bold; cursor: pointer; z-index: 10; transition: transform 0.2s;
         }
         #menu-btn:active { transform: scale(0.9); }
 
-        /* Popup Transparan */
+        #media-controls {
+            position: absolute; bottom: 20px; left: 20px; right: 20px; z-index: 10;
+            display: flex; flex-direction: column; gap: 10px; width: calc(100% - 40px); /* Rata Kiri Kanan Sempurna */
+        }
+
+        /* Banner Slide Horizontal Baru (Support Swipe Jari) */
+        .ad-banner-container {
+            width: 100%; height: 90px; /* Ukuran diperbesar */
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            scroll-behavior: smooth;
+            display: flex;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+            -ms-overflow-style: none; /* Hilangkan scrollbar IE/Edge */
+            scrollbar-width: none; /* Hilangkan scrollbar Firefox */
+        }
+        .ad-banner-container::-webkit-scrollbar {
+            display: none; /* Hilangkan scrollbar Chrome/Safari */
+        }
+        .ad-banner-container img {
+            flex: 0 0 100%; /* Lebar gambar 100% sesuai layarnya */
+            width: 100%; 
+            height: 100%;
+            object-fit: contain; /* Gambar tidak terpotong (sesuai asli) */
+            scroll-snap-align: center; /* Titik berhenti saat diswipe */
+            -webkit-user-drag: none; /* Cegah bug saat digeser di beberapa browser */
+        }
+
+        /* Tombol Pilihan Video */
+        .video-btn-group {
+            display: flex; gap: 5px; flex-wrap: wrap; justify-content: center;
+        }
+        .video-btn {
+            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.4);
+            color: white; padding: 10px 12px; border-radius: 20px; font-size: 11px;
+            cursor: pointer; backdrop-filter: blur(5px); transition: 0.3s; flex-grow: 1;
+            text-align: center; font-weight: bold;
+        }
+        .video-btn:hover, .video-btn:active {
+            background: rgba(255, 255, 255, 0.3); transform: scale(0.95);
+        }
+
+        /* Popup Menu (Tidak Berubah) */
         #popup-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
@@ -114,7 +158,6 @@
         }
         #popup-menu.active .popup-content { transform: translateY(0) scale(1); }
 
-        /* Tampilan Navigasi Internal Popup */
         #menu-view, #read-view, #comment-view { display: flex; flex-direction: column; height: 100%; }
         #read-view, #comment-view { display: none; }
 
@@ -127,7 +170,6 @@
         }
         .menu-list button:hover, .menu-list a:hover { background: rgba(255,255,255,0.15); }
 
-        /* Area Membaca & Komentar (Scrollable) */
         #read-title { text-align: center; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); }
         #content-display, .scroll-area {
             flex-grow: 1; overflow-y: auto; padding-right: 10px; margin-bottom: 15px; font-size: 14px;
@@ -141,7 +183,7 @@
         #close-btn { background: #c0392b; margin-top: auto; }
         .back-btn { background: #2980b9; }
 
-        /* Form Komentar Custom - DIPERBARUI */
+        /* Form Komentar */
         .chat-input {
             width: 100%; height: 80px; border-radius: 10px; padding: 12px;
             background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.3);
@@ -156,7 +198,6 @@
         }
         #cancel-reply { cursor: pointer; color: #e74c3c; font-weight: bold; }
 
-        /* Desain Chat Box Baru (Support Balasan & Reaksi) */
         .chat-box {
             background: rgba(255,255,255,0.08); padding: 12px; border-radius: 10px;
             margin-bottom: 8px; border-left: 3px solid #3498db; font-size: 13px;
@@ -192,7 +233,7 @@
     <!-- Layar Pembuka -->
     <div id="start-overlay">
         <h2>TAP</h2>
-        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">.</p>
+        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Sentuh layar untuk memulai</p>
     </div>
 
     <!-- Video Element -->
@@ -216,7 +257,26 @@
         </svg>
     </div>
 
+    <!-- Kontrol Tampilan Utama: Tombol Menu -->
     <button id="menu-btn">Menu ☰</button>
+
+    <!-- Kontrol Tampilan Utama: Banner & Video Selector -->
+    <div id="media-controls">
+        <!-- Banner Iklan Slide -->
+        <div class="ad-banner-container" id="ad-banner-slider">
+            <!-- Ganti source dengan gambar asli, gambar dipastikan tidak terpotong -->
+            <img src="banner1.png" alt="Iklan 1" onerror="this.src='https://via.placeholder.com/800x200/000000/FFFFFF?text=BANNER+IKLAN+1'">
+            <img src="banner2.png" alt="Iklan 2" onerror="this.src='https://via.placeholder.com/800x200/131a33/FFFFFF?text=BANNER+IKLAN+2'">
+            <img src="banner3.png" alt="Iklan 3" onerror="this.src='https://via.placeholder.com/800x200/e74c3c/FFFFFF?text=BANNER+IKLAN+3'">
+        </div>
+
+        <!-- Tombol Pengganti Video -->
+        <div class="video-btn-group">
+            <button class="video-btn" onclick="changeVideo('cocacola.mp4')">🥤 Cocacola Selebration</button>
+            <button class="video-btn" onclick="changeVideo('musik.mp4')">🎵 Musik</button>
+            <button class="video-btn" onclick="changeVideo('iklan.mp4')">📺 Default Iklan</button>
+        </div>
+    </div>
 
     <!-- Popup Menu -->
     <div id="popup-menu">
@@ -240,7 +300,10 @@
 
                   
                     <li><a href="dashboard.html">4. Dashboard</a></li>
-                    <li><a href="chat.html">5. In Restroom</a></li>
+                  <li><a href="learn.html">5. Survey Evaluasi (Dapatkan Voucher)</a></li>
+
+                  
+                    <li><a href="chat.html">6. In Restroom</a></li>
                     <li><button id="open-anonim-btn">7. Interaksi (anonim)</button></li>
                 </ul>
                 <button id="close-btn" class="action-btn">Tutup</button>
@@ -285,9 +348,53 @@
         </div>
     </div>
 
-    <!-- Script Firebase & Logika Aplikasi -->
+    <!-- Script UI & Penggeser Banner (Slider) -->
+    <script>
+        // LOGIKA SLIDER BANNER (Swipe Jari + Auto Slide 5 Detik)
+        const bannerSlider = document.getElementById('ad-banner-slider');
+        const bannerImages = bannerSlider.querySelectorAll('img');
+        let currentSlideIndex = 0;
+        let slideTimer;
+
+        function goToNextSlide() {
+            currentSlideIndex++;
+            if (currentSlideIndex >= bannerImages.length) {
+                currentSlideIndex = 0; // Kembali ke awal
+            }
+            // Geser ke gambar target secara halus
+            bannerSlider.scrollTo({
+                left: currentSlideIndex * bannerSlider.clientWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function startAutoSlide() {
+            slideTimer = setInterval(goToNextSlide, 5000); // 5000 ms = 5 detik
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideTimer);
+        }
+
+        // Mulai jalankan slider pertama kali
+        startAutoSlide();
+
+        // Apabila layar banner disentuh jari, berhentikan sementara waktu 5 detiknya
+        bannerSlider.addEventListener('touchstart', stopAutoSlide, { passive: true });
+        
+        // Sesudah di swipe selesai dilepas
+        bannerSlider.addEventListener('touchend', () => {
+            setTimeout(() => {
+                // Kalibrasi ulang posisi indeks agar tahu kita lagi di gambar nomor berapa
+                currentSlideIndex = Math.round(bannerSlider.scrollLeft / bannerSlider.clientWidth);
+                startAutoSlide(); // Jalankan lagi
+            }, 500); // Tunggu animasi gesernya berhenti baru dilanjutkan
+        }, { passive: true });
+
+    </script>
+
+    <!-- Script Firebase & Logika Aplikasi Utama -->
     <script type="module">
-        // Tambahan import 'update' dan 'increment' untuk sistem reaksi
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
         import { getDatabase, ref, push, onValue, serverTimestamp, update, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
@@ -310,7 +417,6 @@
         // --------------------------------------------------------
         let deviceUserId = localStorage.getItem('arinex_anon_id');
         if (!deviceUserId) {
-            // Buat ID unik Acak: Anon-XXXXX
             const randomString = Math.random().toString(36).substring(2, 7).toUpperCase();
             deviceUserId = 'Anonim-' + randomString;
             localStorage.setItem('arinex_anon_id', deviceUserId);
@@ -318,7 +424,7 @@
         document.getElementById('user-identity').innerText = "You : " + deviceUserId;
 
 
-        // 1. SITEM ANTI-COPY (Tetap)
+        // 1. SITEM ANTI-COPY 
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', event => {
             if (event.ctrlKey && (event.key === 'c' || event.key === 'C' || event.key === 'x' || event.key === 'X' || event.key === 'a' || event.key === 'A')) {
@@ -326,7 +432,20 @@
             }
         });
 
-        // 2 & 3 & 4 & 5 (Visuals & Menu Sama Seperti Sebelumnya)
+        // EFEK PERCIKAN AIR (RIPPLE) SETIAP KALI LAYAR DISENTUH
+        document.addEventListener('pointerdown', function(e) {
+            let ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            // Posisikan efek sesuai titik sentuh
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            document.body.appendChild(ripple);
+            // Hapus elemen setelah animasi selesai (600ms)
+            setTimeout(() => { ripple.remove(); }, 600);
+        });
+
+
+        // 2. KANVAS & ANIMASI KUNANG-KUNANG
         const canvas = document.getElementById('fireflies');
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
@@ -347,20 +466,40 @@
         }
         drawFireflies();
 
+        // 3. KONTROL VIDEO AWAL
         const bgVideo = document.getElementById('bg-video');
         const startOverlay = document.getElementById('start-overlay');
+        
         startOverlay.addEventListener('click', () => {
-            startOverlay.style.opacity = '0'; setTimeout(() => startOverlay.style.display = 'none', 500);
-            bgVideo.muted = false; bgVideo.play().catch(e => console.log(e));
+            startOverlay.style.opacity = '0'; 
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            bgVideo.muted = false; 
+            bgVideo.play().catch(e => console.log(e));
         });
+
         bgVideo.addEventListener('ended', () => {
             bgVideo.style.opacity = '0'; bgVideo.style.transform = 'translate(-50%, -50%) scale(0.9)';
             setTimeout(() => bgVideo.style.display = 'none', 1500);
         });
 
+        // FUNGSI GANTI VIDEO DARI TOMBOL MEDIA
+        window.changeVideo = function(srcUrl) {
+            bgVideo.src = srcUrl;
+            bgVideo.style.display = 'block';
+            bgVideo.style.opacity = '1';
+            bgVideo.style.transform = 'translate(-50%, -50%) scale(1)';
+            bgVideo.muted = false;
+            bgVideo.play().catch(e => console.log("Gagal memutar video secara otomatis:", e));
+        };
+
+        // 4. KONTROL POPUP MENU
         const popupMenu = document.getElementById('popup-menu');
         const menuView = document.getElementById('menu-view'), readView = document.getElementById('read-view'), commentView = document.getElementById('comment-view');
-        document.getElementById('menu-btn').addEventListener('click', () => { popupMenu.classList.add('active'); menuView.style.display = 'flex'; readView.style.display = 'none'; commentView.style.display = 'none'; });
+        
+        document.getElementById('menu-btn').addEventListener('click', () => { 
+            popupMenu.classList.add('active'); 
+            menuView.style.display = 'flex'; readView.style.display = 'none'; commentView.style.display = 'none'; 
+        });
         document.getElementById('close-btn').addEventListener('click', () => popupMenu.classList.remove('active'));
         
         document.querySelectorAll('button[data-content]').forEach(btn => {
@@ -374,7 +513,7 @@
         document.querySelectorAll('.back-btn').forEach(btn => { btn.addEventListener('click', () => { readView.style.display = 'none'; commentView.style.display = 'none'; menuView.style.display = 'flex'; }); });
 
         // --------------------------------------------------------
-        // LOGIKA FIREBASE BARU: BALASAN & REAKSI
+        // LOGIKA FIREBASE: BALASAN & REAKSI
         // --------------------------------------------------------
         const chatInput = document.getElementById('chat-input');
         const sendChatBtn = document.getElementById('send-chat-btn');
@@ -387,16 +526,14 @@
 
         const chatRef = ref(db, 'pesan_anonim');
         
-        let parentMessageId = null; // Menyimpan ID pesan yang sedang dibalas
+        let parentMessageId = null; 
 
-        // Batalkan Balasan
         cancelReplyBtn.addEventListener('click', () => {
             parentMessageId = null;
             replyIndicator.style.display = 'none';
             chatInput.placeholder = "Tulis komentar...";
         });
 
-        // Kirim Pesan (Komentar Baru atau Balasan)
         sendChatBtn.addEventListener('click', () => {
             const pesanText = chatInput.value.trim();
             if(pesanText !== "") {
@@ -407,8 +544,8 @@
                     userId: deviceUserId,
                     teks: pesanText,
                     waktu: serverTimestamp(),
-                    parentId: parentMessageId, // Jika null, berarti komentar utama
-                    reactions: { wow: 0, super: 0, haha: 0 } // Struktur awal reaksi
+                    parentId: parentMessageId, 
+                    reactions: { wow: 0, super: 0, haha: 0 } 
                 };
 
                 push(chatRef, payload).then(() => {
@@ -416,7 +553,6 @@
                     sendStatus.style.display = "block"; 
                     setTimeout(() => sendStatus.style.display = "none", 3000);
                     
-                    // Reset State Balasan
                     parentMessageId = null;
                     replyIndicator.style.display = 'none';
                     chatInput.placeholder = "Tulis komentar...";
@@ -429,20 +565,17 @@
             }
         });
 
-        // Baca dan Render Pesan
         onValue(chatRef, (snapshot) => {
             chatList.innerHTML = ""; 
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 
-                // Pisahkan komentar utama dan balasan
                 const mainComments = [];
                 const repliesMap = {};
 
                 Object.keys(data).forEach(key => {
                     const msg = { id: key, ...data[key] };
                     
-                    // Pastikan reaksi tidak undefined
                     if(!msg.reactions) msg.reactions = { wow: 0, super: 0, haha: 0 };
 
                     if (!msg.parentId) {
@@ -453,11 +586,9 @@
                     }
                 });
 
-                // Tampilkan komentar utama terbaru di atas
                 mainComments.reverse().forEach(mainMsg => {
                     chatList.appendChild(createMessageDOM(mainMsg, false));
                     
-                    // Tampilkan balasannya di bawah komentar utama
                     if (repliesMap[mainMsg.id]) {
                         repliesMap[mainMsg.id].forEach(replyMsg => {
                             chatList.appendChild(createMessageDOM(replyMsg, true));
@@ -469,12 +600,10 @@
             }
         });
 
-        // Fungsi Pembuat Elemen Chat
         function createMessageDOM(msg, isReply) {
             const box = document.createElement('div');
             box.className = isReply ? 'chat-box reply' : 'chat-box';
             
-            // Format Pengirim (Jika itu kita sendiri, beri tanda 'Kamu')
             const displayName = (msg.userId === deviceUserId) ? `${msg.userId} (Kamu)` : msg.userId;
 
             box.innerHTML = `
@@ -492,7 +621,6 @@
                 </div>
             `;
 
-            // Event Listener Tombol Balas (Hanya ada di Komentar Utama)
             if (!isReply) {
                 box.querySelector('.btn-balas').addEventListener('click', (e) => {
                     const btn = e.target;
@@ -503,19 +631,16 @@
                     replyText.innerText = `Membalas ${targetUser}`;
                     chatInput.placeholder = "Tulis balasanmu...";
                     
-                    // Scroll layar ke text area
                     document.getElementById('chat-scroll-area').scrollTop = 0;
                     chatInput.focus();
                 });
             }
 
-            // Event Listener Tombol Reaksi
             box.querySelectorAll('.reaction-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const reactionType = e.currentTarget.getAttribute('data-type');
                     const messageId = e.currentTarget.getAttribute('data-id');
                     
-                    // Update ke Firebase menggunakan increment (+1)
                     const reactionRef = ref(db, `pesan_anonim/${messageId}/reactions`);
                     update(reactionRef, {
                         [reactionType]: increment(1)
