@@ -440,7 +440,6 @@
 
     <div class="app-container">
         <div class="header-bar">
-            <!-- Header diganti Logo dengan ukuran diperbesar -->
             <img src="arinexfoundation.png" alt="Arinex Foundation" class="header-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <h1 style="display: none;">Arinex Foundation</h1>
             <span style="color: var(--text-muted); font-size: 13px; font-weight: 500;">Survey Evaluasi Kognitif</span>
@@ -586,16 +585,11 @@
 
         let testDuration = 15 * 60; // 15 menit
         let timerInterval;
-        // VARIABEL TOKEN TELAH DITAMBAHKAN
         let userData = { name: "", age: "", email: "", scorePU: 0, scoreLA: 0, scoreTKP: 0, totalScore: 0, token: "" };
 
         // --- Fungsi Modal S&K ---
-        function openTermsModal() {
-            document.getElementById('termsModal').classList.add('active');
-        }
-        function closeTermsModal() {
-            document.getElementById('termsModal').classList.remove('active');
-        }
+        function openTermsModal() { document.getElementById('termsModal').classList.add('active'); }
+        function closeTermsModal() { document.getElementById('termsModal').classList.remove('active'); }
 
         // --- Anti Cheat Script ---
         document.addEventListener('keydown', function(e) {
@@ -672,12 +666,10 @@
         function renderQuestions() {
             const container = document.getElementById("questions-container");
             container.innerHTML = "";
-
             questions.forEach((q, index) => {
                 let html = `<div class="question-block">
                                 <div class="question-text">${index + 1}. ${q.text}</div>
                                 <div class="options">`;
-                
                 for (const [key, val] of Object.entries(q.options)) {
                     html += `<label>
                                 <input type="radio" name="q${q.id}" value="${key}">
@@ -708,7 +700,6 @@
         function submitTest() {
             clearInterval(timerInterval);
             
-            // 1. BUAT TOKEN UNIK E-SIGNATURE DISINI (SEBELUM DATA DIKIRIM)
             let randomHash = Math.random().toString(36).substring(2, 10).toUpperCase();
             userData.token = "ARNX-" + new Date().getTime() + "-" + randomHash;
             
@@ -728,7 +719,6 @@
                 }
             });
 
-            // 2. SIMPAN TOKEN KE FIREBASE BESERTA HASIL TES
             if (window.saveToFirebase) {
                 window.saveToFirebase({
                     nama: userData.name,
@@ -737,7 +727,7 @@
                     nilai_pengetahuan_umum: userData.scorePU,
                     nilai_logika: userData.scoreLA,
                     nilai_kepribadian: userData.scoreTKP,
-                    token_dokumen: userData.token, // <- Token masuk ke Database
+                    token_dokumen: userData.token,
                     waktu_selesai: new Date().toISOString()
                 });
             }
@@ -765,7 +755,15 @@
             });
         }
 
-        // --- Desain Sertifikat Report Modern (RESOLUSI TINGGI HD) ---
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath(); ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius); ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath();
+        }
+
+        // --- Desain Sertifikat Report Modern & Elegan ---
         function downloadResultPDF() {
             const btn = document.getElementById("btn-download");
             const originalText = btn.innerText;
@@ -781,93 +779,20 @@
             
             ctx.scale(scale, scale);
 
-            const bgGrad = ctx.createLinearGradient(0, 0, 0, 700);
-            bgGrad.addColorStop(0, "#ffffff");
-            bgGrad.addColorStop(1, "#f1f5f9");
-            ctx.fillStyle = bgGrad;
+            // 1. Background Bersih
+            ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, 1000, 700);
 
-            ctx.fillStyle = "#e2e8f0";
-            ctx.beginPath(); ctx.arc(0, 0, 250, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(1000, 700, 300, 0, Math.PI * 2); ctx.fill();
-
-            ctx.strokeStyle = "#cbd5e1";
-            ctx.lineWidth = 4;
-            ctx.strokeRect(20, 20, 1000 - 40, 700 - 40);
+            // 2. Bingkai / Border Sertifikat Elegan
+            ctx.strokeStyle = "#1e3a8a"; // Biru gelap
+            ctx.lineWidth = 10;
+            ctx.strokeRect(30, 30, 940, 640);
             
-            ctx.strokeStyle = "#3b82f6";
+            ctx.strokeStyle = "#e2e8f0"; // Border tipis di dalam
             ctx.lineWidth = 2;
-            ctx.strokeRect(26, 26, 1000 - 52, 700 - 52);
+            ctx.strokeRect(45, 45, 910, 610);
 
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(26, 26, 1000 - 52, 110);
-
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 32px 'Segoe UI', Arial, sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText("LAPORAN HASIL EVALUASI KOGNITIF & PERILAKU", 1000 / 2 + 10, 85);
-
-            ctx.fillStyle = "#334155";
-            ctx.font = "bold 28px 'Segoe UI', Arial, sans-serif";
-            ctx.fillText(userData.name, 1000 / 2, 210);
-            
-            ctx.fillStyle = "#64748b";
-            ctx.font = "18px 'Segoe UI', Arial, sans-serif";
-            ctx.fillText(`Usia: ${userData.age} Tahun   |   Diterbitkan: ${new Date().toLocaleDateString('id-ID')}`, 1000 / 2, 245);
-
-            function roundRect(ctx, x, y, width, height, radius) {
-                ctx.beginPath(); ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y);
-                ctx.quadraticCurveTo(x + width, y, x + width, y + radius); ctx.lineTo(x + width, y + height - radius);
-                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
-                ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
-                ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath(); ctx.fill();
-            }
-
-            ctx.fillStyle = "#ffffff";
-            ctx.shadowColor = "rgba(0,0,0,0.08)";
-            ctx.shadowBlur = 25;
-            ctx.shadowOffsetY = 10;
-            roundRect(ctx, 150, 290, 700, 220, 20);
-            ctx.shadowColor = "transparent"; 
-
-            ctx.fillStyle = "#1e293b";
-            ctx.textAlign = "left";
-            ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
-            ctx.fillText("Rekapitulasi Penilaian", 200, 340);
-            
-            ctx.font = "20px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#475569";
-            ctx.fillText(`• Pengetahuan Umum (Crystallized)`, 200, 390);
-            ctx.fillText(`• Logika Analitik (Fluid Intelligence)`, 200, 430);
-            ctx.fillText(`• Karakteristik Pribadi (SJT - TKP)`, 200, 470);
-            
-            ctx.font = "bold 20px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#3b82f6";
-            ctx.textAlign = "right";
-            ctx.fillText(`${userData.scorePU} / 100`, 800, 390);
-            ctx.fillText(`${userData.scoreLA} / 100`, 800, 430);
-            ctx.fillText(`${userData.scoreTKP} / 25`, 800, 470);
-
-            let statusKepribadian = "Sangat Baik";
-            let warnaStatus = "#10b981"; 
-            if(userData.scoreTKP < 15) { statusKepribadian = "Perlu Pengembangan"; warnaStatus = "#ef4444"; }
-            else if(userData.scoreTKP < 20) { statusKepribadian = "Cukup Baik"; warnaStatus = "#f59e0b"; }
-            
-            ctx.textAlign = "center";
-            ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#334155";
-            ctx.fillText("Indikator Perilaku & Etika:", 1000 / 2, 570);
-            
-            ctx.font = "bold 26px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = warnaStatus;
-            ctx.fillText(statusKepribadian, 1000 / 2, 605);
-
-            // ==========================================
-            // LOGIKA E-SIGNATURE (URL KEBAL ERROR)
-            // ==========================================
-            
-            // Menggunakan objek URL bawaan JavaScript agar format link QR code dijamin tidak rusak 
-            // baik di hosting Vercel, localhost, maupun Github Pages.
+            // Siapkan URL untuk QR Code
             let signUrl = new URL('sign.html', window.location.href);
             signUrl.searchParams.set('token', userData.token);
             let targetSignUrl = signUrl.href;
@@ -879,33 +804,159 @@
             });
             const qrDataUrl = qr.toDataURL('image/png');
 
+            // HANYA LOAD LOGO ARINEXFOUNDATION2.png (Sesuai Permintaan)
             Promise.allSettled([
-                loadImage("arinexfoundation.png"),
+                loadImage("arinexfoundation2.png"),
                 loadImage(qrDataUrl)
             ]).then(results => {
-                const logo = results[0].status === 'fulfilled' ? results[0].value : null;
+                const logo2 = results[0].status === 'fulfilled' ? results[0].value : null;
                 const qrCodeImg = results[1].status === 'fulfilled' ? results[1].value : null;
 
-                if (logo) {
-                    ctx.globalAlpha = 0.05;
-                    ctx.drawImage(logo, 1000/2 - 200, 700/2 - 180, 400, 400); 
+                // 3. Watermark Background (Tengah Layar)
+                if (logo2) {
+                    ctx.globalAlpha = 0.06; // Transparan
+                    const wmWidth = 400;
+                    const wmHeight = (logo2.height / logo2.width) * wmWidth;
+                    ctx.drawImage(logo2, (1000 - wmWidth) / 2, (700 - wmHeight) / 2, wmWidth, wmHeight);
                     ctx.globalAlpha = 1.0;
-                    
-                    const targetHeight = 70; 
-                    const aspect = logo.width / logo.height;
-                    const targetWidth = targetHeight * aspect; 
-                    
-                    ctx.drawImage(logo, 50, 46, targetWidth, targetHeight); 
                 }
 
-                if (qrCodeImg) {
-                    ctx.drawImage(qrCodeImg, 810, 520, 110, 110);
-                    
-                    ctx.fillStyle = "#64748b";
-                    ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
-                    ctx.textAlign = "center";
-                    ctx.fillText("VALIDATED E-SIGN", 865, 650);
+                // 4. Logo Header di Kanan
+                if (logo2) {
+                    const logoHeight = 70;
+                    const logoWidth = (logo2.width / logo2.height) * logoHeight;
+                    // Posisi kanan atas dalam margin
+                    ctx.drawImage(logo2, 955 - logoWidth, 70, logoWidth, logoHeight);
                 }
+
+                // 5. Header Teks (Kiri Atas)
+                ctx.fillStyle = "#1e3a8a";
+                ctx.font = "bold 32px 'Segoe UI', Arial, sans-serif";
+                ctx.textAlign = "left";
+                ctx.fillText("ARINEX FOUNDATION", 75, 100);
+                
+                ctx.fillStyle = "#64748b";
+                ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText("OFFICIAL COGNITIVE EVALUATION REPORT", 78, 125);
+
+                // 6. Judul & Identitas Utama (Tengah)
+                ctx.fillStyle = "#0f172a";
+                ctx.font = "bold 34px 'Segoe UI', Arial, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("SERTIFIKAT HASIL EVALUASI", 500, 220);
+
+                ctx.fillStyle = "#475569";
+                ctx.font = "italic 18px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText("Diberikan dengan hormat kepada:", 500, 260);
+
+                // Nama Peserta
+                ctx.fillStyle = "#1e40af"; // Biru profesional
+                ctx.font = "bold 44px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText(userData.name.toUpperCase(), 500, 315);
+                
+                // Detail Usia & Tanggal
+                ctx.fillStyle = "#64748b";
+                ctx.font = "16px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText(`Usia: ${userData.age} Tahun   |   Tanggal Rilis: ${new Date().toLocaleDateString('id-ID')}`, 500, 355);
+
+                // Garis pemisah horizontal
+                ctx.beginPath();
+                ctx.moveTo(300, 380);
+                ctx.lineTo(700, 380);
+                ctx.strokeStyle = "#e2e8f0";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // 7. Kotak Tabel Nilai
+                const boxX = 220;
+                const boxY = 410;
+                const boxW = 560;
+                const boxH = 145;
+
+                ctx.fillStyle = "#f8fafc";
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.lineWidth = 1;
+                roundRect(ctx, boxX, boxY, boxW, boxH, 12);
+                ctx.fill();
+                ctx.stroke();
+
+                // Header Tabel
+                ctx.fillStyle = "#334155";
+                ctx.font = "bold 15px 'Segoe UI', Arial, sans-serif";
+                ctx.textAlign = "left";
+                ctx.fillText("KOMPONEN PENILAIAN", boxX + 30, boxY + 30);
+                ctx.textAlign = "right";
+                ctx.fillText("SKOR", boxX + boxW - 30, boxY + 30);
+
+                // Garis bawah header tabel
+                ctx.beginPath();
+                ctx.moveTo(boxX + 20, boxY + 45);
+                ctx.lineTo(boxX + boxW - 20, boxY + 45);
+                ctx.strokeStyle = "#e2e8f0";
+                ctx.stroke();
+
+                // Isi Tabel Nilai
+                ctx.font = "16px 'Segoe UI', Arial, sans-serif";
+                ctx.fillStyle = "#475569";
+                ctx.textAlign = "left";
+                ctx.fillText("Pengetahuan Umum (Crystallized)", boxX + 30, boxY + 75);
+                ctx.fillText("Logika Analitik (Fluid Intelligence)", boxX + 30, boxY + 105);
+                ctx.fillText("Karakteristik Pribadi (SJT - TKP)", boxX + 30, boxY + 135);
+
+                ctx.font = "bold 16px 'Segoe UI', Arial, sans-serif";
+                ctx.fillStyle = "#0f172a";
+                ctx.textAlign = "right";
+                ctx.fillText(`${userData.scorePU} / 100`, boxX + boxW - 30, boxY + 75);
+                ctx.fillText(`${userData.scoreLA} / 100`, boxX + boxW - 30, boxY + 105);
+                ctx.fillText(`${userData.scoreTKP} / 25`, boxX + boxW - 30, boxY + 135);
+
+                // 8. Kesimpulan & Indikator
+                let statusKepribadian = "Sangat Baik";
+                let warnaStatus = "#10b981"; 
+                if(userData.scoreTKP < 15) { statusKepribadian = "Perlu Pengembangan"; warnaStatus = "#ef4444"; }
+                else if(userData.scoreTKP < 20) { statusKepribadian = "Cukup Baik"; warnaStatus = "#f59e0b"; }
+                
+                ctx.textAlign = "center";
+                ctx.fillStyle = "#334155";
+                ctx.font = "bold 18px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText("Indikator Perilaku & Etika:", 500, 595);
+                
+                ctx.fillStyle = warnaStatus;
+                ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText(statusKepribadian, 500, 625);
+
+                // 9. Penempatan QR Code (Kiri Bawah)
+                if (qrCodeImg) {
+                    ctx.drawImage(qrCodeImg, 70, 520, 100, 100);
+                    ctx.fillStyle = "#64748b";
+                    ctx.font = "bold 11px 'Segoe UI', Arial, sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("SCAN FOR VALIDATION", 120, 635);
+                    ctx.font = "10px 'Segoe UI', Arial, sans-serif";
+                    ctx.fillText(userData.token, 120, 650); // Menampilkan Token Text
+                }
+
+                // 10. Tanda Tangan Digital (Kanan Bawah)
+                ctx.fillStyle = "#0f172a";
+                ctx.font = "bold 16px 'Segoe UI', Arial, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("Direktur Eksekutif", 880, 560);
+                
+                ctx.fillStyle = "#64748b";
+                ctx.font = "italic 14px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText("Arinex Foundation", 880, 580);
+                
+                // Garis tempat tanda tangan
+                ctx.beginPath();
+                ctx.moveTo(800, 630);
+                ctx.lineTo(960, 630);
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                ctx.fillStyle = "#0f172a";
+                ctx.font = "bold 15px 'Segoe UI', Arial, sans-serif";
+                ctx.fillText("Rana Arifin", 880, 650);
 
                 btn.innerText = originalText;
                 btn.disabled = false;
@@ -920,15 +971,12 @@
 
         function triggerDownloadPDF(canvas) {
             const { jsPDF } = window.jspdf;
-            
             const pdf = new jsPDF({
                 orientation: "landscape",
                 unit: "px",
                 format: [1000, 700]
             });
-            
             const imgData = canvas.toDataURL("image/png", 1.0);
-            
             pdf.addImage(imgData, 'PNG', 0, 0, 1000, 700);
             
             const namaFile = userData.name ? userData.name.replace(/\s+/g, '_') : 'Peserta';
