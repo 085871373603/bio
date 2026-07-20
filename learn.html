@@ -2,19 +2,26 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <!-- Mencegah Zoom pada Mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Evaluasi Kognitif</title>
     
-    <!-- Tipografi & Library -->
+    <!-- Tipografi Modern -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Library jsPDF untuk unduh format PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Library QRious untuk Generate QR Code Local (Anti Gagal/CORS) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     
     <style>
+        /* Desain UI/UX Modern & Friendly */
         :root {
             --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             --card-bg: #ffffff;
             --text-main: #334155;
+            --text-muted: #64748b;
             --primary: #3b82f6;
             --primary-hover: #2563eb;
             --border-color: #e2e8f0;
@@ -22,92 +29,513 @@
             --success: #10b981;
         }
 
+        /* Anti-Cheat & Base Reset */
         body {
-            -webkit-user-select: none; user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
             font-family: 'Poppins', sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
-            margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
         }
 
         .app-container {
-            width: 100%; max-width: 750px; background: var(--card-bg);
-            border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            display: flex; flex-direction: column; max-height: 90vh;
-            overflow: hidden; margin: 20px; position: relative;
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            overflow: hidden;
+            margin: 20px;
+            position: relative;
         }
 
         .header-bar {
-            background: #fff; padding: 15px 30px;
+            background: #fff;
+            padding: 15px 30px;
             border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
         }
 
-        .header-logo { height: 60px; object-fit: contain; }
-        .content-area { padding: 30px; overflow-y: auto; flex-grow: 1; }
-        
+        .header-logo {
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .content-area {
+            padding: 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Scrollbar Modern */
+        .content-area::-webkit-scrollbar { width: 8px; }
+        .content-area::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .content-area::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Splash Screen */
+        #splash-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        #splash-screen img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Banner Promo Undian */
         .promo-banner {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white; padding: 18px 24px; border-radius: 14px; margin-bottom: 25px;
-            display: flex; align-items: center; gap: 15px;
+            color: white;
+            padding: 18px 24px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.4);
         }
+        .promo-icon {
+            font-size: 32px;
+            background: rgba(255,255,255,0.2);
+            width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .promo-text strong { display: block; font-size: 16px; margin-bottom: 4px; }
+        .promo-text p { margin: 0; font-size: 13.5px; color: #fff; line-height: 1.4; opacity: 0.95; }
+
+        /* Typography & Forms */
+        h2 { margin-top: 0; font-weight: 600; color: #1e293b; }
+        p { color: var(--text-muted); line-height: 1.6; }
 
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
         .form-group input:not([type="checkbox"]) {
-            width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0;
-            border-radius: 12px; font-size: 15px; outline: none;
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .form-group input:not([type="checkbox"]):focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        /* Checkbox Terms */
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            margin-top: 2px;
+        }
+        .checkbox-text {
+            font-size: 13.5px;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+        .checkbox-text a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .checkbox-text a:hover {
+            text-decoration: underline;
         }
 
-        button {
-            background: var(--primary); color: white; border: none; border-radius: 12px;
-            padding: 14px 28px; cursor: pointer; font-weight: 600; width: 100%;
+        /* Modal S&K */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #fff;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 { margin: 0; color: #1e293b; font-size: 18px; }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .close-modal:hover { background: #f1f5f9; color: var(--danger); }
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+        }
+        .modal-body h4 { color: #1e293b; margin: 15px 0 5px 0; }
+        .modal-body ul { margin-top: 5px; padding-left: 20px; }
+        .modal-body li { margin-bottom: 8px; }
+        .modal-footer {
+            padding: 15px 24px;
+            border-top: 1px solid var(--border-color);
+            text-align: right;
+            background: #f8fafc;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        /* Buttons */
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+            width: 100%;
+        }
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+            width: auto;
+            padding: 10px 20px;
+            box-shadow: none;
+        }
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Waktu Melayang (Sticky Timer) */
+        #timer-display {
+            position: sticky;
+            top: -30px; 
+            margin: -30px -30px 25px -30px;
+            padding: 15px 30px;
+            background: rgba(254, 242, 242, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--danger);
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-bottom: 1px solid #fca5a5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+
+        .question-block {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 25px;
+            padding: 24px;
+            transition: transform 0.2s ease;
+        }
+        .question-block:hover { border-color: #cbd5e1; }
+        
+        .question-text {
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 16px;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 12px 16px;
+            background: #ffffff;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .options label:hover {
+            border-color: #bfdbfe;
+            background: #eff6ff;
+        }
+        
+        .options input[type="radio"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        /* Warning Banner */
+        #anti-cheat-warning {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--danger);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #anti-cheat-warning.show { opacity: 1; }
 
         .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
     </style>
 </head>
 <body oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;">
 
-    <div class="app-container">
-        <div class="header-bar">
-            <img src="arinexfoundation.png" alt="Logo" class="header-logo">
-            <span style="color: #64748b; font-size: 13px; font-weight: 500;">Evaluasi Kognitif</span>
-        </div>
-        
-        <div class="content-area">
-            <div id="splash-screen"><img id="splash-img" src="arinexfoundation.png" alt="Logo"></div>
+    <!-- Toast Warning -->
+    <div id="anti-cheat-warning">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        Sistem mendeteksi aktivitas mencurigakan!
+    </div>
 
-            <div id="registration-screen" class="hidden fade-in">
-                <div class="promo-banner"><div>🎁</div><div class="promo-text"><strong>Undian Spesial!</strong><p>Menangkan voucher belanja Rp 25.000 untuk 100 pemenang.</p></div></div>
-                <h2>Selamat Datang!</h2>
-                <div class="form-group"><label>Nama Lengkap</label><input type="text" id="userName" required></div>
-                <div class="form-group"><label>Usia</label><input type="number" id="userAge" required></div>
-                <div class="form-group"><label>Email</label><input type="email" id="userEmail" required></div>
-                <label class="checkbox-container"><input type="checkbox" id="agreeTerms" required> Saya menyetujui S&K.</label>
-                <button onclick="startTest()">Mulai Tes</button>
+    <!-- Modal S&K -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Syarat & Ketentuan Undian</h3>
+                <button class="close-modal" onclick="closeTermsModal()">&times;</button>
             </div>
+            <div class="modal-body">
+                <p>Dengan Menyetujui evaluasi ini, peserta dianggap telah membaca, memahami, dan menyetujui seluruh syarat dan ketentuan yang berlaku sebagaimana tercantum di bawah ini:</p>
+                
+                <h4>1. Ketentuan Umum & Keamanan Data</h4>
+                <ul>
+                    <li><b>Keamanan Sistem:</b> Aplikasi Tes evaluasi ini menggunakan sistem pengawasan otomatis untuk menjaga integritas tes. Peserta dilarang melakukan tindakan kecurangan seperti: menyalin teks, menggunakan pintasan keyboard, melakukan tangkapan layar (screenshot), atau keluar dari jendela ujian selama durasi tes berlangsung.</li>
+                    <li><b>Deteksi Pelanggaran:</b> Sistem secara otomatis mendeteksi aktivitas mencurigakan. Pelanggaran terhadap poin keamanan dapat mengakibatkan diskualifikasi otomatis dari tes dan pembatalan hak partisipasi undian.</li>
+                    <li><b>Privasi Data:</b> Data diri (nama, usia, email) yang dimasukkan akan digunakan semata-mata untuk keperluan verifikasi hasil tes, legalitas sertifikat, dan distribusi hadiah bagi pemenang terpilih.</li>
+                </ul>
 
-            <div id="test-screen" class="hidden fade-in">
-                <div id="questions-container"></div>
-                <button id="btn-submit" onclick="submitTest()" style="background: var(--success);">Kirim Jawaban</button>
+                <h4>2. Mekanisme Evaluasi & Kelayakan Undian</h4>
+                <ul>
+                    <li><b>Penyelesaian Tes:</b> Peserta wajib menyelesaikan seluruh 20 butir soal evaluasi (Pengetahuan Umum, Logika Analitik, dan Tes Karakteristik Pribadi).</li>
+                    <li><b>Nilai Ambang Batas:</b> Hanya peserta yang berhasil menyelesaikan tes dengan perolehan <b>skor akhir minimal 80</b> yang berhak masuk ke dalam daftar kandidat penerima voucher.</li>
+                    <li><b>Akses Instagram:</b> Peserta diwajibkan untuk mengikuti (follow) akun Instagram resmi <a href="https://www.instagram.com/ranaarifin1_/" target="_blank">@ranaarifin1_</a> sebagai syarat mutlak kelayakan undian.</li>
+                </ul>
+
+                <h4>3. Mekanisme Voucher Belanja</h4>
+                <ul>
+                    <li><b>Hadiah:</b> Voucher belanja senilai <b>Rp 25.000</b> tersedia untuk <b>100 orang pemenang</b> beruntung yang memenuhi seluruh kriteria kelayakan.</li>
+                    <li><b>Distribusi:</b> Bagi pemenang yang terpilih voucher akan didistribusikan langsung oleh <a href="https://alfagift.id/">alfagif.id</a> melalui alamat email yang didaftarkan saat registrasi tes.</li>
+                    <li><b>Penggunaan Voucher:</b> Dapat digunakan di aplikasi Alfagift dan seluruh toko Alfamart terdekat untuk 1x (satu kali) transaksi. Tidak dapat diuangkan dalam bentuk tunai.</li>
+                    <li><b>Batasan Penggunaan:</b> Voucher tidak berlaku untuk pembelian layanan e-service (tagihan, tiket/reservasi, top-up, token listrik, dll).</li>
+                </ul>
+
+                <h4>4. Ketentuan Tambahan</h4>
+                <ul>
+                    <li>Arinex Foundation berhak mengubah syarat dan ketentuan sewaktu-waktu tanpa pemberitahuan sebelumnya, sesuai dengan kebijakan internal.</li>
+                    <li>Keputusan pihak penyelenggara terkait daftar pemenang adalah mutlak dan tidak dapat diganggu gugat.</li>
+                </ul>
             </div>
-
-            <div id="result-screen" class="hidden fade-in">
-                <div style="text-align: center;"><h2>Evaluasi Selesai!</h2><p id="thank-you-msg"></p></div>
-                <button id="btn-download" onclick="downloadResultPDF()" style="margin-top:20px;">Unduh Hasil Tes (PDF HD)</button>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeTermsModal()">Tutup</button>
             </div>
-
-            <div id="blocked-screen" class="hidden fade-in"><h2>Akses Ditolak</h2><p>Tes sudah diselesaikan.</p></div>
         </div>
     </div>
 
+    <div class="app-container">
+        <div class="header-bar">
+            <!-- Header diganti Logo dengan ukuran diperbesar -->
+            <img src="arinexfoundation.png" alt="Arinex Foundation" class="header-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <h1 style="display: none;">Arinex Foundation</h1>
+            <span style="color: var(--text-muted); font-size: 13px; font-weight: 500;">Survey Evaluasi Kognitif</span>
+        </div>
+        
+        <div class="content-area">
+            
+            <!-- 1. Splash Screen -->
+            <div id="splash-screen">
+                <img id="splash-img" src="arinexfoundation.png" alt="Logo Arinex Foundation">
+            </div>
+
+            <!-- 2. Form Registrasi -->
+            <div id="registration-screen" class="hidden fade-in">
+                
+                <!-- IKLAN UNDIAN -->
+                <div class="promo-banner">
+                    <div class="promo-icon">🎁</div>
+                    <div class="promo-text">
+                        <strong>Kesempatan Mendapat Undian Spesial!</strong>
+                        <p>Selesaikan evaluasi ini dan dapatkan kesempatan memenangkan <b>Voucher Belanja di Alfamart & Alfagift senilai Rp 25.000</b> yang akan diundi untuk 100 orang pemenang beruntung.</p>
+                    </div>
+                </div>
+
+                <h2>Selamat Datang!</h2>
+                <p>Tes ini dirancang untuk memetakan Pengetahuan Umum, Logika Analitik, dan Karakteristik Pribadi Anda. Waktu maksimal pengerjaan adalah <b>15 Menit</b>.</p>
+                
+                <div style="background: #eff6ff; border-left: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 25px; font-size: 13px; color: #1e3a8a;">
+                    <b>Informasi Keamanan:</b> Tes ini menerapkan sistem pengawasan otomatis. Anda tidak dapat menyalin teks, menggunakan pintasan, atau keluar dari jendela ujian.
+                </div>
+
+                <div class="form-group">
+                    <label for="userName">Nama Lengkap</label>
+                    <input type="text" id="userName" placeholder="Nama" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="userAge">Usia (Tahun)</label>
+                    <input type="number" id="userAge" placeholder="Usia" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Alamat Email (Untuk pengiriman voucher)</label>
+                    <input type="email" id="userEmail" placeholder="Email" autocomplete="off" required>
+                </div>
+
+                <!-- Checkbox S&K -->
+                <label class="checkbox-container">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <div class="checkbox-text">
+                        Saya telah membaca, memahami, dan menyetujui seluruh <a href="javascript:void(0)" onclick="openTermsModal()">Syarat & Ketentuan</a> pelaksanaan evaluasi dan undian Arinex Foundation.
+                    </div>
+                </label>
+
+                <button id="btn-start" onclick="startTest()">Mulai Tes</button>
+            </div>
+
+            <!-- 3. Test Area -->
+            <div id="test-screen" class="hidden fade-in">
+                <!-- Sticky Timer -->
+                <div id="timer-display">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Sisa Waktu: 15:00</span>
+                </div>
+
+                <div id="questions-container"></div>
+                <button id="btn-submit" onclick="submitTest()" style="background: var(--success); margin-bottom: 20px;">Kirim Jawaban</button>
+            </div>
+
+            <!-- 4. Result Area -->
+            <div id="result-screen" class="hidden fade-in">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="width: 80px; height: 80px; background: #d1fae5; color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <h2>Evaluasi Selesai!</h2>
+                    <p id="thank-you-msg"></p>
+                </div>
+                <button id="btn-download" onclick="downloadResultPDF()">Unduh Hasil Tes (PDF HD)</button>
+            </div>
+            
+            <!-- 5. Already Taken Area -->
+            <div id="blocked-screen" class="hidden fade-in" style="text-align: center; padding: 40px 0;">
+                <div style="width: 80px; height: 80px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z"></path></svg>
+                </div>
+                <h2 style="color: var(--danger);">Akses Ditolak</h2>
+                <p>Sistem mencatat bahwa Anda telah menyelesaikan tes ini. Untuk menjaga integritas data, setiap perangkat hanya diizinkan untuk melakukan satu kali evaluasi.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
         import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -122,65 +550,389 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const database = getDatabase(app);
-        window.saveToFirebase = (data) => push(ref(database, 'hasil_tes'), data);
+
+        window.saveToFirebase = function(data) {
+            const resultsRef = ref(database, 'hasil_tes');
+            const newResultRef = push(resultsRef);
+            set(newResultRef, data).catch(err => console.error("Firebase Error:", err));
+        };
     </script>
 
     <script>
-        // Data Soal (Disederhanakan untuk contoh)
-        const questions = [{ id: 1, type: "PU", text: "Siapa Bapak Proklamator Indonesia?", options: { A: "Soekarno", B: "Hatta" }, correct: "A" }];
-        let userData = { name: "", age: "", email: "", score: 0, token: "" };
+        const questions = [
+            { id: 1, type: "PU", text: "Kemerdekaan RI tidak terlepas dari peran sentral para tokoh bangsa. Siapakah tokoh sentral yang diakui sebagai Bapak Proklamator Indonesia?", options: { A: "Soekarno dan Mohammad Hatta", B: "Soekarno dan Sutan Sjahrir", C: "Mohammad Hatta dan Tan Malaka", D: "Soekarno dan Ki Hajar Dewantara", E: "B.J. Habibie dan Soeharto" }, correct: "A" },
+            { id: 2, type: "PU", text: "Manakah dari planet berikut ini yang secara astronomis memiliki sistem cincin paling besar, paling terang, dan paling kompleks di tata surya kita?", options: { A: "Mars", B: "Jupiter", C: "Saturnus", D: "Uranus", E: "Neptunus" }, correct: "C" },
+            { id: 3, type: "PU", text: "Berdasarkan konsensus ilmiah, berapakah perkiraan kecepatan cahaya saat merambat di ruang hampa?", options: { A: "150.000 km/s", B: "450.000 km/s", C: "1.000.000 km/s", D: "30.000 km/s", E: "300.000 km/s" }, correct: "E" },
+            { id: 4, type: "PU", text: "Peristiwa bersejarah yang mengikrarkan satu nusa, satu bangsa, dan satu bahasa (Sumpah Pemuda) terjadi pada tanggal...", options: { A: "20 Mei 1908", B: "1 Juni 1945", C: "28 Oktober 1928", D: "17 Agustus 1945", E: "10 November 1945" }, correct: "C" },
+            { id: 5, type: "PU", text: "Istilah 'inflasi' secara fundamental merujuk pada kondisi...", options: { A: "Kenaikan harga barang dan jasa secara umum dan berkelanjutan.", B: "Penurunan harga barang dan jasa secara umum di pasar domestik.", C: "Stagnasi pertumbuhan ekonomi yang diiringi pengangguran tinggi.", D: "Kenaikan pendapatan per kapita secara merata.", E: "Penguatan nilai tukar mata uang lokal secara agresif." }, correct: "A" },
+            { id: 6, type: "PU", text: "Apakah nama dari puncak gunung tertinggi di dunia jika diukur dari permukaan air laut?", options: { A: "Gunung Kilimanjaro", B: "Gunung Elbrus", C: "Gunung Denali", D: "Gunung Everest", E: "Gunung Fuji" }, correct: "D" },
+            { id: 7, type: "PU", text: "Tari Saman, yang menampilkan ritme gerakan tubuh dan tepukan tanpa instrumen musik eksternal, berasal dari provinsi mana?", options: { A: "Kalimantan Selatan", B: "Sulawesi Utara", C: "Sumatera Barat", D: "Jawa Barat", E: "Aceh" }, correct: "E" },
+            { id: 8, type: "PU", text: "Di antara gas-gas pembentuk atmosfer bumi, manakah gas yang memiliki volume konsentrasi terbesar?", options: { A: "Oksigen", B: "Karbon Dioksida", C: "Nitrogen", D: "Argon", E: "Helium" }, correct: "C" },
+            { id: 9, type: "PU", text: "Organisasi internasional yang memiliki yurisdiksi dan regulasi untuk mengatur aktivitas perdagangan dunia antar-negara adalah...", options: { A: "PBB", B: "IMF", C: "WTO", D: "ASEAN", E: "WHO" }, correct: "C" },
+            { id: 10, type: "PU", text: "Bagian spesifik dari anatomi mata yang bertugas mengatur jumlah intensitas cahaya yang masuk disebut...", options: { A: "Retina", B: "Lensa", C: "Pupil", D: "Kornea", E: "Saraf Optik" }, correct: "C" },
+            { id: 11, type: "LA", text: "Premis 1: Semua mahasiswa merupakan individu yang pintar. Premis 2: Andi secara status adalah seorang mahasiswa. Simpulan yang paling koheren adalah...", options: { A: "Tidak relevan untuk dinilai.", B: "Andi adalah individu yang mungkin pintar.", C: "Tidak bisa dipastikan tingkat kepintaran Andi.", D: "Andi adalah mahasiswa yang pintar.", E: "Hanya mahasiswa saja yang bisa pintar." }, correct: "D" },
+            { id: 12, type: "LA", text: "20 siswa belajar Matematika, 15 siswa belajar Fisika, dan 10 siswa belajar keduanya. Berapa siswa yang HANYA belajar Matematika?", options: { A: "5 siswa", B: "10 siswa", C: "15 siswa", D: "20 siswa", E: "35 siswa" }, correct: "B" },
+            { id: 13, type: "LA", text: "Jika ukuran A lebih besar dari B, dan B lebih besar dari C. Apakah A dipastikan lebih besar dari C?", options: { A: "Tidak relevan", B: "Tidak, pernyataan tersebut salah.", C: "Tidak bisa dipastikan karena tidak ada data angka.", D: "Ya, pernyataan tersebut benar.", E: "A dan C bernilai ekuivalen (sama besar)." }, correct: "D" },
+            { id: 14, type: "LA", text: "Modal sepatu Rp500.000. Pedagang ingin untung 20% dari modal. Berapa harga jualnya?", options: { A: "Rp520.000,00", B: "Rp550.000,00", C: "Rp600.000,00", D: "Rp620.000,00", E: "Rp700.000,00" }, correct: "C" },
+            { id: 15, type: "LA", text: "5 kios berderet (1-5). Beras di kios paling ujung (Kios 5). Sayur selalu di tengah (Kios 3). Ayam dan Buah berdampingan. Jika Ayam di Kios 2, di mana Kios Buah?", options: { A: "Kios 1", B: "Kios 2", C: "Kios 3", D: "Kios 4", E: "Kios 5" }, correct: "A" },
+            { id: 16, type: "TKP", text: "Anda diinstruksikan atasan mengeksekusi tugas mendesak di luar deskripsi spesialisasi Anda. Reaksi Anda:", options: { A: "Mengelak halus dan memohon diberikan ke yang kompeten.", B: "Membiarkan terbengkalai menunggu teguran.", C: "Menerima instruksi meski dengan rasa berat hati.", D: "Menerima sebagai ruang belajar dan berusaha seoptimal mungkin.", E: "Mendesak rekan dari departemen lain merampungkannya." }, scores: { D: 5, C: 4, A: 3, E: 2, B: 1 } },
+            { id: 17, type: "TKP", text: "Sebagai auditor, Anda menemukan atasan Anda merekayasa laporan keuangan demi kepentingan pribadi. Anda akan:", options: { A: "Menegur atasan secara personal agar menghentikan.", B: "Mentoleransi demi keamanan karier.", C: "Menutupi jika dijanjikan promosi jabatan.", D: "Mendiskusikan pasif dengan rekan sejawat.", E: "Melaporkan ke sistem whistleblowing yang bebas intervensi." }, scores: { E: 5, A: 4, D: 3, B: 2, C: 1 } },
+            { id: 18, type: "TKP", text: "Proyek Anda didemo warga karena debu, meski kompensasi sudah dibayar lunas. Pendekatan Anda:", options: { A: "Dialog empatik terbuka dan jadwalkan penyiraman debu.", B: "Menekankan secara kaku bahwa ganti rugi sudah dibayar.", C: "Menghentikan total proyek tanpa batas waktu.", D: "Menyuruh ketua paguyuban menenangkan warganya.", E: "Memanggil polisi untuk membungkam protes." }, scores: { A: 5, D: 4, B: 3, C: 2, E: 1 } },
+            { id: 19, type: "TKP", text: "Tim Anda kehilangan motivasi dan melepaskan tanggung jawab menjelang deadline. Anda akan:", options: { A: "Memborong semua pekerjaan sendirian hingga lembur.", B: "Membiarkan karena bagian saya sudah selesai.", C: "Menggelar rapat evaluasi untuk restorasi motivasi dan kohesi.", D: "Langsung melaporkan disfungsi ke HRD untuk sanksi.", E: "Memberikan suap pribadi agar mereka mau bekerja." }, scores: { C: 5, D: 4, A: 3, E: 2, B: 1 } },
+            { id: 20, type: "TKP", text: "Tetangga Anda melakukan ritual budaya yang bertentangan radikal dengan keyakinan Anda. Sikap Anda:", options: { A: "Menghasut warga memboikot keluarga tersebut.", B: "Menaati prinsip netralitas dan kebebasan beribadah selama tidak disrupsi.", C: "Menggrebek bersama aparat demi kenyamanan mayoritas.", D: "Menceramahi mereka bahwa ritus mereka keliru.", E: "Menjalin dialog empatik untuk memperkaya literasi kebinekaan tanpa harus menyetujui teologinya." }, scores: { E: 5, B: 4, D: 3, C: 2, A: 1 } }
+        ];
+
+        let testDuration = 15 * 60; // 15 menit
+        let timerInterval;
+        // VARIABEL TOKEN TELAH DITAMBAHKAN
+        let userData = { name: "", age: "", email: "", scorePU: 0, scoreLA: 0, scoreTKP: 0, totalScore: 0, token: "" };
+
+        // --- Fungsi Modal S&K ---
+        function openTermsModal() {
+            document.getElementById('termsModal').classList.add('active');
+        }
+        function closeTermsModal() {
+            document.getElementById('termsModal').classList.remove('active');
+        }
+
+        // --- Anti Cheat Script ---
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+               (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's' || e.key === 'u')) ||
+               (e.metaKey && e.shiftKey)) { 
+                e.preventDefault();
+                triggerWarning();
+            }
+        });
+
+        window.addEventListener('blur', function() {
+            if(!document.getElementById('test-screen').classList.contains('hidden')) {
+                triggerWarning();
+            }
+        });
+
+        function triggerWarning() {
+            const warning = document.getElementById('anti-cheat-warning');
+            warning.classList.add('show');
+            setTimeout(() => { warning.classList.remove('show'); }, 3000);
+        }
+
+        // --- Alur UI ---
+        window.onload = () => {
+            if (localStorage.getItem("arinex_test_completed")) {
+                document.getElementById("splash-screen").classList.add("hidden");
+                document.getElementById("blocked-screen").classList.remove("hidden");
+                return;
+            }
+
+            setTimeout(() => {
+                const img = document.getElementById("splash-img");
+                img.style.opacity = 0;
+                setTimeout(() => {
+                    img.src = "survey.png";
+                    img.style.opacity = 1;
+                    setTimeout(() => {
+                        document.getElementById("splash-screen").classList.add("hidden");
+                        document.getElementById("registration-screen").classList.remove("hidden");
+                    }, 3000);
+                }, 500);
+            }, 3000);
+        };
 
         function startTest() {
-            userData.name = document.getElementById("userName").value;
-            if(!userData.name) return alert("Isi data!");
+            const name = document.getElementById("userName").value.trim();
+            const age = document.getElementById("userAge").value.trim();
+            const email = document.getElementById("userEmail").value.trim();
+            const isAgreed = document.getElementById("agreeTerms").checked;
+            
+            if (!name || !age || !email) {
+                alert("Mohon lengkapi form Nama, Usia, dan Email untuk memulai.");
+                return;
+            }
+
+            if (!isAgreed) {
+                alert("Anda harus menyetujui Syarat & Ketentuan untuk mengikuti evaluasi.");
+                return;
+            }
+
+            userData.name = name;
+            userData.age = age;
+            userData.email = email;
+
             document.getElementById("registration-screen").classList.add("hidden");
             document.getElementById("test-screen").classList.remove("hidden");
+            
+            renderQuestions();
+            startTimer();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                let html = `<div class="question-block">
+                                <div class="question-text">${index + 1}. ${q.text}</div>
+                                <div class="options">`;
+                
+                for (const [key, val] of Object.entries(q.options)) {
+                    html += `<label>
+                                <input type="radio" name="q${q.id}" value="${key}">
+                                <span style="font-weight: 600; margin-right: 5px;">${key}.</span> ${val}
+                             </label>`;
+                }
+                html += `</div></div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function startTimer() {
+            const display = document.querySelector("#timer-display span");
+            timerInterval = setInterval(() => {
+                testDuration--;
+                let minutes = Math.floor(testDuration / 60);
+                let seconds = testDuration % 60;
+                display.innerText = `Sisa Waktu: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (testDuration <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu habis! Jawaban Anda otomatis dikumpulkan oleh sistem.");
+                    submitTest();
+                }
+            }, 1000);
         }
 
         function submitTest() {
-            userData.token = "ARNX-" + new Date().getTime() + "-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+            clearInterval(timerInterval);
             
+            // 1. BUAT TOKEN UNIK E-SIGNATURE DISINI (SEBELUM DATA DIKIRIM)
+            let randomHash = Math.random().toString(36).substring(2, 10).toUpperCase();
+            userData.token = "ARNX-" + new Date().getTime() + "-" + randomHash;
+            
+            questions.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const answer = selected ? selected.value : null;
+
+                if (q.type === "PU" || q.type === "LA") {
+                    if (answer === q.correct) {
+                        if (q.type === "PU") userData.scorePU += 10; 
+                        if (q.type === "LA") userData.scoreLA += 20; 
+                    }
+                } else if (q.type === "TKP") {
+                    if (answer && q.scores[answer]) {
+                        userData.scoreTKP += q.scores[answer]; 
+                    }
+                }
+            });
+
+            // 2. SIMPAN TOKEN KE FIREBASE BESERTA HASIL TES
             if (window.saveToFirebase) {
                 window.saveToFirebase({
-                    nama: userData.name, email: userData.email,
-                    token_dokumen: userData.token,
+                    nama: userData.name,
+                    usia: userData.age,
+                    email: userData.email,
+                    nilai_pengetahuan_umum: userData.scorePU,
+                    nilai_logika: userData.scoreLA,
+                    nilai_kepribadian: userData.scoreTKP,
+                    token_dokumen: userData.token, // <- Token masuk ke Database
                     waktu_selesai: new Date().toISOString()
                 });
             }
-            
+
             localStorage.setItem("arinex_test_completed", "true");
+
             document.getElementById("test-screen").classList.add("hidden");
             document.getElementById("result-screen").classList.remove("hidden");
+            
+            document.getElementById("thank-you-msg").innerHTML = `
+                Terima kasih yang sebesar-besarnya, <b>${userData.name}</b>, atas dedikasi Anda meluangkan waktu.<br><br>
+                Seluruh rangkaian jawaban Anda telah berhasil dienkripsi dan disimpan ke dalam pangkalan data kami.<br> <br>
+                <em>Pemberitahuan pemenang undian Voucher Rp 25.000 akan di Undi dan di Distribusikan langsunh oleh <a href="https://alfagift.id/" target="_blank"><b>alfagift.id</b></a> Pada tgl <b>30 Juli 2026</b> Melalui email <b>${userData.email}</b> jika Anda terpilih.</em>
+            `;
         }
 
+        // --- Proses Load Gambar Menggunakan Promise ---
+        function loadImage(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous"; 
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(new Error('Gagal muat: ' + src));
+                img.src = src;
+            });
+        }
+
+        // --- Desain Sertifikat Report Modern (RESOLUSI TINGGI HD) ---
         function downloadResultPDF() {
+            const btn = document.getElementById("btn-download");
+            const originalText = btn.innerText;
+            btn.innerText = "Memproses Dokumen PDF (HD)...";
+            btn.disabled = true;
+
             const canvas = document.createElement("canvas");
-            canvas.width = 3000; canvas.height = 2100;
             const ctx = canvas.getContext("2d");
             
-            // Background
-            ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,3000,2100);
-            ctx.fillStyle = "#1e293b"; ctx.fillRect(0, 0, 3000, 300);
+            const scale = 3;
+            canvas.width = 1000 * scale;
+            canvas.height = 700 * scale;
             
-            // Teks
-            ctx.fillStyle = "#ffffff"; ctx.font = "bold 80px Poppins";
-            ctx.fillText("LAPORAN HASIL EVALUASI", 1500, 180);
+            ctx.scale(scale, scale);
+
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, 700);
+            bgGrad.addColorStop(0, "#ffffff");
+            bgGrad.addColorStop(1, "#f1f5f9");
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, 1000, 700);
+
+            ctx.fillStyle = "#e2e8f0";
+            ctx.beginPath(); ctx.arc(0, 0, 250, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(1000, 700, 300, 0, Math.PI * 2); ctx.fill();
+
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 20, 1000 - 40, 700 - 40);
             
-            // QR Code
+            ctx.strokeStyle = "#3b82f6";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(26, 26, 1000 - 52, 700 - 52);
+
+            ctx.fillStyle = "#1e293b";
+            ctx.fillRect(26, 26, 1000 - 52, 110);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 32px 'Segoe UI', Arial, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("LAPORAN HASIL EVALUASI KOGNITIF & PERILAKU", 1000 / 2 + 10, 85);
+
+            ctx.fillStyle = "#334155";
+            ctx.font = "bold 28px 'Segoe UI', Arial, sans-serif";
+            ctx.fillText(userData.name, 1000 / 2, 210);
+            
+            ctx.fillStyle = "#64748b";
+            ctx.font = "18px 'Segoe UI', Arial, sans-serif";
+            ctx.fillText(`Usia: ${userData.age} Tahun   |   Diterbitkan: ${new Date().toLocaleDateString('id-ID')}`, 1000 / 2, 245);
+
+            function roundRect(ctx, x, y, width, height, radius) {
+                ctx.beginPath(); ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius); ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath(); ctx.fill();
+            }
+
+            ctx.fillStyle = "#ffffff";
+            ctx.shadowColor = "rgba(0,0,0,0.08)";
+            ctx.shadowBlur = 25;
+            ctx.shadowOffsetY = 10;
+            roundRect(ctx, 150, 290, 700, 220, 20);
+            ctx.shadowColor = "transparent"; 
+
+            ctx.fillStyle = "#1e293b";
+            ctx.textAlign = "left";
+            ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+            ctx.fillText("Rekapitulasi Penilaian", 200, 340);
+            
+            ctx.font = "20px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = "#475569";
+            ctx.fillText(`• Pengetahuan Umum (Crystallized)`, 200, 390);
+            ctx.fillText(`• Logika Analitik (Fluid Intelligence)`, 200, 430);
+            ctx.fillText(`• Karakteristik Pribadi (SJT - TKP)`, 200, 470);
+            
+            ctx.font = "bold 20px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = "#3b82f6";
+            ctx.textAlign = "right";
+            ctx.fillText(`${userData.scorePU} / 100`, 800, 390);
+            ctx.fillText(`${userData.scoreLA} / 100`, 800, 430);
+            ctx.fillText(`${userData.scoreTKP} / 25`, 800, 470);
+
+            let statusKepribadian = "Sangat Baik";
+            let warnaStatus = "#10b981"; 
+            if(userData.scoreTKP < 15) { statusKepribadian = "Perlu Pengembangan"; warnaStatus = "#ef4444"; }
+            else if(userData.scoreTKP < 20) { statusKepribadian = "Cukup Baik"; warnaStatus = "#f59e0b"; }
+            
+            ctx.textAlign = "center";
+            ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = "#334155";
+            ctx.fillText("Indikator Perilaku & Etika:", 1000 / 2, 570);
+            
+            ctx.font = "bold 26px 'Segoe UI', Arial, sans-serif";
+            ctx.fillStyle = warnaStatus;
+            ctx.fillText(statusKepribadian, 1000 / 2, 605);
+
+            // ==========================================
+            // LOGIKA E-SIGNATURE (URL KEBAL ERROR)
+            // ==========================================
+            
+            // Menggunakan objek URL bawaan JavaScript agar format link QR code dijamin tidak rusak 
+            // baik di hosting Vercel, localhost, maupun Github Pages.
+            let signUrl = new URL('sign.html', window.location.href);
+            signUrl.searchParams.set('token', userData.token);
+            let targetSignUrl = signUrl.href;
+
             const qr = new QRious({
-                value: window.location.origin + "/sign.html?token=" + userData.token,
-                size: 500
+                value: targetSignUrl,
+                size: 300,        
+                level: 'H'        
             });
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 2400, 1500, 500, 500);
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('l', 'px', [1000, 700]);
-                pdf.addImage(canvas.toDataURL("image/png"), 'PNG', 0, 0, 1000, 700);
-                pdf.save("Sertifikat_" + userData.name + ".pdf");
-            };
-            img.src = qr.toDataURL();
+            const qrDataUrl = qr.toDataURL('image/png');
+
+            Promise.allSettled([
+                loadImage("arinexfoundation.png"),
+                loadImage(qrDataUrl)
+            ]).then(results => {
+                const logo = results[0].status === 'fulfilled' ? results[0].value : null;
+                const qrCodeImg = results[1].status === 'fulfilled' ? results[1].value : null;
+
+                if (logo) {
+                    ctx.globalAlpha = 0.05;
+                    ctx.drawImage(logo, 1000/2 - 200, 700/2 - 180, 400, 400); 
+                    ctx.globalAlpha = 1.0;
+                    
+                    const targetHeight = 70; 
+                    const aspect = logo.width / logo.height;
+                    const targetWidth = targetHeight * aspect; 
+                    
+                    ctx.drawImage(logo, 50, 46, targetWidth, targetHeight); 
+                }
+
+                if (qrCodeImg) {
+                    ctx.drawImage(qrCodeImg, 810, 520, 110, 110);
+                    
+                    ctx.fillStyle = "#64748b";
+                    ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("VALIDATED E-SIGN", 865, 650);
+                }
+
+                btn.innerText = originalText;
+                btn.disabled = false;
+                triggerDownloadPDF(canvas);
+            }).catch(err => {
+                console.error("Error loading images:", err);
+                btn.innerText = originalText;
+                btn.disabled = false;
+                triggerDownloadPDF(canvas); 
+            });
+        }
+
+        function triggerDownloadPDF(canvas) {
+            const { jsPDF } = window.jspdf;
+            
+            const pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "px",
+                format: [1000, 700]
+            });
+            
+            const imgData = canvas.toDataURL("image/png", 1.0);
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, 1000, 700);
+            
+            const namaFile = userData.name ? userData.name.replace(/\s+/g, '_') : 'Peserta';
+            pdf.save(`Laporan_Evaluasi_${namaFile}.pdf`);
         }
     </script>
 </body>
