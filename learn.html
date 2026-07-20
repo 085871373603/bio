@@ -903,19 +903,11 @@
                     ctx.fillStyle = "#64748b";
                     ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
                     ctx.textAlign = "center";
-                    ctx.fillText("QR E-SIGNATURE", 875, 650);
+                    ctx.fillText("E-SIGN", 875, 650);
                 }
 
-                // Teks Nama Penandatangan di Kiri Bawah (Pengganti gambar tanda tangan)
-                ctx.fillStyle = "#334155";
-                ctx.font = "italic 18px 'Segoe UI', Arial, sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText("Disahkan secara digital oleh:", 180, 610);
-                
-                ctx.fillStyle = "#1e293b";
-                ctx.font = "bold 16px 'Segoe UI', Arial, sans-serif";
-                ctx.fillText("Ketua Arinex Foundation", 180, 640);
-                ctx.fillRect(90, 645, 180, 2); // Garis bawah nama
+                // Teks Nama Penandatangan di Kiri Bawah (Pengganti gambar tanda tangan
+        
 
                 // Trigger pengunduhan sertifikat
                 triggerDownload(canvas);
