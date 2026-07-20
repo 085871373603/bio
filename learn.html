@@ -12,6 +12,9 @@
     <!-- Library jsPDF untuk unduh format PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
+    <!-- Library QRious untuk Generate QR Code Local (Anti Gagal/CORS) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    
     <style>
         /* Desain UI/UX Modern & Friendly */
         :root {
@@ -462,7 +465,7 @@
                     </div>
                 </div>
 
-                <h2>Selamat Datang! 👋</h2>
+                <h2>Selamat Datang!</h2>
                 <p>Tes ini dirancang untuk memetakan Pengetahuan Umum, Logika Analitik, dan Karakteristik Pribadi Anda. Waktu maksimal pengerjaan adalah <b>15 Menit</b>.</p>
                 
                 <div style="background: #eff6ff; border-left: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 25px; font-size: 13px; color: #1e3a8a;">
@@ -514,7 +517,7 @@
                     <h2>Evaluasi Selesai!</h2>
                     <p id="thank-you-msg"></p>
                 </div>
-                <button id="btn-download" onclick="downloadResultPDF()">Unduh Hasil Tes</button>
+                <button id="btn-download" onclick="downloadResultPDF()">Unduh Hasil Tes (PDF HD)</button>
             </div>
             
             <!-- 5. Already Taken Area -->
@@ -649,7 +652,6 @@
                 return;
             }
 
-            // Validasi Checkbox
             if (!isAgreed) {
                 alert("Anda harus menyetujui Syarat & Ketentuan untuk mengikuti evaluasi.");
                 return;
@@ -741,40 +743,46 @@
             document.getElementById("thank-you-msg").innerHTML = `
                 Terima kasih yang sebesar-besarnya, <b>${userData.name}</b>, atas dedikasi Anda meluangkan waktu.<br><br>
                 Seluruh rangkaian jawaban Anda telah berhasil dienkripsi dan disimpan ke dalam pangkalan data kami.<br> <br>
-                <em>Pemberitahuan pemenang undian Voucher Rp 25.000 akan di undi dan dikirimkan oleh <a href="https://alfagift.id/" target="_blank"><b>alfagift</b></a> Pada tgl <b>30 Juli 2026</b> melalui email <b>${userData.email}</b> jika Anda terpilih.</em>
+                <em>Pemberitahuan pemenang undian Voucher Rp 25.000 akan di Undi dan di Distribusikan langsunh oleh <a href="https://alfagift.id/" target="_blank"><b>alfagift.id</b></a> Pada tgl <b>30 Juli 2026</b> Melalui email <b>${userData.email}</b> jika Anda terpilih.</em>
             `;
         }
 
-        // --- Proses Load Gambar Menggunakan Promise (Lebih Aman) ---
+        // --- Proses Load Gambar Menggunakan Promise ---
         function loadImage(src) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
-                img.crossOrigin = "Anonymous"; // Menghindari isu CORS pada Canvas
+                img.crossOrigin = "Anonymous"; // Menghindari isu CORS
                 img.onload = () => resolve(img);
                 img.onerror = () => reject(new Error('Gagal muat: ' + src));
                 img.src = src;
             });
         }
 
-        // --- Desain Sertifikat Report Modern ---
+        // --- Desain Sertifikat Report Modern (RESOLUSI TINGGI HD) ---
         function downloadResultPDF() {
-            // Ubah tombol untuk memberikan indikator loading
             const btn = document.getElementById("btn-download");
             const originalText = btn.innerText;
-            btn.innerText = "Memproses Dokumen PDF...";
+            btn.innerText = "Memproses Dokumen PDF (HD)...";
             btn.disabled = true;
 
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
-            canvas.width = 1000;
-            canvas.height = 700;
+            
+            // SCALE 3x UNTUK RESOLUSI SUPER TAJAM SAAT DICETAK
+            const scale = 3;
+            // Dimensi aktual kanvas (3000 x 2100)
+            canvas.width = 1000 * scale;
+            canvas.height = 700 * scale;
+            
+            // Skalakan context agar kordinat tetap menggunakan base 1000x700
+            ctx.scale(scale, scale);
 
             // Background Modern Gradient
-            const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, 700);
             bgGrad.addColorStop(0, "#ffffff");
             bgGrad.addColorStop(1, "#f1f5f9");
             ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, 1000, 700);
 
             // Shape dekoratif
             ctx.fillStyle = "#e2e8f0";
@@ -788,30 +796,30 @@
             // Border Sertifikat
             ctx.strokeStyle = "#cbd5e1";
             ctx.lineWidth = 4;
-            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            ctx.strokeRect(20, 20, 1000 - 40, 700 - 40);
             
             ctx.strokeStyle = "#3b82f6";
             ctx.lineWidth = 2;
-            ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+            ctx.strokeRect(26, 26, 1000 - 52, 700 - 52);
 
             // Header Banner
             ctx.fillStyle = "#1e293b";
-            ctx.fillRect(26, 26, canvas.width - 52, 110);
+            ctx.fillRect(26, 26, 1000 - 52, 110);
 
             // Teks Header
             ctx.fillStyle = "#ffffff";
             ctx.font = "bold 32px 'Segoe UI', Arial, sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText("LAPORAN HASIL EVALUASI KOGNITIF & PERILAKU", canvas.width / 2 + 10, 85);
+            ctx.fillText("LAPORAN HASIL EVALUASI KOGNITIF & PERILAKU", 1000 / 2 + 10, 85);
 
             // Identitas Peserta
             ctx.fillStyle = "#334155";
             ctx.font = "bold 28px 'Segoe UI', Arial, sans-serif";
-            ctx.fillText(userData.name, canvas.width / 2, 210);
+            ctx.fillText(userData.name, 1000 / 2, 210);
             
             ctx.fillStyle = "#64748b";
             ctx.font = "18px 'Segoe UI', Arial, sans-serif";
-            ctx.fillText(`Usia: ${userData.age} Tahun   |   Diterbitkan: ${new Date().toLocaleDateString('id-ID')}`, canvas.width / 2, 245);
+            ctx.fillText(`Usia: ${userData.age} Tahun   |   Diterbitkan: ${new Date().toLocaleDateString('id-ID')}`, 1000 / 2, 245);
 
             function roundRect(ctx, x, y, width, height, radius) {
                 ctx.beginPath();
@@ -863,61 +871,67 @@
             ctx.textAlign = "center";
             ctx.font = "bold 22px 'Segoe UI', Arial, sans-serif";
             ctx.fillStyle = "#334155";
-            ctx.fillText("Indikator Perilaku & Etika:", canvas.width / 2, 570);
+            ctx.fillText("Indikator Perilaku & Etika:", 1000 / 2, 570);
             
             ctx.font = "bold 26px 'Segoe UI', Arial, sans-serif";
             ctx.fillStyle = warnaStatus;
-            ctx.fillText(statusKepribadian, canvas.width / 2, 605);
+            ctx.fillText(statusKepribadian, 1000 / 2, 605);
 
             // ==========================================
-            // LOGIKA PEMBANGUNAN URL & E-SIGNATURE (QR CODE)
+            // LOGIKA E-SIGNATURE (QR CODE LOKAL & AMAN)
             // ==========================================
             
-            // Mendapatkan Base URL tempat Anda menghosting website
             let currentUrl = window.location.href.split('?')[0];
             let baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
             if (!baseUrl) {
                 baseUrl = window.location.origin;
             }
 
-            let documentToken = "ARNXSIGN20260720001";
+            // Membuat Token Unik dan Aman (Kombinasi waktu & hash acak)
+            let randomHash = Math.random().toString(36).substring(2, 10).toUpperCase();
+            let documentToken = "ARNX-" + new Date().getTime() + "-" + randomHash;
             let targetSignUrl = `${baseUrl}/sign.html?token=${documentToken}`;
 
-            // Menggunakan API TEC-IT sesuai instruksi untuk mencetak QR E-Signature
-            const qrUrl = `https://qrcode.tec-it.com/API/QRCode?data=${encodeURIComponent(targetSignUrl)}`;
+            // Generate QR Code langsung di browser (Mengatasi masalah blank/tidak tampil)
+            const qr = new QRious({
+                value: targetSignUrl,
+                size: 300,        // Resolusi QR Tinggi
+                level: 'H'        // Error correction High
+            });
+            const qrDataUrl = qr.toDataURL('image/png');
 
-            // Meload Logo dan QR Code
+            // Load Logo Arinex
             Promise.allSettled([
-                loadImage("arinexfoundation2.png"),
-                loadImage(qrUrl)
+                loadImage("arinexfoundation.png"),
+                loadImage(qrDataUrl)
             ]).then(results => {
                 const logo = results[0].status === 'fulfilled' ? results[0].value : null;
-                const qrCode = results[1].status === 'fulfilled' ? results[1].value : null;
+                const qrCodeImg = results[1].status === 'fulfilled' ? results[1].value : null;
 
-                // Eksekusi jika Logo berhasil dimuat
+                // 1. Eksekusi Logo (Mengatasi Gambar Mengkerut)
                 if (logo) {
                     ctx.globalAlpha = 0.05;
-                    ctx.drawImage(logo, canvas.width/2 - 200, canvas.height/2 - 180, 400, 400); // Watermark
+                    ctx.drawImage(logo, 1000/2 - 200, 700/2 - 180, 400, 400); // Watermark tengah
                     ctx.globalAlpha = 1.0;
-                    ctx.drawImage(logo, 50, 46, 70, 70); // Logo Header Kiri
+                    
+                    // Logika Aspect Ratio agar logo proporsional
+                    const targetHeight = 70; // tinggi maksimum di header
+                    const aspect = logo.width / logo.height;
+                    const targetWidth = targetHeight * aspect; 
+                    
+                    ctx.drawImage(logo, 50, 46, targetWidth, targetHeight); // Logo Header Kiri Proporsional
                 }
 
-                // ==========================================
-                // BLOK E-SIGNATURE (QR CODE & TEXT)
-                // ==========================================
-
-                // 1. Eksekusi QR Code di Pojok Kanan Bawah
-                if (qrCode) {
-                    ctx.drawImage(qrCode, 820, 520, 110, 110);
+                // 2. Eksekusi QR Code di Pojok Kanan Bawah
+                if (qrCodeImg) {
+                    ctx.drawImage(qrCodeImg, 810, 520, 110, 110);
                     
                     ctx.fillStyle = "#64748b";
                     ctx.font = "bold 13px 'Segoe UI', Arial, sans-serif";
                     ctx.textAlign = "center";
-                    ctx.fillText("VALIDATED E-SIGN", 875, 650);
+                    ctx.fillText("VALIDATED E-SIGN", 865, 650);
                 }
 
-
-                // Kembalikan Tombol seperti semula & Unduh PDF
                 btn.innerText = originalText;
                 btn.disabled = false;
                 triggerDownloadPDF(canvas);
@@ -925,7 +939,7 @@
                 console.error("Error loading images:", err);
                 btn.innerText = originalText;
                 btn.disabled = false;
-                triggerDownloadPDF(canvas); // Tetap unduh meskipun gambar gagal dimuat
+                triggerDownloadPDF(canvas); // Tetap unduh meskipun gagal muat logo
             });
         }
 
@@ -933,22 +947,23 @@
             // Destruktur jsPDF dari window
             const { jsPDF } = window.jspdf;
             
-            // Konfigurasi canvas 1000x700px ke PDF lanskap
+            // Konfigurasi PDF lanskap (1000x700 px layout dimension)
             const pdf = new jsPDF({
                 orientation: "landscape",
                 unit: "px",
                 format: [1000, 700]
             });
             
-            // Konversi Canvas ke Data URL
-            const imgData = canvas.toDataURL("image/png");
+            // Ambil Data Gambar Resolusi Tinggi (3000x2100 px aktual) dari Canvas
+            const imgData = canvas.toDataURL("image/png", 1.0);
             
-            // Tambahkan gambar ke dalam PDF
+            // Tempelkan gambar ke PDF dengan ukuran layout 1000x700
+            // Ini akan memadatkan pixel (compress size) sehingga hasilnya HD saat dicetak
             pdf.addImage(imgData, 'PNG', 0, 0, 1000, 700);
             
-            // Simpan / Unduh Dokumen PDF
+            // Simpan Dokumen PDF
             const namaFile = userData.name ? userData.name.replace(/\s+/g, '_') : 'Peserta';
-            pdf.save(`Sertifikat_${namaFile}.pdf`);
+            pdf.save(`Laporan_Evaluasi_${namaFile}.pdf`);
         }
     </script>
 </body>
