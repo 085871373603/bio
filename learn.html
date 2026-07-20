@@ -931,32 +931,19 @@
                     ctx.fillStyle = "#64748b";
                     ctx.font = "bold 11px 'Segoe UI', Arial, sans-serif";
                     ctx.textAlign = "center";
-                    ctx.fillText("SCAN FOR VALIDATION", 120, 635);
+                    ctx.fillText("SIGNATUR-VALIDATION", 120, 635);
                     ctx.font = "10px 'Segoe UI', Arial, sans-serif";
                     ctx.fillText(userData.token, 120, 650); // Menampilkan Token Text
                 }
 
                 // 10. Tanda Tangan Digital (Kanan Bawah)
-                ctx.fillStyle = "#0f172a";
-                ctx.font = "bold 16px 'Segoe UI', Arial, sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText("Direktur Eksekutif", 880, 560);
+
+
+
+
+
+
                 
-                ctx.fillStyle = "#64748b";
-                ctx.font = "italic 14px 'Segoe UI', Arial, sans-serif";
-                ctx.fillText("Arinex Foundation", 880, 580);
-                
-                // Garis tempat tanda tangan
-                ctx.beginPath();
-                ctx.moveTo(800, 630);
-                ctx.lineTo(960, 630);
-                ctx.strokeStyle = "#cbd5e1";
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                
-                ctx.fillStyle = "#0f172a";
-                ctx.font = "bold 15px 'Segoe UI', Arial, sans-serif";
-                ctx.fillText("Rana Arifin", 880, 650);
 
                 btn.innerText = originalText;
                 btn.disabled = false;
