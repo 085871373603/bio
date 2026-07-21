@@ -45,22 +45,30 @@
             100% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 20px rgba(141,164,247,0.5); }
         }
 
-        /* Video Latar & Iframe (Diubah ke contain agar tidak terpotong) */
-        #bg-video, #yt-video {
-            position: fixed; top: 38%; left: 50%;
+        /* Wadah Utama Video & Kontrol (Update 3: Posisi berurutan ke bawah) */
+        #media-controls {
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%; max-width: 500px; height: 30vh;
+            z-index: 15;
+            display: flex; flex-direction: column; gap: 12px;
+            width: 90%; max-width: 450px;
+        }
+
+        /* Video Latar & Iframe (Update 1: Tanpa blank hitam di atas/bawah) */
+        #bg-video, #yt-video {
+            width: 100%; height: 26vh;
+            max-height: 240px;
             border-radius: 16px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.1);
-            z-index: 15; background-color: #000;
-            transition: opacity 1s ease-out, transform 1s ease-out;
-            object-fit: contain; /* Mencegah informasi video terpotong */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.1);
+            background-color: #000;
+            object-fit: cover; /* Memastikan video full screen di area pemutaran tanpa blank hitam */
+            transition: opacity 1s ease-out;
         }
 
         /* Bulan Bercahaya */
         #moon {
-            position: absolute; top: 10%; left: 50%;
-            width: 90px; height: 90px;
+            position: absolute; top: 8%; left: 50%;
+            width: 80px; height: 80px;
             background: radial-gradient(circle at 30% 30%, #fff, #e2e5de, #a9aca6);
             border-radius: 50%;
             box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.4), inset -8px -8px 15px rgba(0,0,0,0.2);
@@ -96,7 +104,7 @@
             100% { width: 120px; height: 120px; opacity: 0; border-width: 1px; }
         }
 
-        /* TOMBOL MENU UTAMA (Dibuat Sangat Mencolok / Menyala) */
+        /* TOMBOL MENU UTAMA (Mencolok & Menyala) */
         #menu-btn {
             position: absolute; top: 25px; right: 20px; padding: 12px 24px;
             background: linear-gradient(135deg, #ff416c, #ff412b);
@@ -112,47 +120,39 @@
         }
         #menu-btn:hover, #menu-btn:active { transform: scale(1.08); }
 
-        #media-controls {
-            position: absolute; bottom: 25px; left: 0; right: 0; z-index: 10;
-            display: flex; flex-direction: column; gap: 12px; padding: 0 20px;
-        }
-
-        /* Banner Slide Horizontal (Support Swipe Jari & Dinamis) */
+        /* Banner Slide Horizontal (Update 2: 100% Full Screen 1 Banner) */
         .ad-banner-container {
-            width: 100%; height: 100px; 
+            width: 100%; height: 90px; 
             overflow-x: auto; 
             scroll-snap-type: x mandatory; 
             scroll-behavior: smooth;
-            display: flex; align-items: center; gap: 15px; padding: 0 15px;
-            border-radius: 16px;
-            background: rgba(10, 15, 30, 0.5); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            border-radius: 14px;
+            background: rgba(10, 15, 30, 0.6); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             -ms-overflow-style: none; scrollbar-width: none; 
         }
         .ad-banner-container::-webkit-scrollbar { display: none; }
         .ad-banner-container img {
-            flex: 0 0 auto; 
-            height: 70px; 
-            max-width: 85vw; 
-            object-fit: contain; 
-            border-radius: 8px;
+            flex: 0 0 100%; /* Lebar gambar pas 100% full screen 1 banner */
+            width: 100%; 
+            height: 100%;
+            object-fit: cover; /* Mengisi penuh kotak banner */
             scroll-snap-align: center; 
             -webkit-user-drag: none; 
         }
 
-        /* Tombol Pilihan Video (Scrollable Kapsul) */
+        /* Tombol Pilihan Video (Update 4: Tanpa gulir samping, wrap ke bawah) */
         .video-btn-group {
-            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;
-            -ms-overflow-style: none; scrollbar-width: none;
+            display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
         }
-        .video-btn-group::-webkit-scrollbar { display: none; }
         .video-btn {
             background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.04));
             border: 1px solid rgba(255,255,255,0.3);
-            color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 12px;
+            color: #fff; padding: 8px 14px; border-radius: 20px; font-size: 11px;
             cursor: pointer; backdrop-filter: blur(5px); transition: 0.3s ease;
-            white-space: nowrap; flex-shrink: 0; font-weight: 700; letter-spacing: 0.5px;
+            font-weight: 700; flex-grow: 1; text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .video-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
@@ -265,14 +265,6 @@
         <p style="font-size: 13px; opacity: 0.7; margin-top: 10px; font-weight: 300;">Sentuh layar untuk memulai</p>
     </div>
 
-    <!-- Video Element -->
-    <video id="bg-video" playsinline>
-        <source src="iklan.mp4" type="video/mp4">
-    </video>
-
-    <!-- Iframe Element (Khusus YouTube) -->
-    <iframe id="yt-video" style="display:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
     <!-- Bulan & Kunang-kunang -->
     <div id="moon"></div>
     <canvas id="fireflies"></canvas>
@@ -292,21 +284,23 @@
     <!-- Kontrol Tampilan Utama: Tombol Menu (Mencolok & Menyala) -->
     <button id="menu-btn">Menu ☰</button>
 
-    <!-- Kontrol Tampilan Utama: Banner & Video Selector -->
+    <!-- Wadah Kontrol Tengah (Video -> Banner Persis Di Bawah Video -> Tombol Kapsul Wrap Ke Bawah) -->
     <div id="media-controls">
-        <!-- Banner Iklan Slide -->
+        <!-- Video Latar -->
+        <video id="bg-video" playsinline>
+            <source src="iklan.mp4" type="video/mp4">
+        </video>
+        <!-- Iframe YouTube -->
+        <iframe id="yt-video" style="display:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+        <!-- Banner Iklan Slide (Posisi Tepat Di Bawah Video) -->
         <div class="ad-banner-container" id="ad-banner-slider">
             <img src="banner1.jpeg" alt="Iklan 1" onerror="this.src='https://via.placeholder.com/800x200/0a0f1e/FFFFFF?text=BANNER+IKLAN+1'">
             <img src="banner2.png" alt="Iklan 2" onerror="this.src='https://via.placeholder.com/800x200/131a33/FFFFFF?text=BANNER+IKLAN+2'">
             <img src="banner3.png" alt="Iklan 3" onerror="this.src='https://via.placeholder.com/800x200/1a2240/FFFFFF?text=BANNER+IKLAN+3'">
         </div>
 
-        <!-- Petunjuk teks agar user tahu tombol kapsul bisa digeser -->
-        <div style="font-size: 11px; color: #93c5fd; text-align: center; letter-spacing: 0.5px; opacity: 0.9; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">
-            ↔️ Geser tombol untuk pilihan video lainnya
-        </div>
-
-        <!-- Tombol Pilihan Video (Kapsul Scrollable) -->
+        <!-- Tombol Pilihan Video (Kapsul, Wrap otomatis ke bawah) -->
         <div class="video-btn-group">
             <button class="video-btn" onclick="changeVideo('hutri.mp4')">🇮🇩 Lokal</button>
             <button class="video-btn" onclick="changeVideo('iklan.mp4')">🎬 TRIAL.mp4</button>
@@ -386,16 +380,14 @@
             if (currentSlideIndex >= bannerImages.length) {
                 currentSlideIndex = 0; 
             }
-            const targetImage = bannerImages[currentSlideIndex];
-            const scrollPosition = targetImage.offsetLeft - (bannerSlider.clientWidth / 2) + (targetImage.clientWidth / 2);
             bannerSlider.scrollTo({
-                left: scrollPosition,
+                left: currentSlideIndex * bannerSlider.clientWidth,
                 behavior: 'smooth'
             });
         }
 
         function startAutoSlide() {
-            slideTimer = setInterval(goToNextSlide, 4000); // Diubah jadi 4 detik (4000ms)
+            slideTimer = setInterval(goToNextSlide, 4000); // 4 detik per banner
         }
 
         function stopAutoSlide() {
@@ -408,20 +400,7 @@
         
         bannerSlider.addEventListener('touchend', () => {
             setTimeout(() => {
-                let closestIndex = 0;
-                let minDistance = Infinity;
-                const containerCenter = bannerSlider.scrollLeft + (bannerSlider.clientWidth / 2);
-
-                bannerImages.forEach((img, index) => {
-                    const imgCenter = img.offsetLeft + (img.clientWidth / 2);
-                    const distance = Math.abs(containerCenter - imgCenter);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestIndex = index;
-                    }
-                });
-                
-                currentSlideIndex = closestIndex;
+                currentSlideIndex = Math.round(bannerSlider.scrollLeft / bannerSlider.clientWidth);
                 startAutoSlide(); 
             }, 500); 
         }, { passive: true });
@@ -501,8 +480,8 @@
         });
 
         bgVideo.addEventListener('ended', () => {
-            bgVideo.style.opacity = '0'; bgVideo.style.transform = 'translate(-50%, -50%) scale(0.9)';
-            setTimeout(() => bgVideo.style.display = 'none', 1500);
+            bgVideo.style.opacity = '0'; 
+            setTimeout(() => bgVideo.style.display = 'none', 1000);
         });
 
         window.changeVideo = function(srcUrl) {
@@ -519,15 +498,12 @@
 
                 ytVideo.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
                 ytVideo.style.display = 'block';
-                ytVideo.style.opacity = '1';
             } else {
                 ytVideo.style.display = 'none';
                 ytVideo.src = ""; 
 
                 bgVideo.src = srcUrl;
                 bgVideo.style.display = 'block';
-                bgVideo.style.opacity = '1';
-                bgVideo.style.transform = 'translate(-50%, -50%) scale(1)';
                 bgVideo.muted = false;
                 bgVideo.play().catch(e => console.log("Gagal memutar video secara otomatis:", e));
             }
