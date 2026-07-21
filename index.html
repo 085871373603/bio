@@ -92,10 +92,15 @@
         /* TOMBOL MENU & MEDIA KONTROL TAMPILAN AWAL */
         #menu-btn {
             position: absolute; top: 20px; right: 20px; padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 20px;
-            font-size: 16px; font-weight: bold; cursor: pointer; z-index: 10; transition: transform 0.2s;
+            background: rgba(220, 38, 38, 0.4); /* Merah transparan */
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 100, 100, 0.5); 
+            color: white; border-radius: 20px;
+            font-size: 16px; font-weight: bold; cursor: pointer; z-index: 10; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
         }
+        #menu-btn:hover { background: rgba(220, 38, 38, 0.7); }
         #menu-btn:active { transform: scale(0.9); }
 
         #media-controls {
@@ -142,7 +147,7 @@
             background: rgba(255, 255, 255, 0.3); transform: scale(0.95);
         }
 
-        /* Popup Menu (Tidak Berubah) */
+        /* Popup Menu */
         #popup-menu {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
@@ -161,14 +166,25 @@
         #menu-view, #read-view, #comment-view { display: flex; flex-direction: column; height: 100%; }
         #read-view, #comment-view { display: none; }
 
-        .menu-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow-y: auto; }
-        .menu-list li { margin-bottom: 12px; }
-        .menu-list button, .menu-list a {
-            width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: white;
-            font-size: 15px; text-align: left; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; transition: background 0.3s;
+        .menu-list { 
+            list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow-y: auto; 
+            display: flex; flex-direction: column; gap: 10px; /* Merapikan jarak otomatis */
         }
-        .menu-list button:hover, .menu-list a:hover { background: rgba(255,255,255,0.15); }
+        .menu-list li { margin-bottom: 0; }
+        .menu-list button, .menu-list a {
+            width: 100%; padding: 15px; 
+            background: rgba(220, 38, 38, 0.15); /* Merah transparan yang lembut */
+            border: 1px solid rgba(220, 38, 38, 0.3); 
+            border-radius: 12px; color: white;
+            font-size: 15px; text-align: left; cursor: pointer; 
+            text-decoration: none; display: block; box-sizing: border-box; 
+            transition: all 0.3s ease;
+        }
+        .menu-list button:hover, .menu-list a:hover { 
+            background: rgba(220, 38, 38, 0.4); 
+            border-color: rgba(255, 100, 100, 0.6);
+            transform: translateX(5px); /* Animasi geser sedikit saat disentuh/hover */
+        }
 
         #read-title { text-align: center; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); }
         #content-display, .scroll-area {
@@ -180,7 +196,15 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
 
         .action-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 15px; margin-top: 10px;}
-        #close-btn { background: #c0392b; margin-top: auto; }
+        
+        #close-btn { 
+            background: rgba(192, 57, 43, 0.8); 
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-top: auto; 
+            backdrop-filter: blur(5px);
+        }
+        #close-btn:hover { background: rgba(192, 57, 43, 1); }
+        
         .back-btn { background: #2980b9; }
 
         /* Form Komentar */
@@ -272,9 +296,9 @@
 
         <!-- Tombol Pengganti Video -->
         <div class="video-btn-group">
-            <button class="video-btn" onclick="changeVideo('hutri.mp4')">81</button>
+            <button class="video-btn" onclick="changeVideo('hutri.mp4')">🇮🇩</button>
+            <button class="video-btn" onclick="changeVideo('iklam.mp4')">TRAIL</button>
             <button class="video-btn" onclick="changeVideo('arinex.mp4')">ARNX</button>
-            <button class="video-btn" onclick="changeVideo('iklan.mp4')">TRAIL</button>
         </div>
     </div>
 
