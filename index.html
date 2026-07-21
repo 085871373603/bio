@@ -264,6 +264,10 @@
     <video id="bg-video" playsinline>
         <source src="iklan.mp4" type="video/mp4">
     </video>
+        <!-- Iframe Element (Khusus untuk memutar YouTube) -->
+    <iframe id="yt-video" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; width: 600px; height: 35vh; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); z-index: 15; background-color: black; border: none;" allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+
 
     <!-- Bulan & Kunang-kunang -->
     <div id="moon"></div>
@@ -299,14 +303,14 @@
         <div class="video-btn-group">
             <!-- Video Lokal -->
             <button class="video-btn" onclick="changeVideo('hutri.mp4')">🇮🇩</button>
-            <button class="video-btn" onclick="changeVideo('iklan.mp4')">TRAIL</button>
+            <button class="video-btn" onclick="changeVideo('iklan.mp4')">TRIAL.mp4</button>
             <button class="video-btn" onclick="changeVideo('arinex.mp4')">ARNX</button>
 
             <!-- Video Google Drive (Ganti ID_VIDEO dengan ID file Anda) -->
-            <button class="video-btn" onclick="changeVideo('https://drive.google.com/uc?export=download&id=ID_VIDEO')">GDRIVE</button>
+            <button class="video-btn" onclick="changeVideo('https://drive.google.com/file/d/1eMWz0ywt1SEHtfcZOsMIYxBNE1dbJALT/view?usp=drivesdk')">TrialGDRIVE</button>
 
             <!-- Video YouTube -->
-            <button class="video-btn" onclick="changeVideo('https://youtu.be/hvAOqTLEBDY?si=SvsCeMRI_LHqNpoa')">YOUTUBE</button>
+            <button class="video-btn" onclick="changeVideo('https://youtu.be/hvAOqTLEBDY?si=SvsCeMRI_LHqNpoa')">TrialYtMUSIK</button>
         </div>
 
     </div>
@@ -515,15 +519,43 @@
             setTimeout(() => bgVideo.style.display = 'none', 1500);
         });
 
-        // FUNGSI GANTI VIDEO DARI TOMBOL MEDIA
+                // FUNGSI GANTI VIDEO PINTAR (Support MP4, GDrive, & YouTube)
         window.changeVideo = function(srcUrl) {
-            bgVideo.src = srcUrl;
-            bgVideo.style.display = 'block';
-            bgVideo.style.opacity = '1';
-            bgVideo.style.transform = 'translate(-50%, -50%) scale(1)';
-            bgVideo.muted = false;
-            bgVideo.play().catch(e => console.log("Gagal memutar video secara otomatis:", e));
+            const bgVideo = document.getElementById('bg-video');
+            const ytVideo = document.getElementById('yt-video');
+
+            // Cek apakah link adalah YouTube
+            if (srcUrl.includes('youtube.com') || srcUrl.includes('youtu.be')) {
+                // Matikan video lokal/mp4
+                bgVideo.style.display = 'none'; 
+                bgVideo.pause();
+
+                // Ambil ID Video dari link YouTube
+                let videoId = "";
+                if(srcUrl.includes('v=')) videoId = srcUrl.split('v=')[1].substring(0, 11);
+                else if(srcUrl.includes('youtu.be/')) videoId = srcUrl.split('youtu.be/')[1].substring(0, 11);
+
+                // Masukkan ke Iframe dan tampilkan
+                ytVideo.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                ytVideo.style.display = 'block';
+                ytVideo.style.opacity = '1';
+            } 
+            // Jika link adalah Lokal (.mp4) atau Google Drive
+            else {
+                // Matikan Iframe YouTube
+                ytVideo.style.display = 'none';
+                ytVideo.src = ""; 
+
+                // Jalankan video lokal/mp4
+                bgVideo.src = srcUrl;
+                bgVideo.style.display = 'block';
+                bgVideo.style.opacity = '1';
+                bgVideo.style.transform = 'translate(-50%, -50%) scale(1)';
+                bgVideo.muted = false;
+                bgVideo.play().catch(e => console.log("Gagal memutar video secara otomatis:", e));
+            }
         };
+
 
         // 4. KONTROL POPUP MENU
         const popupMenu = document.getElementById('popup-menu');
