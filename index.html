@@ -262,7 +262,7 @@
     <!-- Layar Pembuka -->
     <div id="start-overlay">
         <h2>TAP</h2>
-        <p style="font-size: 13px; opacity: 0.7; margin-top: 10px; font-weight: 300;">Sentuh layar untuk memulai</p>
+        <p style="font-size: 13px; opacity: 0.7; margin-top: 10px; font-weight: 300;">to start</p>
     </div>
 
     <!-- Bulan & Kunang-kunang -->
@@ -298,15 +298,18 @@
             <img src="banner1.jpeg" alt="Iklan 1" onerror="this.src='https://via.placeholder.com/800x200/0a0f1e/FFFFFF?text=BANNER+IKLAN+1'">
             <img src="banner2.png" alt="Iklan 2" onerror="this.src='https://via.placeholder.com/800x200/131a33/FFFFFF?text=BANNER+IKLAN+2'">
             <img src="banner3.png" alt="Iklan 3" onerror="this.src='https://via.placeholder.com/800x200/1a2240/FFFFFF?text=BANNER+IKLAN+3'">
+            <img src="banner3.png" alt="Iklan 4" onerror="this.src='https://via.placeholder.com/800x200/1a2240/FFFFFF?text=BANNER+IKLAN+4'">
+            <img src="banner3.png" alt="Iklan 5" onerror="this.src='https://via.placeholder.com/800x200/1a2240/FFFFFF?text=BANNER+IKLAN+5'">
         </div>
+        
 
         <!-- Tombol Pilihan Video (Kapsul, Wrap otomatis ke bawah) -->
         <div class="video-btn-group">
-            <button class="video-btn" onclick="changeVideo('hutri.mp4')">🇮🇩 Lokal</button>
-            <button class="video-btn" onclick="changeVideo('iklan.mp4')">🎬 TRIAL.mp4</button>
-            <button class="video-btn" onclick="changeVideo('arinex.mp4')">✨ ARNX</button>
-            <button class="video-btn" onclick="changeVideo('https://drive.google.com/uc?export=download&id=1eMWz0ywt1SEHtfcZOsMIYxBNE1dbJALT')">☁️ G-Drive</button>
-            <button class="video-btn" onclick="changeVideo('https://youtu.be/hvAOqTLEBDY?si=SvsCeMRI_LHqNpoa')">🎵 YouTube</button>
+            <button class="video-btn" onclick="changeVideo('hutri.mp4')">#81🇮🇩</button>
+            <button class="video-btn" onclick="changeVideo('iklan.mp4')">Trial.muv</button>
+            <button class="video-btn" onclick="changeVideo('arinex.mp4')">Iklan</button>
+            <button class="video-btn" onclick="changeVideo('https://drive.google.com/uc?export=download&id=1eMWz0ywt1SEHtfcZOsMIYxBNE1dbJALT')">Trial.G-Drive</button>
+            <button class="video-btn" onclick="changeVideo('https://youtu.be/hvAOqTLEBDY?si=SvsCeMRI_LHqNpoa')">Trial.ytmusik</button>
         </div>
     </div>
 
@@ -387,7 +390,7 @@
         }
 
         function startAutoSlide() {
-            slideTimer = setInterval(goToNextSlide, 4000); // 4 detik per banner
+            slideTimer = setInterval(goToNextSlide, 5000); // 5 detik per banner
         }
 
         function stopAutoSlide() {
