@@ -82,6 +82,33 @@
         .video-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); color: #fff; transform: translateY(-2px); }
         .video-btn:active { transform: scale(0.95); }
 
+        /* Tombol Live Streaming Khusus (Aksen Merah/Live) */
+        .video-btn.live-btn {
+            background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;
+        }
+        .video-btn.live-btn:hover {
+            background: rgba(239, 68, 68, 0.3); border-color: rgba(239, 68, 68, 0.6); color: #fff;
+        }
+
+        /* Popup Banner Iklan Berkala Saat Live */
+        #live-ad-popup {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(10px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        #live-ad-popup.active { display: flex; opacity: 1; }
+        .live-ad-content {
+            background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 20px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;
+        }
+        .live-ad-content img { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
+        .live-ad-close {
+            background: #ef4444; border: none; color: white; padding: 10px 20px; border-radius: 12px;
+            font-weight: 700; cursor: pointer; font-size: 14px; width: 100%;
+        }
+
         /* Tombol Menu Melayang (FAB) */
         #menu-btn {
             position: absolute; top: 25px; right: 20px; padding: 12px 24px;
@@ -211,7 +238,7 @@
         
         .btn-balas { background: none; border: none; color: #fbbf24; font-size: 12px; font-weight: 700; cursor: pointer; padding: 0; transition: color 0.2s; }
         .btn-balas:hover { color: #fde047; }
-        .chat-box.self .btn-balas { color: #dbeafe; } /* Sesuaikan warna tombol balas di chat sendiri */
+        .chat-box.self .btn-balas { color: #dbeafe; }
 
         /* Efek klik air */
         .ripple { position: absolute; border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 50%; transform: translate(-50%, -50%); animation: rippleAnim 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; pointer-events: none; z-index: 9999; }
@@ -226,12 +253,21 @@
         <p>untuk masuk</p>
     </div>
 
+    <!-- Popup Banner Iklan Berkala Saat Live -->
+    <div id="live-ad-popup">
+        <div class="live-ad-content">
+            <h3 style="margin-top:0; color:#f8fafc; font-size:18px;">Informasi Spesial</h3>
+            <img id="live-ad-img" src="banner1.jpeg" alt="Banner Iklan" onerror="this.src='https://via.placeholder.com/400x200/0f172a/FFFFFF?text=BANNER+IKLAN'">
+            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">Terima kasih telah menyaksikan siaran langsung kami.</p>
+            <button class="live-ad-close" onclick="closeLiveAd()">Tutup Banner</button>
+        </div>
+    </div>
+
     <!-- Ornamen Latar -->
     <div id="moon"></div>
     <canvas id="fireflies"></canvas>
     <div id="landscape">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-            <!-- Menggunakan warna gelap yang menyatu dengan gradien baru -->
             <path d="M0,70 Q100,30 200,60 L200,100 L0,100 Z" fill="#020617"/>
             <g transform="translate(115, 33)">
                 <circle cx="-5" cy="8" r="4" fill="#020617"/>
@@ -249,7 +285,7 @@
         <video id="bg-video" playsinline>
             <source src="arinex.mp4" type="video/mp4">
         </video>
-        <iframe id="yt-video" style="display:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe id="yt-video" style="display:none;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
 
         <div class="ad-banner-container" id="ad-banner-slider">
             <img src="banner1.jpeg" alt="Iklan 1" onerror="this.src='https://via.placeholder.com/800x200/0f172a/FFFFFF?text=BANNER+IKLAN+1'">
@@ -266,6 +302,8 @@
             <button class="video-btn" onclick="changeVideo('hutri.mp4')">#81🇮🇩</button>
             <button class="video-btn" onclick="changeVideo('https://drive.google.com/uc?export=download&id=1eMWz0ywt1SEHtfcZOsMIYxBNE1dbJALT')">Trial.Drive</button>
             <button class="video-btn" onclick="changeVideo('https://youtu.be/hvAOqTLEBDY?si=SvsCeMRI_LHqNpoa')">Trial.YTM</button>
+            <!-- Tombol Kapsul Live Streaming Terintegrasi -->
+            <button class="video-btn live-btn" onclick="changeVideo('https://www.youtube.com/watch?v=uvXeM-DnSzQ', true)">🔴 Live SOTA</button>
         </div>
     </div>
 
@@ -278,7 +316,7 @@
                 <h3 class="menu-title">Eksplorasi</h3>
                 <ul class="menu-list">
                     <li><button data-title="The Assembly" data-content="<h1>PROSPEKTUS: COMPILE 4.73</h1><hr><h2>1. Latar Belakang Masalah &amp; Penyelesaian</h2><p><b>Analisis Kondisi Nyata:</b><br>Berdasarkan modul <i>Lean Startup</i> oleh Eric Ries, pemborosan terbesar pengusaha pemula adalah membangun produk/ruang fisik berskala besar tanpa memvalidasi apakah ada pasar yang menginginkannya. Mengutip pengusaha Bob Sadino, &quot;Bisnis yang bagus adalah yang dibuka, bukan yang ditanyakan terus.&quot; Dalam lanskap urban dikota besar, masalah utamanya adalah tingginya beban <i>overhead</i> yang sering membunuh kedai kopi independen pada tahun pertama.</p><p><b>Penyelesaian:</b><br>Compile 4.73 mengadopsi prinsip <i>Minimum Viable Product (MVP)</i>—fokus pada <i>micro-space</i> (lapak teras 2x2 meter) yang memangkas beban sewa hingga 80%, mengoptimalkan kecepatan saji, dan menghilangkan biaya pekerja (<i>sweat equity</i> oleh pendiri di tahap awal).</p><h2>2. Konsep Bisnis</h2><p>Compile 4.73 adalah entitas F&amp;B yang beroperasi seperti mesin presisi. Ini adalah stasiun <i>grab-and-go</i> yang mengutamakan kualitas kopi esensial dengan perputaran pelanggan yang cepat. Fokus pada retensi pelanggan melalui konsistensi rasa, bukan fasilitas fisik.</p><h2>3. Sistem Informasi (Integrasi, Keamanan, &amp; Akurasi)</h2><p>Sistem dibangun secara mandiri menggunakan arsitektur <i>Serverless</i>. Fokus utama adalah pada integritas data agar bisnis tetap terkontrol meski dijalankan oleh karyawan:</p><ul><li><b>Keamanan &amp; Anti-Manipulasi:</b> Menggunakan <i>Rule-Based Authentication</i> di level <i>database</i>. Tidak ada opsi &quot;Edit/Hapus Transaksi&quot; bagi kasir; setiap koreksi harus melalui <i>log</i> admin permanen guna mencegah manipulasi/fraud.</li><li><b>Inventory &amp; Repacking:</b> Sistem membagi inventori menjadi <b>Bahan Baku Original (ORI)</b> dan <b>Bahan Baku Siap Pakai (RPC/Repack)</b>. Fitur <i>Repacking</i> mengonversi satuan besar ke porsi jual. Saat terjual, sistem memotong stok RPC. Jika ada kehilangan/kerusakan, fitur <b>Waste Management</b> wajib digunakan untuk mencatat pemusnahan barang sebagai beban operasional.</li><li><b>Real-time Stock Opname (SO):</b> Jika ditemukan selisih, sistem melakukan <b>Adjustment Otomatis</b> yang mengompensasi selisih tersebut ke laporan HPP harian, memastikan inventori selalu sinkron.</li><li><b>Manajemen F&amp;B &amp; Kalkulasi HPP:</b> Sistem menghitung HPP secara dinamis. Setiap Menu Jual memiliki <i>Recipe Base</i> yang terikat pada stok RPC. Saat menu terjual, HPP dihitung berdasarkan biaya rata-rata bahan baku (termasuk proporsi <i>waste</i>), sehingga laporan laba kotor selalu akurat.</li><li><b>Sistem Setoran Kasir (Variance Control):</b> Saat tutup buku (<i>End of Day</i>), sistem mengunci nominal uang fisik yang wajib disetor. Jika terdapat <b>Variance</b> (selisih uang kas), sistem menandai selisih tersebut sebagai utang karyawan yang wajib dilunasi.</li><li><b>Cloud &amp; Purchase Order (PO):</b> Sistem memiliki modul <b>Auto-PO</b>, yang secara otomatis menciptakan draf <i>Purchase Order</i> berdasarkan <i>re-order point</i>, dihitung dari gelombang keluar barang (<i>flow</i> rata-rata) dan tren produk.</li><li><b>Analisis Pasar &amp; Laporan:</b> Sistem menghasilkan laporan keuangan dan modul <b>Analisis Produk</b>. Dashboard otomatis mengklasifikasikan menu menjadi <i>Fast-Moving</i> (laris) dan <i>Slow-Moving</i> (tidak laris) berdasarkan data 1 bulan terakhir untuk rekomendasi strategis.</li></ul><h2>4. Risiko dan Manajemen Risiko</h2><p>Menerapkan matriks manajemen risiko standar korporasi untuk memitigasi operasional bahan baku (JIT Inventory), finansial sewa lapak, dan persaingan harga.</p><h2>5. Rincian Anggaran (Kapitalisasi Rp 12.000.000)</h2><table border='1' cellpadding='5' style='border-collapse: collapse; width: 100%; border-color: rgba(255,255,255,0.3); font-size:12px;'><thead><tr style='background: rgba(255,255,255,0.1);'><th>Komponen</th><th>Alokasi (Rp)</th></tr></thead><tbody><tr><td><b>Sewa Lapak (3bln)</b></td><td>1.800.000</td></tr><tr><td><b>Booth &amp; Infrastruktur</b></td><td>2.500.000</td></tr><tr><td><b>Alat Produksi</b></td><td>4.000.000</td></tr><tr><td><b>Fasilitas</b></td><td>1.000.000</td></tr><tr><td><b>Bahan Baku Awal</b></td><td>1.100.000</td></tr><tr><td><b>Promosi</b></td><td>500.000</td></tr><tr><td><b>Cadangan</b></td><td>1.100.000</td></tr></tbody></table><h2>6. Manajemen Keuangan</h2><p>Asumsi <b>Rp 0 Pemasukan selama Triwulan Pertama</b>. Total kebutuhan operasional 3 bulan (listrik, keamanan, gaji karyawan paruh waktu) adalah Rp 4.000.000. Dengan dana cadangan Rp 3.500.000, <i>founder</i> mengantisipasi kekurangan kecil dengan penyesuaian biaya sewa atau subsidi pribadi.</p><h2>7. Manajemen Operasional</h2><p>Menggunakan prinsip <i>Kaizen</i>, Kalibrasi Pagi (<i>dial-in</i> kopi), akuntansi disiplin (pemisahan kas kasir &amp; pribadi), dan <i>Zero Waste</i>.</p><h2>8. Promosi</h2><p>Taktik <i>Customer Acquisition Cost (CAC)</i> agresif (Buy 1 Get 1) untuk membeli <i>data palate</i> pasar dan memaksa orang mencoba produk.</p><h2>9. Plan B</h2><p>Pivot ke B2B (produksi massal botol literan) dengan sistem konsinyasi jika pendapatan bulan ke-2 gagal menutupi biaya operasional.</p><h2>10. Tindakan Wajib &amp; Pantangan</h2><p>Input POS real-time, rotasi FIFO, dan eksekusi Plan B adalah wajib. Larangan keras: Mixing funds (uang kas untuk pribadi), merubah HPP manual, dan meninggalkan mesin POS tanpa kunci.</p>">1. The Assembly</button></li>
-                    <li><button data-title="Behavioral Approach" data-content="Antara Nurani dan Bertahan Hidup<br><br>Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan takdir tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.">2. Behavioral Approach</button></li>
+                    <li><button data-title="Behavioral Approach" data-content="Antara Nurani dan Bertahan Hidup<br><br>Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.">2. Behavioral Approach</button></li>
                     <li><button data-title="Sebelum Esok" data-content="<h2 style='margin-top:0;'>Bayang-Bayang Obsesi di Tengah Tuntutan Sosial</h2><p>Layar gawai dan etalase kehidupan orang lain sering kali memancarkan ilusi yang menyilaukan. Di tengah masyarakat modern yang serba cepat, nilai seseorang kerap kali direduksi menjadi seberapa besar pencapaian material yang bisa mereka pamerkan. Dari sinilah lahir sebuah fenomena sosial yang menggerogoti dari dalam: gengsi yang bermutasi menjadi obsesi.</p><h3>Analisis Masalah: Keterasingan Diri dan Hancurnya Batasan</h3><p>Tuntutan untuk terlihat sukses dan mapan menciptakan tekanan psikologis yang luar biasa. Ketika gengsi mengambil alih, standar kebahagiaan tidak lagi ditentukan oleh diri sendiri, melainkan oleh pandangan orang lain. Dalam titik ini, obsesi yang berlebihan mulai bekerja bagai racun yang perlahan melumpuhkan akal sehat.</p><ul><li><b>Keluar dari Dirinya Sendiri (Alienasi Diri):</b> Demi memenuhi ekspektasi sosial, seseorang mulai memakai topeng. Mereka memaksa diri menjalani gaya hidup, mengambil keputusan, atau memburu status yang sebenarnya bertentangan dengan kapasitas dan keinginan sejati mereka. Mereka menjadi asing di dalam tubuh mereka sendiri, memainkan peran sebagai orang lain yang dianggap ideal oleh masyarakat. Jati diri, ketenangan batin, dan kebahagiaan sederhana perlahan mati kelaparan.</li><li><b>Menabrak Aturan dan Etika:</b> Ketika obsesi akan status dan pencapaian sudah menutupi mata, proses perlahan kehilangan maknanya. Mentalitas jalan pintas mulai tumbuh. Demi memuaskan dahaga akan gengsi, garis batas antara yang benar dan yang salah menjadi sangat kabur. Aturan, baik itu norma sosial, kode etik, maupun integritas pribadi, tidak lagi dipandang sebagai pedoman, melainkan sebagai penghalang yang harus diterabas. Pada tahap ini, obsesi membenarkan segala cara, mengorbankan moralitas demi ilusi kemenangan.</li></ul><h3>Persiapan untuk Besok: Mengkalibrasi Ulang Realitas</h3><p>Malam ini adalah batas waktu sebelum roda tuntutan kembali berputar esok hari. Agar tidak terus terseret dalam pusaran obsesi yang merusak, persiapan yang dibutuhkan bukanlah strategi untuk berlari lebih cepat, melainkan keberanian untuk berhenti sejenak.</p><ul><li><b>Mendekonstruksi Gengsi:</b> Sadari bahwa pandangan orang lain adalah hal yang berada di luar kendali kita. Membayar harga mahal (baik secara finansial, moral, maupun mental) hanya untuk membeli decak kagum yang sementara adalah sebuah investasi yang sia-sia.</li><li><b>Menemukan Kembali Akar Jati Diri:</b> Bertanya kembali pada diri sendiri dengan jujur: Apakah yang sedang saya kejar ini benar-benar yang saya butuhkan, atau sekadar yang ingin saya pamerkan? Menerima kondisi realitas saat ini tanpa rasa malu adalah langkah pertama untuk kembali ke dalam diri sendiri.</li><li><b>Memperbaiki Kompas Moral:</b> Menyadari bahwa pencapaian yang diraih dengan mengorbankan aturan dan integritas pada akhirnya hanya akan membawa kehampaan dan kecemasan yang baru. Proses yang jujur jauh lebih berharga daripada hasil yang manipulatif.</li></ul><h3>Pesan Motivasi untuk Besok</h3><blockquote style='font-style: italic; background: rgba(255,255,255,0.1); padding: 15px; border-left: 4px solid #3b82f6; margin-left: 0; border-radius: 4px;'>&quot;Kesuksesan sejati tidak diukur dari seberapa riuh tepuk tangan orang lain, melainkan dari seberapa damai kau bisa menatap pantulan dirimu sendiri di cermin.&quot;</blockquote><p>Esok adalah lembaran yang baru. Jangan biarkan gengsi mendikte setiap keputusanmu, dan jangan biarkan obsesi merampas kewarasan serta nuranimu. Hiduplah di atas tanah realitas yang kokoh. Melangkahlah dengan integritas dan kejujuran. Ingatlah, tidak ada garis finis yang sepadan jika kau harus kehilangan dirimu sendiri di sepanjang jalan.</p><p>Bernapaslah. Lepaskan beban ekspektasi yang bukan milikmu. Hadapi esok hari sebagai dirimu yang paling sejati.</p>">3. Sebelum Esok</button></li>
                     <li><a href="dashboard.html">4. Profile</a></li>
                     <li><a href="learn.html">5. Survey Evaluasi (Dapatkan Voucher)</a></li>
@@ -410,28 +448,70 @@
         }
         drawFireflies();
 
-        // Logika Video Overlay
+        // Logika Video Overlay & Live Streaming Fullscreen + Banner 5 Menit
         const bgVideo = document.getElementById('bg-video');
         const startOverlay = document.getElementById('start-overlay');
+        let liveAdInterval = null;
+
         startOverlay.addEventListener('click', () => {
             startOverlay.style.opacity = '0'; setTimeout(() => startOverlay.style.display = 'none', 500);
             bgVideo.muted = false; bgVideo.play().catch(e => console.log(e));
         });
 
-        window.changeVideo = function(srcUrl) {
+        window.changeVideo = function(srcUrl, isLive = false) {
             const ytVideo = document.getElementById('yt-video');
+            
+            // Bersihkan timer live sebelumnya jika ada
+            if (liveAdInterval) {
+                clearInterval(liveAdInterval);
+                liveAdInterval = null;
+            }
+
             if (srcUrl.includes('youtube.com') || srcUrl.includes('youtu.be')) {
                 bgVideo.style.display = 'none'; bgVideo.pause();
                 let videoId = "";
                 if(srcUrl.includes('v=')) videoId = srcUrl.split('v=')[1].substring(0, 11);
                 else if(srcUrl.includes('youtu.be/')) videoId = srcUrl.split('youtu.be/')[1].substring(0, 11);
-                ytVideo.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                
+                ytVideo.src = `https://www.youtube.com/live/WHTPYAvakTg?si=fmTQ4KIH_Aamt7Tn/${videoId}?autoplay=1&rel=0&playsinline=1`;
                 ytVideo.style.display = 'block';
+
+                // Jika mode live, aktifkan layar penuh otomatis dan interval banner setiap 5 menit (300000 ms)
+                if (isLive) {
+                    setTimeout(() => {
+                        if (ytVideo.requestFullscreen) {
+                            ytVideo.requestFullscreen().catch(err => console.log("Fullscreen dibatasi browser:", err));
+                        } else if (ytVideo.webkitRequestFullscreen) {
+                            ytVideo.webkitRequestFullscreen();
+                        }
+                    }, 800);
+
+                    // Munculkan banner iklan pertama setelah 5 menit, lalu berulang tiap 5 menit
+                    liveAdInterval = setInterval(() => {
+                        triggerLiveAdPopup();
+                    }, 300000); 
+                }
             } else {
                 ytVideo.style.display = 'none'; ytVideo.src = ""; 
                 bgVideo.src = srcUrl; bgVideo.style.display = 'block'; bgVideo.style.opacity = '1';
                 bgVideo.muted = false; bgVideo.play().catch(e => console.log(e));
             }
+        };
+
+        // Fungsi kontrol Popup Banner Live
+        window.triggerLiveAdPopup = function() {
+            const popup = document.getElementById('live-ad-popup');
+            const imgElement = document.getElementById('live-ad-img');
+            // Ambil gambar acak dari banner yang sudah ada
+            const banners = ['banner1.jpeg', 'banner2.png', 'banner3.png', 'banner4.png', 'banner5.png', 'banner6.png'];
+            const randomBanner = banners[Math.floor(Math.random() * banners.length)];
+            imgElement.src = randomBanner;
+            popup.classList.add('active');
+        };
+
+        window.closeLiveAd = function() {
+            const popup = document.getElementById('live-ad-popup');
+            popup.classList.remove('active');
         };
 
         // Navigasi UI Menu Modal
@@ -469,7 +549,6 @@
                 push(chatRef, { userId: deviceUserId, teks: pesanText, waktu: serverTimestamp(), parentId: parentMessageId, reactions: { wow: 0, super: 0, haha: 0 } }).then(() => {
                     chatInput.value = ""; sendStatus.style.display = "block"; setTimeout(() => sendStatus.style.display = "none", 3000);
                     parentMessageId = null; replyIndicator.style.display = 'none'; chatInput.placeholder = "Tulis sesuatu...";
-                    // Auto scroll to top
                     const scrollArea = document.getElementById('chat-scroll-area');
                     scrollArea.scrollTop = scrollArea.scrollHeight;
                 }).catch(() => alert("Gagal mengirim.")).finally(() => { sendChatBtn.textContent = "Kirim Pesan"; sendChatBtn.disabled = false; });
@@ -497,9 +576,8 @@
         // Generate Elemen Bubble Chat
         function createMessageDOM(msg, isReply) {
             const box = document.createElement('div');
-            const isSelf = (msg.userId === deviceUserId); // Deteksi pesan diri sendiri
+            const isSelf = (msg.userId === deviceUserId); 
             
-            // Pengaturan class UI: Kiri (Orang lain), Kanan (Self/Sendiri)
             box.className = `chat-box ${isReply ? 'reply' : ''} ${isSelf ? 'self' : ''}`;
             const displayName = isSelf ? `Kamu` : msg.userId;
 
@@ -536,4 +614,4 @@
         }
     </script>
 </body>
-                            </html>
+</html>
