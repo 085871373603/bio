@@ -302,8 +302,12 @@
             <button class="video-btn" onclick="changeVideo('hutri.mp4')">#81🇮🇩</button>
             <button class="video-btn" onclick="changeVideo('https://drive.google.com/uc?export=download&id=1eMWz0ywt1SEHtfcZOsMIYxBNE1dbJALT')">Trial.Drive</button>
             <button class="video-btn" onclick="changeVideo('https://youtu.be/hvAOqTLEBDY?si=SvsCeMRI_LHqNpoa')">Trial.YTM</button>
-            <!-- Tombol Kapsul Live Streaming Terintegrasi -->
-            <button class="video-btn live-btn" onclick="changeVideo('https://www.youtube.com/watch?v=uvXeM-DnSzQ', true)">🔴 Live SOTA</button>
+            
+            <!-- =================================================================== -->
+            <!-- 🔴 TEMPAT GANTI LINK LIVE STREAMING (Ubah URL di dalam tanda kutip) -->
+            <!-- =================================================================== -->
+            <button class="video-btn live-btn" onclick="changeVideo('https://www.youtube.com/live/WHTPYAvakTg?si=fmTQ4KIH_Aamt7Tn', true)">🔴 Live SOTA</button>
+            
         </div>
     </div>
 
@@ -470,10 +474,20 @@
             if (srcUrl.includes('youtube.com') || srcUrl.includes('youtu.be')) {
                 bgVideo.style.display = 'none'; bgVideo.pause();
                 let videoId = "";
-                if(srcUrl.includes('v=')) videoId = srcUrl.split('v=')[1].substring(0, 11);
-                else if(srcUrl.includes('youtu.be/')) videoId = srcUrl.split('youtu.be/')[1].substring(0, 11);
                 
-                ytVideo.src = `https://www.youtube.com/live/WHTPYAvakTg?si=fmTQ4KIH_Aamt7Tn/${videoId}?autoplay=1&rel=0&playsinline=1`;
+                // ==============================================================
+                // PERBAIKAN BUG: Ekstraksi ID Video dari berbagai tipe link YT
+                // ==============================================================
+                if(srcUrl.includes('v=')) {
+                    videoId = srcUrl.split('v=')[1].substring(0, 11);
+                } else if(srcUrl.includes('youtu.be/')) {
+                    videoId = srcUrl.split('youtu.be/')[1].substring(0, 11);
+                } else if(srcUrl.includes('/live/')) { 
+                    // Menambahkan kondisi ini untuk menangkap format URL "youtube.com/live/..."
+                    videoId = srcUrl.split('/live/')[1].substring(0, 11); 
+                }
+                
+                ytVideo.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
                 ytVideo.style.display = 'block';
 
                 // Jika mode live, aktifkan layar penuh otomatis dan interval banner setiap 5 menit (300000 ms)
