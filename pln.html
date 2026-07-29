@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARINEX - Cetak Struk Listrik</title>
+    <!-- Tailwind CSS untuk Styling Modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS Khusus untuk Tampilan Cetak (Struk Thermal 48mm) */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-area, #print-area * {
+                visibility: visible;
+            }
+            /* Menghilangkan margin bawaan browser saat print */
+            @page {
+                margin: 0;
+            }
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 48mm;
+                max-width: 48mm;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 10px;
+                color: black;
+                margin: 0;
+                padding: 2mm;
+                box-sizing: border-box;
+            }
+            .print-bold { font-weight: bold; }
+            .print-center { text-align: center; }
+            .print-divider { border-top: 1px dashed black; margin: 6px 0; }
+            .print-flex { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; }
+            .print-flex span:first-child { flex-shrink: 0; }
+            .print-flex span:last-child { text-align: right; word-break: break-word; }
+            .token-text { 
+                font-size: 13px; 
+                font-weight: bold; 
+                text-align: center; 
+                margin: 8px 0; 
+                letter-spacing: 1px;
+                word-wrap: break-word;
+            }
+        }
+        
+        /* Sembunyikan area cetak di layar biasa/HP */
+        @media screen {
+            #print-area {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header Aplikasi -->
+    <header class="bg-blue-600 text-white p-4 shadow-md text-center">
+        <h1 class="text-2xl font-bold tracking-wider">ARINEX</h1>
+        <p class="text-sm text-blue-200">Sistem Pembayaran & Cetak Struk</p>
+    </header>
+
+    <!-- Navigasi Menu -->
+    <nav class="flex justify-center bg-white shadow-sm mb-4">
+        <button id="tab-bayar" class="w-1/2 py-3 text-blue-600 font-semibold border-b-2 border-blue-600">MENU BAYAR</button>
+        <button id="tab-cetak" class="w-1/2 py-3 text-gray-500 font-semibold border-b-2 border-transparent">CETAK ULANG</button>
+    </nav>
+
+    <!-- MENU 1: BAYAR -->
+    <main id="view-bayar" class="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md mx-2">
+        <h2 class="text-lg font-bold mb-4 border-b pb-2">Detail Transaksi Baru</h2>
+        <form id="form-bayar" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">ID Transaksi</label>
+                <input type="text" id="id-transaksi" readonly class="mt-1 w-full p-2 bg-gray-100 border rounded-md text-gray-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Jenis Layanan</label>
+                <input type="text" value="Prabayar" readonly class="mt-1 w-full p-2 bg-gray-100 border rounded-md text-gray-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">ID Pelanggan (Idpel)</label>
+                <input type="number" id="idpel" required class="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nama Pelanggan</label>
+                <input type="text" id="nama-pelanggan" required class="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Token / Stroom</label>
+                <input type="text" id="token" required class="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="XXXX-XXXX-XXXX-XXXX">
+            </div>
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <label class="block text-sm font-medium text-gray-700">KWh</label>
+                    <input type="text" id="kwh" required class="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 outline-none">
+                </div>
+                <div class="w-1/2">
+                    <label class="block text-sm font-medium text-gray-700">Denom (Rp)</label>
+                    <input type="number" id="denom" required class="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 outline-none" placeholder="Contoh: 20000">
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 p-3 rounded-md mt-4 border border-blue-100">
+                <div class="flex justify-between text-sm">
+                    <span>Listrik PLN:</span>
+                    <span id="preview-listrik" class="font-semibold">Rp 0</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span>Biaya Layanan:</span>
+                    <span class="font-semibold">Rp 4.500</span>
+                </div>
+                <!-- Tambahan Preview PPN -->
+                <div class="flex justify-between text-sm">
+                    <span>PPN:</span>
+                    <span class="font-semibold">Rp 0</span>
+                </div>
+                <div class="print-divider my-2 border-t border-dashed border-blue-300" style="border-top-width: 1px;"></div>
+                <div class="flex justify-between text-lg font-bold text-blue-700">
+                    <span>Total Bayar:</span>
+                    <span id="preview-total">Rp 4.500</span>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 active:scale-95 transition-all mt-4">
+                SIMPAN & CETAK STRUK
+            </button>
+        </form>
+    </main>
+
+    <!-- MENU 2: CETAK ULANG -->
+    <main id="view-cetak" class="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md mx-2 hidden">
+        <h2 class="text-lg font-bold mb-4 border-b pb-2">Cari Transaksi</h2>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Masukkan ID Pelanggan (Idpel)</label>
+                <div class="flex gap-2 mt-1">
+                    <input type="number" id="search-idpel" class="w-full p-2 border rounded-md focus:ring-blue-500 outline-none" placeholder="Contoh: 123456789">
+                    <button id="btn-cari" class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900">Cari</button>
+                </div>
+            </div>
+            
+            <div id="search-result" class="mt-4 space-y-3">
+                <!-- Hasil pencarian akan muncul di sini -->
+            </div>
+        </div>
+    </main>
+
+    <!-- AREA CETAK STRUK -->
+    <div id="print-area">
+        <div class="print-center">
+            <img src="logo.png" alt="ARINEX" style="max-width: 40px; margin: 0 auto 5px; display: block;" onerror="this.style.display='none'">
+            <div class="print-bold" style="font-size: 11px;">STRUK PEMBELIAN LISTRIK PRABAYAR</div>
+            <div id="print-tanggal" style="font-size: 9px; margin-top: 3px;"></div>
+        </div>
+        <div class="print-divider"></div>
+        <div>
+            <div class="print-flex"><span>ID Trans:</span> <span id="print-idtrans"></span></div>
+            <div class="print-flex"><span>Idpel:</span> <span id="print-idpel"></span></div>
+            <div class="print-flex"><span>Nama:</span> <span id="print-nama"></span></div>
+            <div class="print-flex"><span>KWh:</span> <span id="print-kwh"></span></div>
+        </div>
+        <div class="print-divider"></div>
+        <div class="print-center">Token / Stroom :</div>
+        <div class="token-text" id="print-token"></div>
+        <div class="print-divider"></div>
+        <div>
+            <div class="print-flex"><span>Pembayaran:</span> <span>TUNAI</span></div>
+            <div class="print-flex"><span>PLN:</span> <span id="print-denom"></span></div>
+            <div class="print-flex"><span>Admin:</span> <span>Rp 4.500</span></div>
+            <!-- Tambahan Baris PPN pada area cetak struk -->
+            <div class="print-flex"><span>PPN:</span> <span>Rp 0</span></div>
+        </div>
+        <div class="print-divider"></div>
+        <div class="print-flex print-bold" style="font-size: 11px;">
+            <span>TOTAL:</span> <span id="print-total"></span>
+        </div>
+        <div class="print-divider"></div>
+        <div class="print-center" style="margin-top: 10px;">
+            *** TERIMA KASIH ***
+        </div>
+    </div>
+
+    <!-- Firebase v12 & Logika Aplikasi -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZMPSEQhCgM8vvEbotEO5Ck15VpuFXHY4",
+            authDomain: "server-323.firebaseapp.com",
+            databaseURL: "https://server-323-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "server-323",
+            storageBucket: "server-323.firebasestorage.app",
+            messagingSenderId: "411152653914",
+            appId: "1:411152653914:web:88ba5f277172400b31c263",
+            measurementId: "G-WRDRC4WSWQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const tabBayar = document.getElementById('tab-bayar');
+        const tabCetak = document.getElementById('tab-cetak');
+        const viewBayar = document.getElementById('view-bayar');
+        const viewCetak = document.getElementById('view-cetak');
+        const inputIdTransaksi = document.getElementById('id-transaksi');
+        const inputDenom = document.getElementById('denom');
+        const previewListrik = document.getElementById('preview-listrik');
+        const previewTotal = document.getElementById('preview-total');
+
+        const BIAYA_ADMIN = 4500;
+
+        const formatRp = (angka) => {
+            return "Rp " + angka.toLocaleString('id-ID');
+        };
+
+        const generateId = () => {
+            inputIdTransaksi.value = Date.now().toString();
+        };
+        generateId();
+
+        tabBayar.addEventListener('click', () => {
+            viewBayar.classList.remove('hidden');
+            viewCetak.classList.add('hidden');
+            tabBayar.className = "w-1/2 py-3 text-blue-600 font-semibold border-b-2 border-blue-600";
+            tabCetak.className = "w-1/2 py-3 text-gray-500 font-semibold border-b-2 border-transparent";
+            generateId();
+        });
+
+        tabCetak.addEventListener('click', () => {
+            viewCetak.classList.remove('hidden');
+            viewBayar.classList.add('hidden');
+            tabCetak.className = "w-1/2 py-3 text-blue-600 font-semibold border-b-2 border-blue-600";
+            tabBayar.className = "w-1/2 py-3 text-gray-500 font-semibold border-b-2 border-transparent";
+        });
+
+        inputDenom.addEventListener('input', (e) => {
+            const denomValue = parseInt(e.target.value) || 0;
+            previewListrik.innerText = formatRp(denomValue);
+            previewTotal.innerText = formatRp(denomValue + BIAYA_ADMIN);
+        });
+
+        const persiapkanStruk = (data) => {
+            const dateObj = new Date(data.timestamp);
+            const dateFormatted = dateObj.toLocaleString('id-ID', { 
+                dateStyle: 'short', 
+                timeStyle: 'short' 
+            }).replace(/\./g, ':');
+
+            document.getElementById('print-tanggal').innerText = dateFormatted;
+            document.getElementById('print-idtrans').innerText = data.idTransaksi;
+            document.getElementById('print-idpel').innerText = data.idpel;
+            document.getElementById('print-nama').innerText = data.nama;
+            document.getElementById('print-kwh').innerText = data.kwh;
+            document.getElementById('print-token').innerText = data.token;
+            document.getElementById('print-denom').innerText = formatRp(parseInt(data.denom));
+            document.getElementById('print-total').innerText = formatRp(parseInt(data.denom) + BIAYA_ADMIN);
+        };
+
+        document.getElementById('form-bayar').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btnSubmit = e.target.querySelector('button');
+            btnSubmit.innerHTML = "Menyimpan...";
+            btnSubmit.disabled = true;
+
+            const dataTransaksi = {
+                idTransaksi: inputIdTransaksi.value,
+                jenisLayanan: "Prabayar",
+                idpel: document.getElementById('idpel').value,
+                nama: document.getElementById('nama-pelanggan').value,
+                token: document.getElementById('token').value,
+                kwh: document.getElementById('kwh').value,
+                denom: parseInt(inputDenom.value),
+                totalBayar: parseInt(inputDenom.value) + BIAYA_ADMIN,
+                timestamp: Date.now()
+            };
+
+            try {
+                await set(ref(db, 'transaksi/' + dataTransaksi.idTransaksi), dataTransaksi);
+                persiapkanStruk(dataTransaksi);
+                
+                setTimeout(() => {
+                    window.print();
+                    document.getElementById('form-bayar').reset();
+                    previewListrik.innerText = "Rp 0";
+                    previewTotal.innerText = "Rp 4.500";
+                    generateId();
+                }, 300);
+
+            } catch (error) {
+                alert("Gagal menyimpan data: " + error.message);
+            } finally {
+                btnSubmit.innerHTML = "SIMPAN & CETAK STRUK";
+                btnSubmit.disabled = false;
+            }
+        });
+
+        document.getElementById('btn-cari').addEventListener('click', async () => {
+            const searchIdpel = document.getElementById('search-idpel').value;
+            const resultDiv = document.getElementById('search-result');
+            const btnCari = document.getElementById('btn-cari');
+            
+            if(!searchIdpel) return alert('Masukkan Idpel terlebih dahulu!');
+
+            btnCari.innerText = "Mencari...";
+            resultDiv.innerHTML = "";
+
+            try {
+                const transaksiRef = ref(db, 'transaksi');
+                const q = query(transaksiRef, orderByChild('idpel'), equalTo(searchIdpel));
+                const snapshot = await get(q);
+
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const data = childSnapshot.val();
+                        
+                        const card = document.createElement('div');
+                        card.className = "border p-3 rounded-md flex justify-between items-center bg-gray-50 mb-2";
+                        
+                        const tgl = new Date(data.timestamp).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }).replace(/\./g, ':');
+                        
+                        card.innerHTML = `
+                            <div>
+                                <p class="font-bold text-sm text-gray-800">${data.nama}</p>
+                                <p class="text-xs text-gray-500">ID: ${data.idTransaksi}</p>
+                                <p class="text-xs text-blue-600 font-semibold">${formatRp(data.totalBayar)} | ${tgl}</p>
+                            </div>
+                            <button class="bg-green-500 text-white px-3 py-1 text-sm rounded hover:bg-green-600 btn-cetak-ulang">
+                                Cetak
+                            </button>
+                        `;
+
+                        card.querySelector('.btn-cetak-ulang').addEventListener('click', () => {
+                            persiapkanStruk(data);
+                            setTimeout(() => window.print(), 300);
+                        });
+
+                        resultDiv.appendChild(card);
+                    });
+                } else {
+                    resultDiv.innerHTML = `<p class="text-sm text-red-500 text-center py-4">Data tidak ditemukan.</p>`;
+                }
+            } catch (error) {
+                alert("Gagal mencari data: " + error.message);
+            } finally {
+                btnCari.innerText = "Cari";
+            }
+        });
+    </script>
+</body>
+</html>
