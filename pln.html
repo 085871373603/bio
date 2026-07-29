@@ -25,26 +25,71 @@
                 top: 0;
                 width: 48mm;
                 max-width: 48mm;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: 10px;
+                /* Sans-serif menghasilkan cetakan thermal yang lebih tebal dan tajam */
+                font-family: 'Arial', 'Helvetica', sans-serif;
+                font-size: 11px;
+                font-weight: bold; /* Menjadikan seluruh teks cetakan tebal */
                 color: black;
                 margin: 0;
-                padding: 2mm;
+                padding: 2mm 1mm; /* Padding sisi diperkecil agar teks lebih leluasa */
                 box-sizing: border-box;
+                line-height: 1.3;
             }
-            .print-bold { font-weight: bold; }
+            
+            /* Pengaturan Logo */
+            #print-area img {
+                width: 80px; /* Ukuran proporsional, tidak terlalu kecil */
+                max-width: 100%;
+                margin: 0 auto 6px;
+                display: block;
+                filter: grayscale(100%) contrast(1.5); /* Memastikan hitam pekat di printer thermal */
+            }
+
+            .print-title { font-size: 12px; text-align: center; margin-bottom: 2px; }
+            .print-date { font-size: 10px; text-align: center; margin-bottom: 6px; }
             .print-center { text-align: center; }
-            .print-divider { border-top: 1px dashed black; margin: 6px 0; }
-            .print-flex { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; }
-            .print-flex span:first-child { flex-shrink: 0; }
+            
+            /* Garis Pembatas */
+            .print-divider { 
+                border-top: 1.5px dashed black; 
+                margin: 6px 0; 
+            }
+            
+            /* Layout Baris Teks */
+            .print-flex { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: flex-start; 
+                margin-bottom: 2px;
+            }
+            .print-flex span:first-child { flex-shrink: 0; margin-right: 4px; }
             .print-flex span:last-child { text-align: right; word-break: break-word; }
+            
+            /* Pengaturan Khusus Token */
+            .token-label {
+                text-align: center;
+                font-size: 11px;
+                margin-top: 6px;
+            }
             .token-text { 
-                font-size: 13px; 
-                font-weight: bold; 
+                font-size: 16px; /* Token berukuran besar */
+                font-weight: 900; 
                 text-align: center; 
-                margin: 8px 0; 
-                letter-spacing: 1px;
+                margin: 4px 0 6px 0; 
+                letter-spacing: 2px; /* Jarak antar angka agar tidak dempet */
                 word-wrap: break-word;
+            }
+            
+            /* Total Bayar */
+            .print-total {
+                font-size: 12px;
+                font-weight: 900;
+            }
+            
+            .print-footer {
+                text-align: center;
+                margin-top: 10px;
+                font-size: 11px;
             }
         }
         
@@ -61,7 +106,7 @@
     <!-- Header Aplikasi -->
     <header class="bg-blue-600 text-white p-4 shadow-md text-center">
         <h1 class="text-2xl font-bold tracking-wider">ARINEX</h1>
-        <p class="text-sm text-blue-200">Sistem Pembayaran & Cetak Struk</p>
+        <p class="text-sm text-blue-200">Cetak Struk</p>
     </header>
 
     <!-- Navigasi Menu -->
@@ -114,7 +159,6 @@
                     <span>Biaya Layanan:</span>
                     <span class="font-semibold">Rp 4.500</span>
                 </div>
-                <!-- Tambahan Preview PPN -->
                 <div class="flex justify-between text-sm">
                     <span>PPN:</span>
                     <span class="font-semibold">Rp 0</span>
@@ -127,7 +171,7 @@
             </div>
 
             <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 active:scale-95 transition-all mt-4">
-                SIMPAN & CETAK STRUK
+                SIMPAN & CETAK
             </button>
         </form>
     </main>
@@ -139,7 +183,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">Masukkan ID Pelanggan (Idpel)</label>
                 <div class="flex gap-2 mt-1">
-                    <input type="number" id="search-idpel" class="w-full p-2 border rounded-md focus:ring-blue-500 outline-none" placeholder="Contoh: 123456789">
+                    <input type="number" id="search-idpel" class="w-full p-2 border rounded-md focus:ring-blue-500 outline-none" placeholder="">
                     <button id="btn-cari" class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900">Cari</button>
                 </div>
             </div>
@@ -150,37 +194,40 @@
         </div>
     </main>
 
-    <!-- AREA CETAK STRUK -->
+    <!-- AREA CETAK STRUK (Diperbarui) -->
     <div id="print-area">
-        <div class="print-center">
-            <img src="logo.png" alt="ARINEX" style="max-width: 40px; margin: 0 auto 5px; display: block;" onerror="this.style.display='none'">
-            <div class="print-bold" style="font-size: 11px;">STRUK PEMBELIAN LISTRIK PRABAYAR</div>
-            <div id="print-tanggal" style="font-size: 9px; margin-top: 3px;"></div>
-        </div>
+        <img src="logo.png" alt="ARINEX" onerror="this.style.display='none'">
+        <div class="print-title">STRUK PEMBELIAN LISTRIK</div>
+        <div class="print-date" id="print-tanggal"></div>
+        
         <div class="print-divider"></div>
-        <div>
-            <div class="print-flex"><span>ID Trans:</span> <span id="print-idtrans"></span></div>
-            <div class="print-flex"><span>Idpel:</span> <span id="print-idpel"></span></div>
-            <div class="print-flex"><span>Nama:</span> <span id="print-nama"></span></div>
-            <div class="print-flex"><span>KWh:</span> <span id="print-kwh"></span></div>
-        </div>
+        
+        <div class="print-flex"><span>ID Trans:</span> <span id="print-idtrans"></span></div>
+        <div class="print-flex"><span>Idpel:</span> <span id="print-idpel"></span></div>
+        <div class="print-flex"><span>Nama:</span> <span id="print-nama"></span></div>
+        <div class="print-flex"><span>KWh:</span> <span id="print-kwh"></span></div>
+        
         <div class="print-divider"></div>
-        <div class="print-center">Token / Stroom :</div>
+        
+        <div class="token-label">Token / Stroom :</div>
         <div class="token-text" id="print-token"></div>
+        
         <div class="print-divider"></div>
-        <div>
-            <div class="print-flex"><span>Pembayaran:</span> <span>TUNAI</span></div>
-            <div class="print-flex"><span>PLN:</span> <span id="print-denom"></span></div>
-            <div class="print-flex"><span>Admin:</span> <span>Rp 4.500</span></div>
-            <!-- Tambahan Baris PPN pada area cetak struk -->
-            <div class="print-flex"><span>PPN:</span> <span>Rp 0</span></div>
-        </div>
+        
+        <div class="print-flex"><span>Bayar:</span> <span>TUNAI</span></div>
+        <div class="print-flex"><span>PLN:</span> <span id="print-denom"></span></div>
+        <div class="print-flex"><span>Admin:</span> <span>Rp 4.500</span></div>
+        <div class="print-flex"><span>PPN:</span> <span>Rp 0</span></div>
+        
         <div class="print-divider"></div>
-        <div class="print-flex print-bold" style="font-size: 11px;">
+        
+        <div class="print-flex print-total">
             <span>TOTAL:</span> <span id="print-total"></span>
         </div>
+        
         <div class="print-divider"></div>
-        <div class="print-center" style="margin-top: 10px;">
+        
+        <div class="print-footer">
             *** TERIMA KASIH ***
         </div>
     </div>
