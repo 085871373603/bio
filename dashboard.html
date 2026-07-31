@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <!-- Mengunci Layar & Anti Zoom -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>Rana Arifin</title>
+    
+    <!-- SEO & Meta Tags Open Graph -->
+    <title>Rana Arifin - Portfolio</title>
+    <meta name="description" content="Web profil dan portofolio Rana Arifin. Eksplorasi proyek web development, desain visual, AI image editing, dan sistem informasi.">
+    <meta property="og:title" content="Rana Arifin - Portfolio Web & Operasional">
+    <meta property="og:description" content="Pemula yang hobi begadang ngulik HTML, CSS, JS, dan integrasi Firebase.">
+    <meta property="og:image" content="profil.jpg">
+    <meta property="og:type" content="website">
+
     <!-- Font Poppins untuk kesan Profesional & Elegan -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Icon FontAwesome -->
@@ -31,20 +39,15 @@
             text-size-adjust: none;
         }
 
-        /* --- FITUR ANTI COPAS & ILUSTRASI BACKGROUND --- */
+        /* --- BACKGROUND --- */
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
             line-height: 1.7;
             position: relative;
             overflow-x: hidden;
-            
-            /* Kunci Interaksi */
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
             overscroll-behavior: none; /* Anti-bounce di HP */
+            /* Script anti-copas dihapus agar UI/UX lebih ramah bagi perekrut/klien */
         }
 
         /* Ilustrasi Latar Belakang Geometris & Glowing Orbs (CSS Only) */
@@ -64,7 +67,7 @@
 
         img {
             -webkit-user-drag: none;
-            pointer-events: none;
+            /* pointer-events dihapus agar gambar profil bisa di-klik kanan jika diperlukan */
         }
 
         .container {
@@ -186,15 +189,16 @@
             padding: 25px;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
-            border-top: 2px solid rgba(56, 189, 248, 0.3); /* Aksen tipis di atas */
+            border-top: 2px solid rgba(56, 189, 248, 0.3);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Efek cahaya halus saat di-hover */
         .card::before {
             content: "";
             position: absolute;
@@ -232,12 +236,27 @@
             color: var(--text-muted); 
             font-size: 0.95rem; 
             line-height: 1.6; 
+            flex-grow: 1; /* Membuat tombol sejajar di bawah */
         }
+        
         .card p b {
             color: #fff;
             font-weight: 500;
         }
+
+        .tech-stack {
+            font-size: 0.8rem !important;
+            color: var(--accent) !important;
+            margin: 10px 0 15px 0;
+            font-weight: 500;
+        }
         
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .tag {
             display: inline-flex;
             align-items: center;
@@ -245,13 +264,13 @@
             background: rgba(56, 189, 248, 0.1);
             padding: 8px 16px;
             border-radius: 8px;
-            font-size: 0.9rem;
-            margin-top: 15px;
+            font-size: 0.85rem;
+            margin-top: auto;
             color: var(--accent);
             text-decoration: none;
             border: 1px solid rgba(56, 189, 248, 0.2);
             transition: all 0.2s;
-            pointer-events: auto; /* Agar link tetap bisa di klik */
+            cursor: pointer;
         }
         .tag:hover {
             background: var(--accent);
@@ -296,7 +315,7 @@
             align-items: center;
             gap: 10px;
             transition: all 0.3s;
-            pointer-events: auto;
+            cursor: pointer;
         }
 
         .btn-wa { 
@@ -329,11 +348,6 @@
             border-top: 1px solid var(--glass-border);
         }
 
-        /* --- Pencegahan Cetak/Print (Anti Save as PDF / Print Screen Layout) --- */
-        @media print {
-            html, body { display: none !important; }
-        }
-
         /* Responsif */
         @media (max-width: 600px) {
             .hero h1 { font-size: 2.2rem; }
@@ -356,11 +370,12 @@
         }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"> 
+<body> 
+    <!-- Standard Body (tanpa atribut anti-klik agar teks bisa dicopy oleh perekrut/klien) -->
 
     <!-- Foto Profil Pojok Kiri Atas -->
     <div class="top-header">
-        <img src="profil.jpg" alt="Foto Profil" class="profile-pic">
+        <img src="profil.jpg" alt="Foto Profil Rana Arifin" class="profile-pic">
         <span class="profile-name">Rana Arifin</span>
     </div>
 
@@ -369,10 +384,10 @@
         <h1>Saya Rana Arifin!</h1>
         <h2><i class="fa-solid fa-user"></i> Pemula yang Hobi Begadang</h2>
         <p>
-            Sehari-hari saya berkutat di dunia operasional. Dari sana, saya sering mengamati sistem manajemen jaringan retail dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
+            Sehari-hari saya berkutat di dunia operasional ritel. Dari sana, saya sering mengamati sistem manajemen jaringan toko dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
         </p>
         <p>
-            Akhirnya, saya terjun belajar secara otodidak. Saya belum ahli, masih sering nyasar di StackOverflow, dan kadang <i>error</i> 1 baris nyarinya sampai besok pagi. Tapi ya namanya juga belajar, perlahan aja
+            Akhirnya, saya terjun belajar secara otodidak. Fakta serunya, saya sering nulis dan edit kode langsung lewat HP pakai aplikasi Acode kalau lagi senggang! Saya memang belum ahli, masih sering nyasar di StackOverflow, dan kadang <i>error</i> 1 baris nyarinya sampai besok pagi. Tapi ya namanya juga belajar, perlahan aja.
         </p>
     </section>
 
@@ -383,13 +398,18 @@
         
         <div class="grid-list">
             <div class="card">
+                <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI & Content Creation</h3>
+                <p>Mampu memanfaatkan <b>AI Tools & CapCut</b> untuk ngedit gambar dan meracik aset visual. Biasa ngerjain *project request* dari klien buat tambahan jajan.</p>
+            </div>
+
+            <div class="card">
                 <h3><i class="fa-solid fa-database"></i> Database</h3>
-                <p><b>phpMyAdmin</b> & <b>Firebase Auth</b>. Bisa nyimpan data dengan aman. Asal jangan suruh simpan Perasaan aja.</p>
+                <p><b>Firebase Auth</b> & <b>phpMyAdmin</b>. Bisa nyimpan dan integrasi data aplikasi. Asal jangan suruh simpan Perasaan aja.</p>
             </div>
             
             <div class="card">
                 <h3><i class="fa-brands fa-html5"></i> Front-End</h3>
-                <p><b>HTML</b> & <b>JavaScript</b>. Bisa bikin tombol dan form. Kadang tombolnya nggak jalan, tapi secara visual mantap.</p>
+                <p><b>HTML</b>, <b>CSS</b>, & <b>JavaScript</b>. Bisa bikin layout responsif dan interaktif. Mulai dari nol sampai bisa *live* di GitHub Pages.</p>
             </div>
             
             <div class="card">
@@ -416,19 +436,31 @@
         <div class="grid-list">
             <div class="card">
                 <h3>Sistem Informasi & Manajemen Retail</h3>
-                <p>Terinspirasi dari kompleksnya operasional retail. Ngurusin stok dan data penjualan biar rapi dan nggak bikin pusing <i>(yang pusing karyawannya hhee)</i> 🤭.</p>
-                <a href="paymentsis.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
+                <p>Terinspirasi dari kompleksnya operasional ritel Alfamart. Ngurusin stok dan data penjualan biar rapi dan nggak bikin pusing <i>(yang pusing karyawannya hhee)</i> 🤭.</p>
+                <p class="tech-stack">Tech: HTML, CSS, JS, Firebase</p>
+                <div class="card-actions">
+                    <a href="paymentsis.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo Web</a>
+                    <a href="https://github.com/" target="_blank" class="btn btn-demo tag"><i class="fa-brands fa-github"></i> Repository</a>
+                </div>
             </div>
 
             <div class="card">
                 <h3>Sistem Informasi & Manajemen F&B</h3>
-                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar engga kejadian 1 cup yang di jual, stock nya hilang 10 cup</p>
-                <a href="payment2.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
+                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar engga kejadian 1 cup yang di jual, stock nya hilang 10 cup.</p>
+                <p class="tech-stack">Tech: HTML, CSS, JavaScript</p>
+                <div class="card-actions">
+                    <a href="payment2.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo Web</a>
+                    <a href="https://github.com/" target="_blank" class="btn btn-demo tag"><i class="fa-brands fa-github"></i> Repository</a>
+                </div>
             </div>
 
             <div class="card">
-                <h3>Website Profil, Formulir & Authentikasi</h3>
-                <p>Buat nampilin portofolio dan ngumpulin data. Formulirnya buat input data ya, bukan buat curhat.</p>
+                <h3>Website Profil & Authentikasi</h3>
+                <p>Buat nampilin portofolio dan ngumpulin data. Di-*host* publik menggunakan GitHub Pages. Formulirnya buat input data ya, bukan buat curhat.</p>
+                <p class="tech-stack">Tech: HTML, CSS, JavaScript</p>
+                <div class="card-actions">
+                    <a href="#" class="btn btn-demo tag"><i class="fa-solid fa-link"></i> Live Web</a>
+                </div>
             </div>
         </div>
     </section>
@@ -437,8 +469,8 @@
     <section class="container" style="padding-top: 0;">
         <h2 class="section-title"><i class="fa-solid fa-star"></i> Pemahaman Lainnya</h2>
         <div class="card" style="max-width: 100%;">
-            <h3><i class="fa-solid fa-mug-hot"></i> Sedikit Tahu Tentang Kopi</h3>
-            <p>Bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi jagung. Lumayan penting buat modal melek pas lagi *debugging* di tengah malam.</p>
+            <h3><i class="fa-solid fa-motorcycle"></i> Seputar Otomotif & Kopi</h3>
+            <p>Di luar coding, saya suka merawat motor tua (Yamaha Vega R kesayangan). Selain itu, lumayan bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi jagung. Skill penting buat modal melek pas lagi *debugging* di tengah malam.</p>
         </div>
     </section>
     <br>
@@ -452,6 +484,7 @@
             </p>
             
             <div class="btn-group">
+                <!-- Ganti wa.me dengan nomor aktif jika diperlukan -->
                 <a href="https://wa.me/6285871373603" target="_blank" class="btn btn-wa">
                     <i class="fa-brands fa-whatsapp"></i> Whatsapp
                 </a>
@@ -463,45 +496,9 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 Ranaarifin.</p>
+        <p>&copy; 2026 Rana Arifin.</p>
     </footer>
 
-    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL -->
-    <script>
-        // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, Ctrl+U, PrintScreen dll)
-        document.addEventListener('keydown', function(e) {
-            // F12 (Inspect Element)
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl + Shift + I/J/C (Developer Tools)
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl + U (View Source), Ctrl + S (Save), Ctrl + C (Copy), Ctrl + A (Select All), Ctrl + P (Print)
-            if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'p' || e.key === 'P')) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        // 2. Blokir Klik Kanan (Context Menu)
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // 3. Deteksi tombol Print Screen (PrtScn) & blur layar sesaat sebagai efek jera
-        document.addEventListener('keyup', (e) => {
-            if (e.key == 'PrintScreen') {
-                navigator.clipboard.writeText(''); // Mencoba mengosongkan clipboard
-                document.body.style.filter = 'blur(10px)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                }, 2000);
-            }
-        });
-    </script>
+    <!-- Script keamanan (klik kanan dll) telah dihapus agar website portofolio tetap fungsional dan teks kontaknya dapat disalin -->
 </body>
 </html>
