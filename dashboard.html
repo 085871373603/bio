@@ -569,7 +569,7 @@
         <p>&copy; 2026 Ranaarifin.</p>
     </footer>
 
-    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL & LOGIKA MIDTRANS -->
+    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL & LOGIKA MIDTRANS (Versi Vercel) -->
     <script>
         // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, Ctrl+U, PrintScreen dll)
         document.addEventListener('keydown', function(e) {
@@ -606,7 +606,7 @@
             }
         });
 
-        // --- LOGIKA MIDTRANS SNAP ---
+        // --- LOGIKA MIDTRANS SNAP (Diubah untuk Vercel Node.js) ---
         document.getElementById('pay-button').addEventListener('click', function(e) {
             e.preventDefault(); // Mencegah pindah halaman sebelum bayar
             
@@ -615,8 +615,8 @@
             // Ubah teks tombol saat loading untuk UX yang baik
             btnPay.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
             
-            // Mengambil Snap Token dari backend (get_token.php)
-            fetch('get_token.php')
+            // Mengambil Snap Token dari backend (Folder API Vercel)
+            fetch('/api/get_token')
                 .then(response => response.json())
                 .then(data => {
                     // Kembalikan teks tombol ke semula
@@ -641,7 +641,7 @@
                             }
                         });
                     } else {
-                        alert("Gagal memuat token. Pastikan get_token.php berjalan dengan baik di server Anda.");
+                        alert("Gagal memuat token. Pastikan file /api/get_token.js berjalan dengan baik.");
                         console.log(data);
                     }
                 })
