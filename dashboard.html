@@ -10,6 +10,11 @@
     <!-- Icon FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Script Midtrans Snap (Sandbox) -->
+    <script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="Mid-client-V9KLcsAAfvwgOCzF"></script>
+    
     <style>
         :root {
             /* Palet Warna Magical (Cyber-Mystic) */
@@ -322,6 +327,7 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
             transition: all 0.3s;
             pointer-events: auto; /* Agar link tetap bisa di klik */
+            cursor: pointer;
         }
         .tag:hover {
             background: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -519,7 +525,8 @@
             <div class="card">
                 <h3>Sistem Informasi & Manajemen F&B</h3>
                 <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar engga kejadian 1 cup yang di jual, stock nya hilang 10 cup</p>
-                <a href="https://085871373603.github.io/Kopi-online/index.html" class="btn btn-demo tag"><i class="fa-solid fa-lock"></i> Demo disini</a>
+                <!-- TOMBOL YANG SUDAH DIUBAH UNTUK MIDTRANS -->
+                <a href="#" id="pay-button" class="btn btn-demo tag"><i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo</a>
             </div>
 
             <div class="card">
@@ -562,7 +569,7 @@
         <p>&copy; 2026 Ranaarifin.</p>
     </footer>
 
-    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL -->
+    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL & LOGIKA MIDTRANS -->
     <script>
         // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, Ctrl+U, PrintScreen dll)
         document.addEventListener('keydown', function(e) {
@@ -597,6 +604,52 @@
                     document.body.style.filter = 'none';
                 }, 2000);
             }
+        });
+
+        // --- LOGIKA MIDTRANS SNAP ---
+        document.getElementById('pay-button').addEventListener('click', function(e) {
+            e.preventDefault(); // Mencegah pindah halaman sebelum bayar
+            
+            const btnPay = this;
+            
+            // Ubah teks tombol saat loading untuk UX yang baik
+            btnPay.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+            
+            // Mengambil Snap Token dari backend (get_token.php)
+            fetch('get_token.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Kembalikan teks tombol ke semula
+                    btnPay.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo';
+                    
+                    if(data.token) {
+                        // Memanggil popup Midtrans Snap
+                        window.snap.pay(data.token, {
+                            onSuccess: function(result){
+                                alert("Pembayaran berhasil! Mengarahkan ke Demo Kopi Online...");
+                                // Arahkan ke link demo F&B setelah sukses
+                                window.location.href = "https://085871373603.github.io/Kopi-online/index.html";
+                            },
+                            onPending: function(result){
+                                alert("Menunggu konfirmasi pembayaran Anda.");
+                            },
+                            onError: function(result){
+                                alert("Pembayaran gagal!");
+                            },
+                            onClose: function(){
+                                alert("Anda menutup halaman pembayaran sebelum menyelesaikannya.");
+                            }
+                        });
+                    } else {
+                        alert("Gagal memuat token. Pastikan get_token.php berjalan dengan baik di server Anda.");
+                        console.log(data);
+                    }
+                })
+                .catch(error => {
+                    btnPay.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo';
+                    alert("Terjadi kesalahan sistem saat mencoba menghubungi server.");
+                    console.error(error);
+                });
         });
     </script>
 </body>
