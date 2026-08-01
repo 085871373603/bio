@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-    // Kunci Server Midtrans Anda
+    // Kunci Server Midtrans Anda (Production)
     const serverKey = 'Mid-server-ceWqzg9QfPUVrE832hrBY4p1';
     const orderId = 'DEMO-FNB-' + Date.now();
     const grossAmount = 15000;
@@ -18,8 +18,8 @@ module.exports = async (req, res) => {
     };
 
     try {
-        // Proses request ke API Midtrans
-        const response = await fetch('https://app.sandbox.midtrans.com/snap/v1/transactions', {
+        // Proses request ke API Midtrans (URL PRODUCTION - TANPA SANDBOX)
+        const response = await fetch('https://app.midtrans.com/snap/v1/transactions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
