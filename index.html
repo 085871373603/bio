@@ -306,7 +306,7 @@
             <!-- =================================================================== -->
             <!-- 🔴 TEMPAT GANTI LINK LIVE STREAMING (Ubah URL di dalam tanda kutip) -->
             <!-- =================================================================== -->
-            <button class="video-btn live-btn" onclick="changeVideo('https://www.youtube.com/live/QIPsGBKKy10?si=JFhLVAcCEmy3PIoe', true)">🔴 Live Indonesia Allstart Vs Aston villa</button>
+            <button class="video-btn live-btn" onclick="changeVideo('https://youtu.be/VKKvpkXWz8E?si=DFsCO8a0mnxZc530', true)">🔴 Live hota</button>
             
         </div>
     </div>
@@ -458,8 +458,39 @@
         let liveAdInterval = null;
 
         startOverlay.addEventListener('click', () => {
-            startOverlay.style.opacity = '0'; setTimeout(() => startOverlay.style.display = 'none', 500);
-            bgVideo.muted = false; bgVideo.play().catch(e => console.log(e));
+            // Animasi menghilangkan overlay
+            startOverlay.style.opacity = '0'; 
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            
+            // Memutar video background
+            bgVideo.muted = false; 
+            bgVideo.play().catch(e => console.log(e));
+
+            // =======================================================
+            // SISTEM PENCATATAN VIEWER UNIK (Hanya Perangkat Baru)
+            // =======================================================
+            
+            // 1. Cek apakah perangkat ini sudah pernah masuk (disimpan di penyimpanan lokal browser)
+            const hasViewed = localStorage.getItem('arinex_has_viewed');
+            
+            if (!hasViewed) {
+                // 2. Jika belum pernah masuk, tambahkan angka viewers +1 di Firebase
+                const statistikRef = ref(db, 'statistik_web');
+                
+                update(statistikRef, {
+                    total_viewers: increment(1)
+                }).then(() => {
+                    // 3. Setelah sukses dicatat ke Firebase, berikan tanda pada perangkat ini
+                    // agar kunjungan berikutnya tidak dihitung lagi
+                    localStorage.setItem('arinex_has_viewed', 'true');
+                    console.log("Viewer baru berhasil ditambahkan!");
+                }).catch((error) => {
+                    console.error("Gagal mencatat viewer:", error);
+                });
+            } else {
+                console.log("Perangkat lama, tidak dihitung sebagai viewer baru.");
+            }
+            // =======================================================
         });
 
         window.changeVideo = function(srcUrl, isLive = false) {
