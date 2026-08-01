@@ -1,8 +1,8 @@
 module.exports = async (req, res) => {
     // Kunci Server Midtrans Anda (Production)
     const serverKey = 'Mid-server-ceWqzg9QfPUVrE832hrBY4p1';
-    const orderId = 'DEMO-FNB-' + Date.now();
-    const grossAmount = 15000;
+    const orderId = 'ARINEX-FNB-' + Date.now();
+    const grossAmount = 1000;
 
     // Payload data yang dikirim ke Midtrans
     const payload = {
