@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Arinex Digital Solution — Master Business Plan & Investment Blueprint 2026. Strategi membangun platform software dan sistem bisnis untuk UMKM dan bisnis kecil Indonesia.">
+<title>Arinex Digital Solution — Master Business Plan & Investment Blueprint</title>
+<style>
+:root{
+  --navy:#082b55;
+  --blue:#0b5cab;
+  --blue2:#1477d4;
+  --green:#2ca64a;
+  --ink:#172235;
+  --muted:#5e6b7d;
+  --soft:#f4f7fb;
+  --line:#dce4ee;
+  --white:#fff;
+  --gold:#c79535;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.7}
+a{text-decoration:none;color:inherit}
+.container{width:min(1160px,92%);margin:auto}
+.topbar{background:var(--navy);color:#dcecff;font-size:13px;padding:8px 0}
+.topbar .container{display:flex;justify-content:space-between;gap:20px}
+nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.navin{height:72px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.logo{font-weight:900;letter-spacing:.4px;color:var(--navy);font-size:20px}
+.logo span{display:block;font-size:10px;color:var(--green);letter-spacing:2.4px;margin-top:-5px}
+.navlinks{display:flex;gap:20px;font-size:13px;color:#415066}
+.navlinks a:hover{color:var(--blue)}
+.btn{display:inline-block;padding:11px 18px;border-radius:8px;background:var(--navy);color:#fff;font-weight:700;font-size:13px}
+.hero{background:linear-gradient(135deg,#071f3e 0%,#0b4e91 62%,#126fc3 100%);color:#fff;padding:105px 0 95px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:500px;height:500px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-170px;top:-190px;box-shadow:0 0 0 60px rgba(255,255,255,.025),0 0 0 120px rgba(255,255,255,.018)}
+.eyebrow{text-transform:uppercase;letter-spacing:2.6px;font-size:12px;font-weight:800;color:#a9d4ff;margin-bottom:18px}
+.hero h1{font-size:clamp(38px,6vw,68px);line-height:1.05;max-width:850px;margin:0 0 20px}
+.hero h1 span{color:#77d18c}
+.hero p{font-size:18px;max-width:790px;color:#dcecff}
+.hero .tagline{font-size:24px;font-weight:700;margin-top:28px;color:#fff}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.pill{border:1px solid rgba(255,255,255,.24);padding:8px 13px;border-radius:999px;font-size:12px;color:#e6f2ff}
+section{padding:78px 0}
+section.alt{background:var(--soft)}
+.section-head{max-width:790px;margin-bottom:38px}
+.kicker{font-size:12px;color:var(--blue);font-weight:900;letter-spacing:2px;text-transform:uppercase}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.2;margin:8px 0 14px;color:var(--navy)}
+h3{color:var(--navy);line-height:1.3;margin:0 0 9px}
+.lead{font-size:18px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:25px;box-shadow:0 8px 24px rgba(8,43,85,.05)}
+.alt .card{background:#fff}
+.num{font-size:30px;font-weight:900;color:var(--blue);margin-bottom:8px}
+.quote{border-left:4px solid var(--green);padding:18px 22px;background:#f7fbf8;border-radius:0 10px 10px 0;font-size:20px;font-weight:700;color:var(--navy)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.stat{padding:23px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.stat strong{display:block;font-size:28px;color:var(--navy)}
+.stat span{font-size:12px;color:var(--muted)}
+.timeline{position:relative;margin-top:35px}
+.timeline:before{content:"";position:absolute;left:72px;top:0;bottom:0;width:2px;background:var(--line)}
+.phase{display:grid;grid-template-columns:145px 1fr;gap:30px;position:relative;margin:0 0 30px}
+.phase .year{font-weight:900;color:var(--blue);padding-top:3px}
+.phase .content{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+th{background:#edf4fb;color:var(--navy);font-weight:800}
+tr:last-child td{border-bottom:0}
+.checklist{padding:0;margin:0;list-style:none}
+.checklist li{padding:9px 0 9px 27px;position:relative}
+.checklist li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900}
+.funnel{display:grid;gap:10px;max-width:850px;margin:30px auto}
+.funnel div{margin:auto;padding:15px 22px;background:#edf5fd;border:1px solid #cfe1f4;border-radius:8px;text-align:center;font-weight:800;color:var(--navy)}
+.funnel div:nth-child(1){width:100%}.funnel div:nth-child(2){width:85%}.funnel div:nth-child(3){width:70%}.funnel div:nth-child(4){width:55%}.funnel div:nth-child(5){width:40%}
+.invest{background:linear-gradient(135deg,#071f3e,#0a579e);color:#fff;border-radius:18px;padding:38px}
+.invest h2,.invest h3{color:#fff}.invest p{color:#dbeaff}
+footer{background:#061a32;color:#bdd0e5;padding:55px 0}
+footer strong{color:#fff;font-size:20px}
+footer small{display:block;margin-top:12px}
+.mobile-menu{display:none}
+@media(max-width:850px){
+ .navlinks{display:none}.mobile-menu{display:block;font-size:22px}
+ .grid,.grid2{grid-template-columns:1fr}
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .phase{grid-template-columns:1fr;gap:7px}.timeline:before{display:none}
+ .hero{padding:75px 0}.hero p{font-size:16px}
+}
+@media(max-width:520px){section{padding:58px 0}.stats{grid-template-columns:1fr 1fr}.card{padding:20px}}
+@media print{
+ nav,.topbar{display:none}.hero{padding:45px 0;background:#fff;color:#000}.hero p,.hero .tagline{color:#222}
+ section{padding:35px 0}.card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container">
+    <span>MASTER BUSINESS PLAN & INVESTMENT BLUEPRINT</span>
+    <span>ARINEX DIGITAL SOLUTION · 2026</span>
+  </div>
+</div>
+
+<nav>
+  <div class="container navin">
+    <a class="logo" href="#top">ARINEX <span>DIGITAL SOLUTION</span></a>
+    <div class="navlinks">
+      <a href="#overview">Overview</a><a href="#market">Market</a><a href="#product">Product</a>
+      <a href="#business">Business Model</a><a href="#growth">Growth</a><a href="#investment">Investment</a>
+    </div>
+    <div class="mobile-menu"></div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="eyebrow">Company Blueprint · Strategic Growth · Investor Document</div>
+    <h1>Building the <span>Digital Operating System</span> for Small Businesses.</h1>
+    <p>Arinex Digital Solution adalah Badan usaha teknologi yang membangun software dan sistem manajemen bisnis untuk UMKM dan bisnis kecil—dengan pendekatan sederhana, terintegrasi, terjangkau, dan dirancang untuk tumbuh bersama pelanggan.</p>
+    <div class="tagline">Partner Digital untuk Bisnis Anda.</div>
+    <div class="meta">
+      <span class="pill">Software & Business Systems</span>
+      <span class="pill">UMKM & Small Business</span>
+      <span class="pill">Recurring Revenue</span>
+      <span class="pill">Indonesia</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="overview">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">01 · Executive Overview</div>
+   <h2>Dari vendor software menjadi partner pertumbuhan bisnis.</h2>
+   <p class="lead">Arinex dibangun atas satu premis: digitalisasi yang berhasil bukan tentang memiliki banyak aplikasi, tetapi tentang memiliki sistem yang membantu pemilik bisnis bekerja lebih cepat, memahami kondisi usaha, dan mengambil keputusan dengan data.</p>
+  </div>
+  <div class="quote">“Teknologi seharusnya membuat bisnis lebih mudah, bukan lebih rumit.”</div>
+  <div class="stats">
+   <div class="stat"><strong>UMKM</strong><span>Fokus pasar awal</span></div>
+   <div class="stat"><strong>SaaS</strong><span>Arah model recurring revenue</span></div>
+   <div class="stat"><strong>Modular</strong><span>Produk dapat berkembang bertahap</span></div>
+   <div class="stat"><strong>Data</strong><span>Fondasi intelligence jangka panjang</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">02 · Vision & Mission</div>
+   <h2>Ambisi yang jelas, diterjemahkan menjadi sistem.</h2>
+  </div>
+  <div class="grid2">
+   <article class="card"><h3>Visi</h3><p>Menjadi partner teknologi terpercaya bagi UMKM dan bisnis kecil dalam membangun bisnis yang lebih terstruktur, efisien, terukur, dan siap berkembang.</p></article>
+   <article class="card"><h3>Misi</h3><ul class="checklist">
+    <li>Menyederhanakan teknologi untuk pelaku usaha.</li>
+    <li>Mengotomatisasi proses operasional yang berulang.</li>
+    <li>Menyediakan informasi bisnis yang dapat ditindaklanjuti.</li>
+    <li>Membangun produk yang terjangkau dan scalable.</li>
+    <li>Menciptakan hubungan pelanggan berbasis partnership.</li>
+   </ul></article>
+  </div>
+ </div>
+</section>
+
+<section id="market">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">03 · Market Problem</div>
+   <h2>Masalah operasional adalah peluang digitalisasi.</h2>
+   <p class="lead">Banyak bisnis kecil sudah memiliki transaksi dan pelanggan, tetapi belum mempunyai fondasi sistem yang memadai untuk mengelola pertumbuhan.</p>
+  </div>
+  <div class="grid">
+   <article class="card"><div class="num">01</div><h3>Data Terfragmentasi</h3><p>Transaksi, stok, supplier, keuangan dan pelanggan sering berada pada catatan atau aplikasi berbeda sehingga pemilik sulit mendapatkan gambaran bisnis secara utuh.</p></article>
+   <article class="card"><div class="num">02</div><h3>Proses Manual</h3><p>Pekerjaan administratif berulang menghabiskan waktu dan meningkatkan risiko kesalahan pencatatan.</p></article>
+   <article class="card"><div class="num">03</div><h3>Software Tidak Kontekstual</h3><p>Sebagian solusi terlalu kompleks, sementara sebagian lainnya hanya menyelesaikan satu titik masalah dan tidak berkembang bersama bisnis.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">04 · Opportunity</div>
+   <h2>Arinex mengambil ruang di antara kebutuhan dan kemampuan UMKM.</h2>
+   <p class="lead">Strategi awal bukan memenangkan seluruh pasar sekaligus. Arinex masuk melalui masalah yang nyata, menyelesaikannya dengan produk yang mudah digunakan, kemudian memperluas nilai melalui modul dan integrasi.</p>
+  </div>
+  <div class="grid2">
+   <article class="card"><h3>Customer Pain → Product</h3><p>Setiap fitur harus memiliki hubungan langsung dengan masalah operasional yang ditemukan pada pelanggan.</p></article>
+   <article class="card"><h3>Product → Ecosystem</h3><p>Produk awal menjadi pintu masuk menuju ekosistem yang menghubungkan transaksi, inventory, keuangan, pelanggan dan analitik.</p></article>
+  </div>
+ </div>
+</section>
+
+<section id="product">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">05 · Product Architecture</div>
+   <h2>Satu fondasi, banyak modul bisnis.</h2>
+   <p class="lead">Arinex dirancang modular agar pelanggan dapat mulai dari kebutuhan paling mendesak dan menambah kapabilitas seiring pertumbuhan.</p>
+  </div>
+  <div class="grid">
+   <article class="card"><h3>Arinex POS</h3><p>Transaksi, pembayaran, diskon, voucher, shift kasir, pelanggan, printer dan laporan penjualan.</p></article>
+   <article class="card"><h3>Arinex Store</h3><p>Produk, stok, supplier, pembelian, harga, stock opname, reorder point dan laporan inventory.</p></article>
+   <article class="card"><h3>Arinex Finance</h3><p>Pemasukan, pengeluaran, budget, cash flow, monitoring dan laporan keuangan operasional.</p></article>
+   <article class="card"><h3>Arinex Business</h3><p>Dashboard yang menyatukan KPI penjualan, inventory, keuangan dan performa bisnis.</p></article>
+   <article class="card"><h3>Integration Layer</h3><p>API dan integrasi dengan payment gateway, printer, marketplace dan layanan pihak ketiga.</p></article>
+   <article class="card"><h3>Business Intelligence</h3><p>Lapisan analitik jangka panjang untuk benchmark, rekomendasi dan pengambilan keputusan berbasis data.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">06 · Customer Journey</div>
+   <h2>Masuk dari satu masalah, tumbuh menjadi ekosistem.</h2>
+  </div>
+  <div class="funnel">
+   <div>PROBLEM — Bisnis menemukan masalah operasional</div>
+   <div>ENTRY PRODUCT — Menggunakan satu solusi Arinex</div>
+   <div>ADOPTION — Sistem menjadi bagian dari operasional harian</div>
+   <div>EXPANSION — Modul dan integrasi bertambah</div>
+   <div>PARTNERSHIP — Arinex menjadi infrastruktur bisnis</div>
+  </div>
+ </div>
+</section>
+
+<section id="business">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">07 · Business Model</div>
+   <h2>Recurring revenue sebagai mesin pertumbuhan.</h2>
+   <p class="lead">Arinex menggabungkan pendapatan berulang dengan pendapatan implementasi dan layanan bernilai tambah.</p>
+  </div>
+  <table>
+   <thead><tr><th>Revenue Stream</th><th>Model</th><th>Nilai bagi pelanggan</th><th>Potensi skala</th></tr></thead>
+   <tbody>
+    <tr><td>Subscription</td><td>Bulanan / tahunan</td><td>Akses software dan fitur</td><td>Sangat tinggi</td></tr>
+    <tr><td>Implementation</td><td>One-time</td><td>Setup, konfigurasi, migrasi dan training</td><td>Sedang</td></tr>
+    <tr><td>Custom Development</td><td>Project</td><td>Fitur khusus dan kebutuhan bisnis</td><td>Sedang</td></tr>
+    <tr><td>Support & Maintenance</td><td>Recurring</td><td>Dukungan dan pemeliharaan</td><td>Tinggi</td></tr>
+    <tr><td>Integration</td><td>Setup / usage</td><td>Integrasi layanan pihak ketiga</td><td>Tinggi</td></tr>
+    <tr><td>Business Intelligence</td><td>Premium subscription</td><td>Analitik dan insight</td><td>Sangat tinggi</td></tr>
+   </tbody>
+  </table>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">08 · Go-To-Market</div>
+   <h2>Distribusi dibangun dari kepercayaan.</h2>
+  </div>
+  <div class="grid">
+   <article class="card"><h3>Direct Sales</h3><p>Demo langsung dan konsultasi berdasarkan masalah operasional calon pelanggan.</p></article>
+   <article class="card"><h3>Content Marketing</h3><p>Edukasi digitalisasi, studi kasus, demo produk dan konten problem-solving.</p></article>
+   <article class="card"><h3>Referral</h3><p>Program rekomendasi pelanggan untuk menurunkan biaya akuisisi dan meningkatkan trust.</p></article>
+   <article class="card"><h3>Partnership</h3><p>Kolaborasi dengan komunitas UMKM, konsultan, supplier dan penyedia perangkat.</p></article>
+   <article class="card"><h3>Reseller / Channel</h3><p>Membangun jaringan distribusi ketika product-market fit dan unit economics sudah tervalidasi.</p></article>
+   <article class="card"><h3>Demo-Based Selling</h3><p>Masalah → demo → solusi → implementasi → onboarding → retention.</p></article>
+  </div>
+ </div>
+</section>
+
+<section id="growth">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">09 · Growth Roadmap</div>
+   <h2>Scale setelah validasi, bukan sebelum validasi.</h2>
+   <p class="lead">Pertumbuhan Arinex dibagi ke dalam tahapan yang memiliki sasaran berbeda. Angka pelanggan adalah ilustrasi target strategis, bukan proyeksi finansial yang dijamin.</p>
+  </div>
+  <div class="timeline">
+   <div class="phase"><div class="year">2026<br>FOUNDATION</div><div class="content"><h3>Validasi Produk</h3><p>Membangun MVP, mendapatkan pelanggan awal, memetakan pain point, membangun brand, SOP dan sistem operasional.</p><strong>Target strategis: 0–50 pelanggan.</strong></div></div>
+   <div class="phase"><div class="year">2027<br>TRACTION</div><div class="content"><h3>Product-Market Fit & Retention</h3><p>Memperkuat produk, onboarding, customer success, sales pipeline dan recurring revenue.</p><strong>Target strategis: 50–500 pelanggan.</strong></div></div>
+   <div class="phase"><div class="year">2028<br>SCALE</div><div class="content"><h3>Distribusi dan Ekspansi</h3><p>Memperluas channel, partnership, reseller, integrasi dan kapasitas teknologi.</p><strong>Target strategis: 500–5.000 pelanggan.</strong></div></div>
+   <div class="phase"><div class="year">2029+<br>ECOSYSTEM</div><div class="content"><h3>Platform & Intelligence</h3><p>Mengembangkan business intelligence, integrasi ekosistem dan layanan bernilai tambah.</p><strong>Fokus: customer lifetime value dan platform depth.</strong></div></div>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">10 · Competitive Advantage</div>
+   <h2>Keunggulan yang dibangun dari produk dan hubungan.</h2>
+  </div>
+  <div class="grid">
+   <article class="card"><h3>UMKM-First</h3><p>Desain produk dimulai dari kebutuhan dan kemampuan pengguna bisnis kecil.</p></article>
+   <article class="card"><h3>Modular & Scalable</h3><p>Pelanggan tidak dipaksa membeli sistem besar sejak awal.</p></article>
+   <article class="card"><h3>Integrated</h3><p>Data dapat mengalir antar fungsi sehingga mengurangi duplikasi pekerjaan.</p></article>
+   <article class="card"><h3>Local Context</h3><p>Memahami pola transaksi, operasional dan kebutuhan bisnis Indonesia.</p></article>
+   <article class="card"><h3>Customer Partnership</h3><p>Feedback pelanggan menjadi sumber pengembangan produk.</p></article>
+   <article class="card"><h3>Data Flywheel</h3><p>Penggunaan software menghasilkan data yang memperkaya analitik dan produk.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">11 · Technology Strategy</div>
+   <h2>Fondasi teknologi yang siap berkembang.</h2>
+  </div>
+  <div class="grid2">
+   <article class="card"><h3>Architecture Principles</h3><ul class="checklist">
+    <li>Modular dan API-ready.</li><li>Authentication dan role-based access.</li><li>Backup dan disaster recovery.</li><li>Monitoring dan observability.</li><li>Security by design.</li><li>Scalable infrastructure.</li>
+   </ul></article>
+   <article class="card"><h3>Data Strategy</h3><p>Data pelanggan diperlakukan sebagai aset yang harus dilindungi. Pengembangan analitik dilakukan dengan prinsip keamanan, kontrol akses, minimisasi data dan kepatuhan terhadap ketentuan yang berlaku.</p><p>Jangka panjang: <strong>Software → Platform → Intelligence.</strong></p></article>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">12 · KPI & Unit Economics</div>
+   <h2>Bisnis diukur dari kualitas pertumbuhan.</h2>
+  </div>
+  <div class="grid">
+   <article class="card"><h3>Revenue</h3><p>MRR, ARR, ARPU, gross margin dan revenue mix.</p></article>
+   <article class="card"><h3>Customer</h3><p>New customers, active customers, retention, churn dan referral.</p></article>
+   <article class="card"><h3>Acquisition</h3><p>CAC, conversion rate, sales cycle dan channel performance.</p></article>
+   <article class="card"><h3>Lifetime Value</h3><p>LTV dan rasio LTV:CAC untuk menilai kualitas economics.</p></article>
+   <article class="card"><h3>Product</h3><p>Activation, feature adoption, daily usage dan transaction volume.</p></article>
+   <article class="card"><h3>Reliability</h3><p>Uptime, incident rate dan waktu penyelesaian support.</p></article>
+  </div>
+ </div>
+</section>
+
+<section id="investment">
+ <div class="container">
+  <div class="invest">
+   <div class="kicker" style="color:#9fd2ff">13 · Investment Thesis</div>
+   <h2>Investasi untuk mempercepat mesin, bukan sekadar memperbesar biaya.</h2>
+   <p>Investor Arinex diharapkan menjadi bagian dari proses membangun perusahaan teknologi yang memiliki produk, recurring revenue, distribusi dan peluang ekspansi jangka panjang.</p>
+   <div class="grid2">
+    <div>
+     <h3>Investment Logic</h3>
+     <ul class="checklist">
+      <li>Masalah pasar jelas.</li>
+      <li>Produk dapat direplikasi.</li>
+      <li>Subscription menciptakan recurring revenue.</li>
+      <li>Expansion revenue meningkatkan customer value.</li>
+      <li>Platform membuka peluang produk baru.</li>
+     </ul>
+    </div>
+    <div>
+     <h3>Capital Allocation</h3>
+     <ul class="checklist">
+      <li>35% Product & Technology</li>
+      <li>25% Sales & Marketing</li>
+      <li>15% Human Resources</li>
+      <li>10% Operations</li>
+      <li>10% Customer Success</li>
+      <li>5% Contingency</li>
+     </ul>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">14 · Risk Management</div>
+   <h2>Pertumbuhan yang sehat membutuhkan disiplin.</h2>
+  </div>
+  <table>
+   <thead><tr><th>Risiko</th><th>Dampak</th><th>Mitigasi strategis</th></tr></thead>
+   <tbody>
+    <tr><td>Kompetisi</td><td>Tekanan harga dan fitur</td><td>Fokus niche, UX, partnership dan customer success</td></tr>
+    <tr><td>Churn</td><td>Recurring revenue melemah</td><td>Onboarding, support, product adoption dan customer health monitoring</td></tr>
+    <tr><td>Reliability</td><td>Operasional pelanggan terganggu</td><td>Backup, monitoring, redundancy dan incident response</td></tr>
+    <tr><td>Cash Flow</td><td>Runway menurun</td><td>Milestone-based spending dan kombinasi recurring/project revenue</td></tr>
+    <tr><td>Founder Dependency</td><td>Skala organisasi terbatas</td><td>SOP, dokumentasi, delegation dan pembangunan leadership team</td></tr>
+    <tr><td>Data & Security</td><td>Reputasi dan kepatuhan</td><td>Access control, encryption, audit, privacy dan security governance</td></tr>
+   </tbody>
+  </table>
+ </div>
+</section>
+
+<section>
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">15 · Organization</div>
+   <h2>Organisasi yang tumbuh mengikuti kebutuhan perusahaan.</h2>
+  </div>
+  <div class="grid">
+   <article class="card"><h3>Founder / CEO</h3><p>Strategi, capital, partnership, culture dan arah perusahaan.</p></article>
+   <article class="card"><h3>Product & Technology</h3><p>Engineering, product management, security, infrastructure dan R&D.</p></article>
+   <article class="card"><h3>Growth</h3><p>Sales, marketing, channel, partnership dan brand.</p></article>
+   <article class="card"><h3>Customer Success</h3><p>Onboarding, training, support, retention dan expansion.</p></article>
+   <article class="card"><h3>Finance & Operations</h3><p>Financial control, legal, administration dan business operations.</p></article>
+   <article class="card"><h3>Advisory</h3><p>Mentor dan advisor strategis sesuai kebutuhan fase perusahaan.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">16 · 2030+ Vision</div>
+   <h2>Software hari ini. Infrastruktur bisnis esok hari.</h2>
+   <p class="lead">Arinex memiliki ambisi jangka panjang untuk membangun lapisan teknologi yang membantu bisnis kecil mengelola seluruh perjalanan operasionalnya.</p>
+  </div>
+  <div class="funnel">
+   <div>TRANSAKSI</div>
+   <div>OPERASIONAL</div>
+   <div>KEUANGAN</div>
+   <div>DATA & INTELLIGENCE</div>
+   <div>PERTUMBUHAN BISNIS</div>
+  </div>
+  <div class="quote">Ketika pelanggan tumbuh, Arinex ikut tumbuh. Ketika semakin banyak bisnis memiliki sistem yang lebih baik, dampak Arinex menjadi semakin besar.</div>
+ </div>
+</section>
+
+<section>
+ <div class="container">
+  <div class="section-head">
+   <div class="kicker">17 · Closing Statement</div>
+   <h2>Arinex bukan sekadar membuat aplikasi.</h2>
+   <p class="lead">Arinex membangun fondasi agar bisnis kecil dapat bekerja dengan lebih baik hari ini dan memiliki kemampuan untuk berkembang besok.</p>
+  </div>
+  <div class="grid2">
+   <article class="card"><h3>For Customers</h3><p>Teknologi yang sederhana, relevan, terjangkau dan dapat membantu bisnis mengambil keputusan lebih baik.</p></article>
+   <article class="card"><h3>For Investors</h3><p>Peluang untuk mendukung pembangunan perusahaan software dengan recurring revenue, pasar luas dan jalur menuju platform bisnis.</p></article>
+  </div>
+  <div style="margin-top:30px;text-align:center">
+   <a class="btn" href="#top">Kembali ke Atas</a>
+  </div>
+ </div>
+</section>
+
+</main>
+
+<footer>
+ <div class="container">
+  <strong>ARINEX DIGITAL SOLUTION</strong>
+  <small>Partner Digital untuk Bisnis Anda.</small>
+  <small>Master Business Plan & Investment Blueprint · 2026</small>
+  <small>Dokumen strategis. Proyeksi dan target bersifat perencanaan dan perlu divalidasi melalui data aktual perusahaan.</small>
+ </div>
+</footer>
+
+</body>
+</html>
