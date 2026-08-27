@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>Rana Arifin</title>
     <!-- Font Poppins untuk kesan Profesional & Elegan -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Icon FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -17,22 +17,21 @@
     
     <style>
         :root {
-            /* Palet Warna Magical (Cyber-Mystic) */
-            --bg-base: #050511; 
-            --glass-bg: rgba(13, 17, 38, 0.5);
+            /* Palet Warna Modern Dark Minimalist */
+            --bg-base: #0a0a0a; 
+            --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #00f0ff; /* Neon Cyan */
-            --accent-glow: rgba(0, 240, 255, 0.4);
-            --accent-2: #bc13fe; /* Neon Purple */
+            --text-main: #ededed;
+            --text-muted: #a1a1aa;
+            --accent: #3b82f6; /* Modern Blue */
+            --accent-2: #8b5cf6; /* Modern Purple */
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', 'Poppins', sans-serif;
             -webkit-text-size-adjust: none;
             text-size-adjust: none;
         }
@@ -50,10 +49,10 @@
             -ms-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
-            overscroll-behavior: none; /* Anti-bounce di HP */
+            overscroll-behavior: none;
         }
 
-        /* --- MAGIC BACKGROUND ANIMATION --- */
+        /* --- MODERN BACKGROUND --- */
         .magic-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -65,19 +64,19 @@
         .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.35;
-            animation: floatOrb 12s infinite alternate ease-in-out;
+            filter: blur(120px);
+            opacity: 0.25;
+            animation: floatOrb 15s infinite alternate ease-in-out;
         }
         
         .orb-1 {
-            width: 350px; height: 350px;
+            width: 400px; height: 400px;
             background: var(--accent);
             top: -10%; left: -10%;
         }
         
         .orb-2 {
-            width: 450px; height: 450px;
+            width: 500px; height: 500px;
             background: var(--accent-2);
             bottom: -15%; right: -10%;
             animation-delay: -5s;
@@ -85,27 +84,7 @@
 
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 60px) scale(1.15); }
-        }
-
-        /* Ilustrasi Latar Belakang Bintang CSS */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: 
-                radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px, 30px 30px;
-            background-position: 0 0, 15px 15px;
-            z-index: -1;
-            pointer-events: none;
-            animation: starDrift 60s linear infinite;
-        }
-
-        @keyframes starDrift {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100vh); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
         img {
@@ -119,6 +98,17 @@
             padding: 0 25px;
             position: relative;
             z-index: 1;
+        }
+
+        /* --- FADE IN / OUT ANIMATION UTILITY --- */
+        .fade-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .fade-element.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* --- Header / Profil Pojok --- */
@@ -135,8 +125,7 @@
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            animation: slideDown 1s ease-out;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .profile-wrapper-sm {
@@ -161,7 +150,7 @@
             background: linear-gradient(45deg, var(--accent), var(--accent-2));
             border-radius: 50%;
             z-index: 1;
-            animation: spin 3s linear infinite;
+            animation: spin 4s linear infinite;
         }
 
         .profile-name {
@@ -179,22 +168,22 @@
             border-bottom: 1px solid var(--glass-border);
             padding-bottom: 50px;
             text-align: center;
-            animation: fadeIn 1.2s ease-out;
         }
         
         .hero h1 { 
             font-size: 2.8rem; 
             margin-bottom: 10px; 
             font-weight: 700;
+            letter-spacing: -1px;
         }
 
         .magic-text {
-            background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
+            background: linear-gradient(90deg, #60a5fa, #c084fc, #60a5fa);
             background-size: 200% auto;
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-            animation: shineText 3s linear infinite;
+            animation: shineText 4s linear infinite;
         }
         
         .hero h2 { 
@@ -202,14 +191,13 @@
             color: var(--text-main); 
             margin-bottom: 25px; 
             font-weight: 500;
-            background: rgba(188, 19, 254, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 8px 20px;
             border-radius: 30px;
-            border: 1px solid rgba(188, 19, 254, 0.3);
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+            border: 1px solid var(--glass-border);
         }
         
         .hero p { 
@@ -233,9 +221,7 @@
         }
 
         .section-title i {
-            background: -webkit-linear-gradient(45deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--accent);
         }
 
         .section-title::after {
@@ -259,30 +245,18 @@
             padding: 25px;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
-            border-top: 2px solid rgba(0, 240, 255, 0.3); /* Aksen tipis di atas */
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
         }
-
-        /* Efek cahaya halus saat di-hover */
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-            transform: skewX(-20deg);
-            transition: 0.6s;
-        }
-        .card:hover::before { left: 150%; }
         
         .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-top-color: var(--accent-2);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 
-                        0 0 20px rgba(188, 19, 254, 0.2);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
         .card h3 { 
@@ -296,11 +270,10 @@
         
         .card h3 i {
             color: var(--accent);
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(59, 130, 246, 0.1);
             padding: 10px;
             border-radius: 10px;
             font-size: 1rem;
-            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
         .card p { 
@@ -309,51 +282,40 @@
             line-height: 1.6; 
         }
         .card p b {
-            color: var(--accent);
-            font-weight: 500;
+            color: var(--text-main);
+            font-weight: 600;
         }
         
         .tag {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             padding: 8px 16px;
             border-radius: 8px;
             font-size: 0.9rem;
             margin-top: 15px;
-            color: var(--accent);
+            color: var(--text-main);
             text-decoration: none;
-            border: 1px solid rgba(0, 240, 255, 0.2);
+            border: 1px solid var(--glass-border);
             transition: all 0.3s;
-            pointer-events: auto; /* Agar link tetap bisa di klik */
+            pointer-events: auto;
             cursor: pointer;
         }
         .tag:hover {
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            background: var(--text-main);
             color: var(--bg-base);
-            border-color: transparent;
-            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.4);
         }
 
         /* --- Kontak --- */
         .contact-box {
-            background: linear-gradient(145deg, rgba(13, 17, 38, 0.7), rgba(5, 5, 17, 0.9));
+            background: var(--glass-bg);
             border-radius: 20px;
             padding: 45px 30px;
             text-align: center;
             margin-bottom: 50px;
             border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-box::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
         .contact-box .section-title {
@@ -385,15 +347,14 @@
         }
 
         .btn-wa { 
-            background: linear-gradient(90deg, #25D366, #128C7E);
-            color: white; 
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            background: #25D366;
+            color: #0a0a0a; 
+            font-weight: 600;
         }
         
         .btn-wa:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
-            color: white;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
         }
 
         .btn-demo { 
@@ -405,7 +366,6 @@
         .btn-demo:hover { 
             background-color: rgba(255,255,255,0.1); 
             transform: translateY(-3px);
-            border-color: var(--accent);
         }
 
         footer { 
@@ -419,10 +379,8 @@
         /* Keyframes Animations */
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes shineText { to { background-position: 200% center; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Pencegahan Cetak/Print (Anti Save as PDF / Print Screen Layout) --- */
+        /* --- Pencegahan Cetak/Print --- */
         @media print {
             html, body { display: none !important; }
         }
@@ -443,7 +401,6 @@
                 box-shadow: none;
                 margin-bottom: -60px;
                 padding: 15px;
-                animation: none;
             }
             .hero { padding-top: 100px; }
             section { padding: 60px 0 20px 0; }
@@ -459,7 +416,7 @@
     </div>
 
     <!-- Foto Profil Pojok Kiri Atas -->
-    <div class="top-header">
+    <div class="top-header fade-element">
         <div class="profile-wrapper-sm">
             <img src="profil.jpg" alt="Foto Profil" class="profile-pic">
         </div>
@@ -468,43 +425,43 @@
 
     <!-- Perkenalan -->
     <section class="hero container">
-        <h1><span class="magic-text">Saya Rana Arifin!</span></h1>
-        <h2><i class="fa-solid fa-user"></i> Pemula yang Hobi Begadang</h2>
-        <p>
+        <h1 class="fade-element"><span class="magic-text">Saya Rana Arifin!</span></h1>
+        <h2 class="fade-element"><i class="fa-solid fa-user"></i> Pemula yang Hobi Begadang</h2>
+        <p class="fade-element">
             Sehari-hari saya berkutat di dunia operasional. Dari sana, saya sering mengamati sistem manajemen jaringan retail dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
         </p>
-        <p>
+        <p class="fade-element">
             Akhirnya, saya terjun belajar secara otodidak. Saya belum ahli, masih sering nyasar di StackOverflow, dan kadang <i>error</i> 1 baris nyarinya sampai besok pagi. Tapi ya namanya juga belajar, perlahan aja
         </p>
     </section>
 
     <!-- Skill / Pemahaman -->
     <section class="container">
-        <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> Pemahaman (Bukan Ahli Ya..)</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham dan ada yang cuma numpang singgah begitu.</p>
+        <h2 class="section-title fade-element"><i class="fa-solid fa-layer-group"></i> Pemahaman (Bukan Ahli Ya..)</h2>
+        <p class="fade-element" style="color: var(--text-muted); margin-bottom: 20px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham dan ada yang cuma numpang singgah begitu.</p>
         
         <div class="grid-list">
-            <div class="card">
+            <div class="card fade-element">
                 <h3><i class="fa-solid fa-database"></i> Database</h3>
                 <p><b>mySQL</b> & <b>Firebase Auth</b>. Bisa nyimpan data dengan aman. Asal jangan suruh simpan Perasaan aja.</p>
             </div>
             
-            <div class="card">
+            <div class="card fade-element">
                 <h3><i class="fa-brands fa-html5"></i> Front-End</h3>
                 <p><b>HTML</b> & <b>JavaScript</b>. Bisa bikin tombol dan form. Kadang tombolnya nggak jalan, tapi secara visual mantap.</p>
             </div>
             
-            <div class="card">
-                <h3><i class="fa-brands fa-php"></i> Back-End</h3>
-                <p><b>PHP</b> (Pemberi Harapan Palsu... eh, Hypertext Preprocessor). Masih terus diulik biar logikanya makin lancar.</p>
+            <div class="card fade-element">
+                <h3><i class="fa-solid fa-server"></i> Back-End</h3>
+                <p><b>PHP</b> & <b>Python (Flask)</b>. Masih terus diulik biar logikanya makin lancar, mulai dari bikin routing web santai sampai urus API yang lebih rapi.</p>
             </div>
             
-            <div class="card">
+            <div class="card fade-element">
                 <h3><i class="fa-solid fa-pen-nib"></i> Graphic Design</h3>
                 <p><b>Canva, Figma, CSS</b>. Lumayan jago bikin tampilan web jadi cakep, selama <i>div</i>-nya nggak berantakan ke mana-mana.</p>
             </div>
 
-            <div class="card">
+            <div class="card fade-element">
                 <h3><i class="fa-solid fa-microchip"></i> Program Mesin</h3>
                 <p><b>C, C++</b>. Sedang mencoba ngobrol sama mesin CNC. Kadang mesinnya nurut, kadang mesinnya cuek begitu aja 😓.</p>
             </div>
@@ -513,26 +470,25 @@
 
     <!-- Projek -->
     <section class="container" style="padding-top: 0;">
-        <h2 class="section-title"><i class="fa-solid fa-rocket"></i> Proyek (Belajar)</h2>
+        <h2 class="section-title fade-element"><i class="fa-solid fa-rocket"></i> Proyek (Belajar)</h2>
         
         <div class="grid-list">
-            <div class="card">
-                <h2>🔴LIVE PROJECT</h2>
+            <div class="card fade-element">
+                <h2 style="font-size:0.9rem; color: #ef4444; margin-bottom: 5px;">🔴 LIVE PROJECT</h2>
                 <h3>Fintek</h3>
                 <p>Aplikasi Sistem PPOB</p>
-                <p>Masih dalam tahap pembuatan sih tapi transaksi mh udah bisa tinggal AKTIFIN Produknya aja dan beberapa tambahan fitur sedikit lagi</p>
+                <p>Masih dalam tahap pembuatan sih tapi transaksi udah bisa tinggal aktifin produknya aja dan beberapa tambahan fitur sedikit lagi.</p>
                 <a href="https://app.arinex.my.id" class="btn btn-demo tag"><i class="fa-regular fa-eye"></i> Lihat</a>
             </div>
 
-            <div class="card">
+            <div class="card fade-element">
                 <h3>Sistem Informasi & Manajemen F&B</h3>
-                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar engga kejadian 1 cup yang di jual, stock nya hilang 10 cup</p>
-                <!-- TOMBOL YANG SUDAH DIUBAH UNTUK MIDTRANS -->
+                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar engga kejadian 1 cup yang dijual, stock hilang 10 cup.</p>
                 <a href="#" id="pay-button" class="btn btn-demo tag"><i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo</a>
             </div>
 
-            <div class="card">
-                <h3>Website Profil, Formulir & Authentikasi</h3>
+            <div class="card fade-element">
+                <h3>Website Profil, Formulir & Auth</h3>
                 <p>Buat nampilin portofolio dan ngumpulin data. Formulirnya buat input data ya, bukan buat curhat.</p>
             </div>
         </div>
@@ -540,17 +496,17 @@
 
     <!-- Pemahaman Lain (Bonus) -->
     <section class="container" style="padding-top: 0;">
-        <h2 class="section-title"><i class="fa-solid fa-star"></i> Pemahaman Lainnya</h2>
-        <div class="card" style="max-width: 100%;">
+        <h2 class="section-title fade-element"><i class="fa-solid fa-star"></i> Pemahaman Lainnya</h2>
+        <div class="card fade-element" style="max-width: 100%;">
             <h3><i class="fa-solid fa-mug-hot"></i> Sedikit Tahu Tentang Kopi</h3>
-            <p>Bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi jagung. Lumayan penting buat modal melek pas lagi *debugging* di tengah malam.</p>
+            <p>Bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi jagung. Lumayan penting buat modal melek pas lagi <i>debugging</i> di tengah malam.</p>
         </div>
     </section>
     <br>
     
     <!-- Kontak -->
     <section class="container" id="kontak">
-        <div class="contact-box">
+        <div class="contact-box fade-element">
             <h2 class="section-title" style="border: none;"><i class="fa-regular fa-comments"></i> Hayu Ngobrol</h2>
             <p style="color: var(--text-muted); font-size: 1rem;">
                 Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting <b>BUKAN MAU PINJAM DULU SERATUS.</b> Ini murni niat suci mau ngajak silaturahmi sambil ngopi, Gas langsung ke kontak di bawah.
@@ -567,40 +523,60 @@
         </div>
     </section>
 
-    <footer>
+    <footer class="fade-element">
         <p>&copy; 2026 Ranaarifin.</p>
     </footer>
 
-    <!-- SCRIPT PENGUNCI KEAMANAN MAKSIMAL & LOGIKA MIDTRANS (Versi Vercel) -->
+    <!-- SCRIPT LOGIKA -->
     <script>
+        // --- LOGIKA ANIMASI FADE IN & OUT SAAT SCROLL ---
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.15 // Animasi akan mulai ketika elemen terlihat 15%
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        // Menghapus kelas 'visible' saat elemen keluar dari layar agar efek fade in/out berulang
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-element');
+            fadeElements.forEach(el => observer.observe(el));
+        });
+
         // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, Ctrl+U, PrintScreen dll)
         document.addEventListener('keydown', function(e) {
-            // F12 (Inspect Element)
             if (e.key === 'F12' || e.keyCode === 123) {
                 e.preventDefault();
                 return false;
             }
-            // Ctrl + Shift + I/J/C (Developer Tools)
             if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
                 e.preventDefault();
                 return false;
             }
-            // Ctrl + U (View Source), Ctrl + S (Save), Ctrl + C (Copy), Ctrl + A (Select All), Ctrl + P (Print)
             if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'p' || e.key === 'P')) {
                 e.preventDefault();
                 return false;
             }
         });
 
-        // 2. Blokir Klik Kanan (Context Menu)
+        // 2. Blokir Klik Kanan
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
 
-        // 3. Deteksi tombol Print Screen (PrtScn) & blur layar sesaat sebagai efek jera
+        // 3. Deteksi tombol Print Screen
         document.addEventListener('keyup', (e) => {
             if (e.key == 'PrintScreen') {
-                navigator.clipboard.writeText(''); // Mencoba mengosongkan clipboard
+                navigator.clipboard.writeText(''); 
                 document.body.style.filter = 'blur(10px)';
                 setTimeout(() => {
                     document.body.style.filter = 'none';
@@ -608,28 +584,22 @@
             }
         });
 
-        // --- LOGIKA MIDTRANS SNAP (Diubah untuk Vercel Node.js) ---
+        // --- LOGIKA MIDTRANS SNAP ---
         document.getElementById('pay-button').addEventListener('click', function(e) {
-            e.preventDefault(); // Mencegah pindah halaman sebelum bayar
-            
+            e.preventDefault(); 
             const btnPay = this;
             
-            // Ubah teks tombol saat loading untuk UX yang baik
             btnPay.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
             
-            // Mengambil Snap Token dari backend (Folder API Vercel)
             fetch('/api/get_token')
                 .then(response => response.json())
                 .then(data => {
-                    // Kembalikan teks tombol ke semula
                     btnPay.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo';
                     
                     if(data.token) {
-                        // Memanggil popup Midtrans Snap
                         window.snap.pay(data.token, {
                             onSuccess: function(result){
                                 alert("Pembayaran berhasil! Mengarahkan ke Demo Kopi Online...");
-                                // Arahkan ke link demo F&B setelah sukses
                                 window.location.href = "https://085871373603.github.io/Kopi-online/index.html";
                             },
                             onPending: function(result){
@@ -656,3 +626,4 @@
     </script>
 </body>
 </html>
+
