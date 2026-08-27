@@ -2,89 +2,62 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- Mengunci Layar & Anti Zoom -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>Rana Arifin</title>
-    <!-- Font Poppins untuk kesan Profesional & Elegan -->
+    <title>Rana Arifin | Arinex Solution</title>
+    <!-- Font Inter untuk Tipografi Profesional -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Icon FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Script Midtrans Snap (Production Live) -->
+    <!-- Script Midtrans Snap -->
     <script type="text/javascript"
             src="https://app.midtrans.com/snap/snap.js"
             data-client-key="Mid-client-V9KLcsAAfvwgOCzF"></script>
     
     <style>
         :root {
-            /* Palet Warna Modern Dark Minimalist */
-            --bg-base: #0a0a0a; 
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-main: #ededed;
+            /* Palet Warna Profesional (Slate / Zinc Dark Mode) */
+            --bg-base: #09090b; 
+            --surface-bg: #18181b;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
-            --accent: #3b82f6; /* Modern Blue */
-            --accent-2: #8b5cf6; /* Modern Purple */
+            --accent: #3b82f6; /* Corporate Blue */
+            --accent-glow: rgba(59, 130, 246, 0.15);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             -webkit-text-size-adjust: none;
             text-size-adjust: none;
         }
 
-        /* --- FITUR ANTI COPAS & ILUSTRASI BACKGROUND --- */
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
-            line-height: 1.7;
+            line-height: 1.6;
             position: relative;
             overflow-x: hidden;
-            
-            /* Kunci Interaksi */
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
-            overscroll-behavior: none;
         }
 
-        /* --- MODERN BACKGROUND --- */
-        .magic-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            overflow: hidden;
+        /* --- BACKGROUND PROFESIONAL --- */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 500px;
+            background: radial-gradient(circle at top, var(--accent-glow) 0%, transparent 70%);
             z-index: -1;
             pointer-events: none;
-        }
-        
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.25;
-            animation: floatOrb 15s infinite alternate ease-in-out;
-        }
-        
-        .orb-1 {
-            width: 400px; height: 400px;
-            background: var(--accent);
-            top: -10%; left: -10%;
-        }
-        
-        .orb-2 {
-            width: 500px; height: 500px;
-            background: var(--accent-2);
-            bottom: -15%; right: -10%;
-            animation-delay: -5s;
-        }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
         img {
@@ -93,175 +66,135 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 0 25px;
             position: relative;
             z-index: 1;
         }
 
-        /* --- FADE IN / OUT ANIMATION UTILITY --- */
+        /* --- ANIMASI SCROLL --- */
         .fade-element {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+            transform: translateY(20px);
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .fade-element.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* --- Header / Profil Pojok --- */
-        .top-header {
-            position: absolute;
-            top: 25px;
-            left: 25px;
+        /* --- NAVBAR --- */
+        nav {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            background: var(--glass-bg);
-            padding: 8px 20px 8px 10px;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .profile-wrapper-sm {
-            position: relative;
-            width: 48px;
-            height: 48px;
-        }
-
-        .profile-pic {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid transparent;
-            position: relative;
-            z-index: 2;
-        }
-
-        .profile-wrapper-sm::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(45deg, var(--accent), var(--accent-2));
-            border-radius: 50%;
-            z-index: 1;
-            animation: spin 4s linear infinite;
-        }
-
-        .profile-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-main);
-            letter-spacing: 0.5px;
-        }
-
-        section { padding: 90px 0 40px 0; }
-
-        /* --- Hero --- */
-        .hero {
-            padding-top: 140px;
+            padding: 25px 0;
             border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 50px;
-            text-align: center;
-        }
-        
-        .hero h1 { 
-            font-size: 2.8rem; 
-            margin-bottom: 10px; 
-            font-weight: 700;
-            letter-spacing: -1px;
+            margin-bottom: 60px;
         }
 
-        .magic-text {
-            background: linear-gradient(90deg, #60a5fa, #c084fc, #60a5fa);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shineText 4s linear infinite;
-        }
-        
-        .hero h2 { 
-            font-size: 1.1rem; 
-            color: var(--text-main); 
-            margin-bottom: 25px; 
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.05);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-        }
-        
-        .hero p { 
-            color: var(--text-muted); 
-            font-size: 1.05rem; 
-            margin-bottom: 18px; 
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* --- Section Titles --- */
-        .section-title {
-            font-size: 1.4rem;
-            margin-bottom: 30px;
-            color: var(--text-main);
+        .brand-logo {
             display: flex;
             align-items: center;
             gap: 12px;
             font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
         }
 
-        .section-title i {
+        .profile-pic {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--glass-border);
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-badge i { font-size: 0.6rem; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: left;
+            padding-bottom: 70px;
+        }
+        
+        .hero h1 { 
+            font-size: 3rem; 
+            margin-bottom: 15px; 
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #ffffff;
+        }
+        
+        .hero h2 { 
+            font-size: 1.2rem; 
+            color: var(--accent); 
+            margin-bottom: 25px; 
+            font-weight: 500;
+        }
+        
+        .hero p { 
+            color: var(--text-muted); 
+            font-size: 1.1rem; 
+            margin-bottom: 20px; 
+            max-width: 700px;
+        }
+
+        /* --- SECTION TITLES --- */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 35px;
+            color: #ffffff;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .section-title span {
+            font-size: 0.9rem;
             color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
         }
 
-        .section-title::after {
-            content: "";
-            flex-grow: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--glass-border), transparent);
-            margin-left: 15px;
-        }
-
-        /* --- Grid & Cards --- */
+        /* --- GRID CARDS --- */
         .grid-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
         }
 
         .card {
-            background: var(--glass-bg);
-            padding: 25px;
-            border-radius: 16px;
+            background: var(--surface-bg);
+            padding: 30px;
+            border-radius: 12px;
             border: 1px solid var(--glass-border);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
         
         .card:hover {
-            transform: translateY(-5px);
             border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(-3px);
         }
 
         .card h3 { 
             font-size: 1.15rem; 
-            margin-bottom: 12px; 
+            margin-bottom: 15px; 
             display: flex;
             align-items: center;
             gap: 12px;
@@ -269,263 +202,207 @@
         }
         
         .card h3 i {
-            color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 1rem;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            opacity: 0.8;
         }
 
         .card p { 
             color: var(--text-muted); 
             font-size: 0.95rem; 
-            line-height: 1.6; 
-        }
-        .card p b {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-        
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            margin-top: 15px;
-            color: var(--text-main);
-            text-decoration: none;
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s;
-            pointer-events: auto;
-            cursor: pointer;
-        }
-        .tag:hover {
-            background: var(--text-main);
-            color: var(--bg-base);
         }
 
-        /* --- Kontak --- */
-        .contact-box {
-            background: var(--glass-bg);
-            border-radius: 20px;
-            padding: 45px 30px;
-            text-align: center;
-            margin-bottom: 50px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
-
-        .contact-box .section-title {
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        
-        .contact-box .section-title::after { display: none; }
-
+        /* --- BUTTONS & TAGS --- */
         .btn-group {
             display: flex;
-            justify-content: center;
             gap: 15px;
-            margin-top: 30px;
             flex-wrap: wrap;
+            margin-top: 30px;
         }
 
         .btn {
-            padding: 12px 28px;
-            border-radius: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.3s;
             pointer-events: auto;
+            cursor: pointer;
         }
 
-        .btn-wa { 
-            background: #25D366;
-            color: #0a0a0a; 
-            font-weight: 600;
+        .btn-primary {
+            background: var(--text-main);
+            color: var(--bg-base);
         }
-        
-        .btn-wa:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        .btn-primary:hover {
+            background: #d4d4d8;
         }
 
-        .btn-demo { 
-            background-color: transparent; 
-            color: var(--text-main); 
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
             border: 1px solid var(--glass-border);
         }
-        
-        .btn-demo:hover { 
-            background-color: rgba(255,255,255,0.1); 
-            transform: translateY(-3px);
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.3);
         }
+
+        .tag-status {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .tag-live { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .tag-dev { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .tag-docs { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
 
         footer { 
             text-align: center; 
-            padding: 25px; 
+            padding: 30px; 
             color: var(--text-muted); 
             font-size: 0.85rem; 
             border-top: 1px solid var(--glass-border);
-        }
-
-        /* Keyframes Animations */
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes shineText { to { background-position: 200% center; } }
-
-        /* --- Pencegahan Cetak/Print --- */
-        @media print {
-            html, body { display: none !important; }
+            margin-top: 40px;
         }
 
         /* Responsif */
         @media (max-width: 600px) {
             .hero h1 { font-size: 2.2rem; }
-            .hero p { font-size: 0.95rem; }
             .btn { width: 100%; justify-content: center; }
-            .top-header { 
-                position: relative; 
-                top: 0; left: 0; 
-                justify-content: center; 
-                border-radius: 0; 
-                border: none; 
-                border-bottom: 1px solid var(--glass-border);
-                background: transparent;
-                box-shadow: none;
-                margin-bottom: -60px;
-                padding: 15px;
-            }
-            .hero { padding-top: 100px; }
-            section { padding: 60px 0 20px 0; }
+            nav { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .status-badge { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"> 
 
-    <!-- MAGIC BACKGROUND -->
-    <div class="magic-bg">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-    </div>
-
-    <!-- Foto Profil Pojok Kiri Atas -->
-    <div class="top-header fade-element">
-        <div class="profile-wrapper-sm">
-            <img src="profil.jpg" alt="Foto Profil" class="profile-pic">
-        </div>
-        <span class="profile-name">Rana Arifin</span>
-    </div>
-
-    <!-- Perkenalan -->
-    <section class="hero container">
-        <h1 class="fade-element"><span class="magic-text">Saya Rana Arifin!</span></h1>
-        <h2 class="fade-element"><i class="fa-solid fa-user"></i> Pemula yang Hobi Begadang</h2>
-        <p class="fade-element">
-            Sehari-hari saya berkutat di dunia operasional. Dari sana, saya sering mengamati sistem manajemen jaringan retail dan mikir, <i>"Kayaknya seru kalau bisa bikin ginian sendiri."</i>
-        </p>
-        <p class="fade-element">
-            Akhirnya, saya terjun belajar secara otodidak. Saya belum ahli, masih sering nyasar di StackOverflow, dan kadang <i>error</i> 1 baris nyarinya sampai besok pagi. Tapi ya namanya juga belajar, perlahan aja
-        </p>
-    </section>
-
-    <!-- Skill / Pemahaman -->
-    <section class="container">
-        <h2 class="section-title fade-element"><i class="fa-solid fa-layer-group"></i> Pemahaman (Bukan Ahli Ya..)</h2>
-        <p class="fade-element" style="color: var(--text-muted); margin-bottom: 20px;">Daftar teknologi yang pernah saya sentuh. Ada yang lumayan paham dan ada yang cuma numpang singgah begitu.</p>
-        
-        <div class="grid-list">
-            <div class="card fade-element">
-                <h3><i class="fa-solid fa-database"></i> Database</h3>
-                <p><b>mySQL</b> & <b>Firebase Auth</b>. Bisa nyimpan data dengan aman. Asal jangan suruh simpan Perasaan aja.</p>
+    <div class="container">
+        <!-- HEADER / NAVBAR -->
+        <nav class="fade-element">
+            <div class="brand-logo">
+                <img src="profil.jpg" alt="Rana Arifin" class="profile-pic">
+                Rana Arifin
             </div>
-            
-            <div class="card fade-element">
-                <h3><i class="fa-brands fa-html5"></i> Front-End</h3>
-                <p><b>HTML</b> & <b>JavaScript</b>. Bisa bikin tombol dan form. Kadang tombolnya nggak jalan, tapi secara visual mantap.</p>
+            <div class="status-badge">
+                <i class="fa-solid fa-circle"></i> Tersedia untuk Diskusi
             </div>
-            
-            <div class="card fade-element">
-                <h3><i class="fa-solid fa-server"></i> Back-End</h3>
-                <p><b>PHP</b> & <b>Python (Flask)</b>. Masih terus diulik biar logikanya makin lancar, mulai dari bikin routing web santai sampai urus API yang lebih rapi.</p>
-            </div>
-            
-            <div class="card fade-element">
-                <h3><i class="fa-solid fa-pen-nib"></i> Graphic Design</h3>
-                <p><b>Canva, Figma, CSS</b>. Lumayan jago bikin tampilan web jadi cakep, selama <i>div</i>-nya nggak berantakan ke mana-mana.</p>
-            </div>
+        </nav>
 
-            <div class="card fade-element">
-                <h3><i class="fa-solid fa-microchip"></i> Program Mesin</h3>
-                <p><b>C, C++</b>. Sedang mencoba ngobrol sama mesin CNC. Kadang mesinnya nurut, kadang mesinnya cuek begitu aja 😓.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projek -->
-    <section class="container" style="padding-top: 0;">
-        <h2 class="section-title fade-element"><i class="fa-solid fa-rocket"></i> Proyek (Belajar)</h2>
-        
-        <div class="grid-list">
-            <div class="card fade-element">
-                <h2 style="font-size:0.9rem; color: #ef4444; margin-bottom: 5px;">🔴 LIVE PROJECT</h2>
-                <h3>Fintek</h3>
-                <p>Aplikasi Sistem PPOB</p>
-                <p>Masih dalam tahap pembuatan sih tapi transaksi udah bisa tinggal aktifin produknya aja dan beberapa tambahan fitur sedikit lagi.</p>
-                <a href="https://app.arinex.my.id" class="btn btn-demo tag"><i class="fa-regular fa-eye"></i> Lihat</a>
-            </div>
-
-            <div class="card fade-element">
-                <h3>Sistem Informasi & Manajemen F&B</h3>
-                <p>Bikin sistem pencatatan pesanan ala-ala kafe hits, biar pesanan kopi nggak ketukar sama es teh, dan yang paling penting biar engga kejadian 1 cup yang dijual, stock hilang 10 cup.</p>
-                <a href="#" id="pay-button" class="btn btn-demo tag"><i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo</a>
-            </div>
-
-            <div class="card fade-element">
-                <h3>Website Profil, Formulir & Auth</h3>
-                <p>Buat nampilin portofolio dan ngumpulin data. Formulirnya buat input data ya, bukan buat curhat.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pemahaman Lain (Bonus) -->
-    <section class="container" style="padding-top: 0;">
-        <h2 class="section-title fade-element"><i class="fa-solid fa-star"></i> Pemahaman Lainnya</h2>
-        <div class="card fade-element" style="max-width: 100%;">
-            <h3><i class="fa-solid fa-mug-hot"></i> Sedikit Tahu Tentang Kopi</h3>
-            <p>Bisa bedain mana kopi beneran, mana kopi sachet, dan mana kopi jagung. Lumayan penting buat modal melek pas lagi <i>debugging</i> di tengah malam.</p>
-        </div>
-    </section>
-    <br>
-    
-    <!-- Kontak -->
-    <section class="container" id="kontak">
-        <div class="contact-box fade-element">
-            <h2 class="section-title" style="border: none;"><i class="fa-regular fa-comments"></i> Hayu Ngobrol</h2>
-            <p style="color: var(--text-muted); font-size: 1rem;">
-                Ini bukan broadcast MLM, bukan nawarin asuransi, dan yang paling penting <b>BUKAN MAU PINJAM DULU SERATUS.</b> Ini murni niat suci mau ngajak silaturahmi sambil ngopi, Gas langsung ke kontak di bawah.
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <h1 class="fade-element">Pengembang Sistem & Operasional IT.</h1>
+            <h2 class="fade-element">Inisiator Arinex Solution</h2>
+            <p class="fade-element">
+                Berangkat dari pengalaman langsung di dunia operasional ritel, saya mengamati dan menganalisis sistem manajemen jaringan. Hal ini mendorong saya untuk merancang dan membangun solusi digital secara mandiri.
+            </p>
+            <p class="fade-element">
+                Saat ini, saya terus mengembangkan kapabilitas dalam rekayasa perangkat lunak—mengubah kendala operasional menjadi sistem otomasi yang efisien dan terstruktur.
             </p>
             
-            <div class="btn-group">
-                <a href="https://wa.me/6285871373603" target="_blank" class="btn btn-wa">
-                    <i class="fa-brands fa-whatsapp"></i> Whatsapp
-                </a>
-                <a href="mailto:ranaarifin1@gmail.com" class="btn btn-demo">
-                    <i class="fa-solid fa-envelope"></i> Email
-                </a>
+            <div class="btn-group fade-element">
+                <a href="#kontak" class="btn btn-primary"><i class="fa-regular fa-envelope"></i> Hubungi Saya</a>
+                <a href="https://dokumentasi.arinex.my.id/" target="_blank" class="btn btn-outline"><i class="fa-solid fa-book"></i> Baca Dokumentasi</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="fade-element">
-        <p>&copy; 2026 Ranaarifin.</p>
-    </footer>
+        <!-- SKILL / STACK -->
+        <section>
+            <h2 class="section-title fade-element">
+                <span>Teknologi & Ekosistem</span>
+                Keahlian Teknis
+            </h2>
+            
+            <div class="grid-list">
+                <div class="card fade-element">
+                    <h3><i class="fa-solid fa-server"></i> Infrastruktur Backend</h3>
+                    <p>Mengelola logika server dan API menggunakan <b>Python (Flask)</b> dan <b>PHP</b>. Fokus pada efisiensi pemrosesan data dan routing web yang terstruktur.</p>
+                </div>
+                
+                <div class="card fade-element">
+                    <h3><i class="fa-solid fa-database"></i> Basis Data</h3>
+                    <p>Pengelolaan skema dan relasi data terpusat menggunakan <b>MySQL</b> dan implementasi autentikasi aman via <b>Firebase Auth</b>.</p>
+                </div>
+                
+                <div class="card fade-element">
+                    <h3><i class="fa-solid fa-code"></i> Komponen Frontend</h3>
+                    <p>Membangun antarmuka dinamis dan responsif memanfaatkan <b>HTML, CSS</b>, dan <b>JavaScript</b> murni untuk performa yang ringan.</p>
+                </div>
+
+                <div class="card fade-element">
+                    <h3><i class="fa-solid fa-microchip"></i> Logika Mesin</h3>
+                    <p>Eksplorasi bahasa tingkat menengah (<b>C, C++</b>) untuk memahami instruksi operasional pada mesin industri dan mikrokontroler.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROYEK & DOKUMENTASI -->
+        <section>
+            <h2 class="section-title fade-element">
+                <span>Portofolio & Referensi</span>
+                Implementasi Sistem
+            </h2>
+            
+            <div class="grid-list">
+                <!-- DOKUMENTASI (BARU) -->
+                <div class="card fade-element" style="border-color: rgba(168, 85, 247, 0.4);">
+                    <span class="tag-status tag-docs"><i class="fa-solid fa-book-bookmark"></i> DOKUMENTASI PUSAT</span>
+                    <h3>Pusat Dokumentasi Arinex</h3>
+                    <p style="margin-bottom: 20px;">Repositori referensi teknis, panduan penggunaan, dan panduan API untuk seluruh ekosistem sistem operasi ritel dan F&B Arinex Solution.</p>
+                    <a href="https://dokumentasi.arinex.my.id/" target="_blank" class="btn btn-outline" style="width: 100%; justify-content: center;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Akses Portal Dokumentasi</a>
+                </div>
+
+                <!-- PROJECT 1 -->
+                <div class="card fade-element">
+                    <span class="tag-status tag-live">LIVE SYSTEM</span>
+                    <h3>Sistem Transaksi Fintek</h3>
+                    <p style="margin-bottom: 20px;">Pengembangan platform PPOB dengan arsitektur transaksi langsung. Sedang dalam fase aktivasi produk dan finalisasi fitur tambahan.</p>
+                    <a href="https://app.arinex.my.id" target="_blank" class="btn btn-outline"><i class="fa-solid fa-link"></i> Kunjungi Sistem</a>
+                </div>
+
+                <!-- PROJECT 2 -->
+                <div class="card fade-element">
+                    <span class="tag-status tag-dev">ON DEVELOPMENT</span>
+                    <h3>Sistem Manajemen F&B</h3>
+                    <p style="margin-bottom: 20px;">Solusi Point of Sale (POS) terintegrasi untuk mencegah diskrepansi antara pencatatan pesanan (cup) dan manajemen inventaris stok.</p>
+                    <a href="#" id="pay-button" class="btn btn-outline"><i class="fa-solid fa-cart-shopping"></i> Beli Akses Demo</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- KONTAK -->
+        <section id="kontak">
+            <h2 class="section-title fade-element">
+                <span>Mari Terhubung</span>
+                Konsultasi & Diskusi
+            </h2>
+            <div class="card fade-element" style="text-align: center; padding: 40px 20px;">
+                <h3 style="justify-content: center; font-size: 1.5rem; margin-bottom: 10px;">Mulai Percakapan</h3>
+                <p style="max-width: 600px; margin: 0 auto 30px auto;">Terbuka untuk diskusi teknis, kolaborasi pengembangan sistem operasional, maupun sekadar bertukar wawasan sambil menikmati kopi.</p>
+                
+                <div class="btn-group" style="justify-content: center; margin-top: 0;">
+                    <a href="https://wa.me/6285871373603" target="_blank" class="btn btn-primary" style="background: #25D366; color: #000;">
+                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                    </a>
+                    <a href="mailto:ranaarifin1@gmail.com" class="btn btn-outline">
+                        <i class="fa-regular fa-envelope"></i> ranaarifin1@gmail.com
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="fade-element">
+            <p>&copy; 2026 Arinex Solution by Rana Arifin. Seluruh hak cipta dilindungi.</p>
+        </footer>
+    </div>
 
     <!-- SCRIPT LOGIKA -->
     <script>
@@ -534,7 +411,7 @@
             const observerOptions = {
                 root: null,
                 rootMargin: "0px",
-                threshold: 0.15 // Animasi akan mulai ketika elemen terlihat 15%
+                threshold: 0.15 
             };
 
             const observer = new IntersectionObserver((entries) => {
@@ -542,7 +419,6 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
                     } else {
-                        // Menghapus kelas 'visible' saat elemen keluar dari layar agar efek fade in/out berulang
                         entry.target.classList.remove('visible');
                     }
                 });
@@ -552,35 +428,20 @@
             fadeElements.forEach(el => observer.observe(el));
         });
 
-        // 1. Blokir kombinasi tombol keyboard (Ctrl+C, Ctrl+A, F12, Ctrl+U, PrintScreen dll)
+        // --- PENGAMANAN LAYAR (Anti Copas, Inspect, Print) ---
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'p' || e.key === 'P')) {
-                e.preventDefault();
-                return false;
-            }
+            if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) { e.preventDefault(); return false; }
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'p' || e.key === 'P')) { e.preventDefault(); return false; }
         });
 
-        // 2. Blokir Klik Kanan
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
-        // 3. Deteksi tombol Print Screen
         document.addEventListener('keyup', (e) => {
             if (e.key == 'PrintScreen') {
                 navigator.clipboard.writeText(''); 
                 document.body.style.filter = 'blur(10px)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                }, 2000);
+                setTimeout(() => { document.body.style.filter = 'none'; }, 2000);
             }
         });
 
@@ -599,7 +460,7 @@
                     if(data.token) {
                         window.snap.pay(data.token, {
                             onSuccess: function(result){
-                                alert("Pembayaran berhasil! Mengarahkan ke Demo Kopi Online...");
+                                alert("Pembayaran berhasil! Mengarahkan ke Demo Sistem...");
                                 window.location.href = "https://085871373603.github.io/Kopi-online/index.html";
                             },
                             onPending: function(result){
@@ -613,7 +474,7 @@
                             }
                         });
                     } else {
-                        alert("Gagal memuat token. Pastikan file /api/get_token.js berjalan dengan baik.");
+                        alert("Gagal memuat token. Pastikan file server berjalan.");
                         console.log(data);
                     }
                 })
