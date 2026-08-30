@@ -281,7 +281,7 @@
     <!-- Layar Pembuka -->
     <div id="start-overlay">
         <h2>TAP</h2>
-        <p>untuk masuk</p>
+        <p>🙈</p>
     </div>
 
     <!-- Popup Banner Iklan Berkala Saat Live -->
@@ -314,7 +314,7 @@
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
             <circle cx="12" cy="12" r="3"></circle>
         </svg>
-        <span id="viewers-count">0</span>
+        <span id="viewers-count">Load...</span>
     </div>
 
     <!-- Tombol Menu -->
@@ -323,7 +323,7 @@
     <!-- Kontrol Tengah -->
     <div id="media-controls">
         <video id="bg-video" playsinline>
-            <source src="arinex.mp4" type="video/mp4">
+            <source src="020901.mp4" type="video/mp4">
         </video>
         <iframe id="yt-video" style="display:none;" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
 
@@ -577,7 +577,7 @@
                     // Munculkan banner iklan pertama setelah 5 menit, lalu berulang tiap 5 menit
                     liveAdInterval = setInterval(() => {
                         triggerLiveAdPopup();
-                    }, 300000); 
+                    }, 30000); 
                 }
             } else {
                 ytVideo.style.display = 'none'; ytVideo.src = ""; 
