@@ -1,1592 +1,2711 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+<meta charset="UTF-8">
 
-    <title>ARINEX.id — Information Channel</title>
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no,
+               viewport-fit=cover">
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet">
+<meta name="theme-color" content="#07111f">
 
-    <style>
-        /* =========================================================
-           RESET & PROTECTION
-        ========================================================= */
-        * {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        }
+<title>ARINEX.id — Information Channel</title>
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            overflow: hidden;
-            background: #07111f;
-            color: #f8fafc;
-            -webkit-tap-highlight-color: transparent;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        body {
-            background:
-                radial-gradient(circle at 50% -10%, rgba(37,99,235,.22), transparent 35%),
-                linear-gradient(180deg, #07111f 0%, #091525 55%, #050b13 100%);
-        }
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
-        button,
-        a,
-        input,
-        textarea {
-            font-family: inherit;
-        }
+<style>
 
-        button {
-            -webkit-tap-highlight-color: transparent;
-        }
+/* =========================================================
+   ROOT
+========================================================= */
 
+:root{
+    --bg:#06111f;
+    --bg-soft:#0a1728;
 
-        /* =========================================================
-           CHANNEL BACKGROUND
-        ========================================================= */
-        .channel-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
+    --text:#f8fafc;
+    --muted:#8ea0b8;
+    --muted-2:#62738b;
 
-        .channel-glow {
-            position: absolute;
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            background: rgba(37,99,235,.12);
-            filter: blur(100px);
-            top: -170px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+    --blue:#2563eb;
+    --blue-light:#60a5fa;
+    --cyan:#22d3ee;
 
-        .channel-grid {
-            position: absolute;
-            inset: 0;
-            opacity: .13;
+    --green:#22c55e;
+    --yellow:#facc15;
+    --orange:#fb923c;
+    --red:#ef4444;
+    --purple:#8b5cf6;
+    --pink:#ec4899;
 
-            background-image:
-                linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    --glass:rgba(255,255,255,.055);
+    --glass-2:rgba(255,255,255,.085);
 
-            background-size: 40px 40px;
+    --border:rgba(255,255,255,.10);
+}
 
-            mask-image: linear-gradient(
-                to bottom,
-                rgba(0,0,0,1),
-                rgba(0,0,0,.25),
-                transparent
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    user-select:none;
+
+    font-family:
+        'Plus Jakarta Sans',
+        system-ui,
+        sans-serif;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+
+    margin:0;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(37,99,235,.34),
+            transparent 40%
+        ),
+        linear-gradient(
+            180deg,
+            #06111f 0%,
+            #081526 50%,
+            #040a12 100%
+        );
+
+    color:var(--text);
+
+    -webkit-tap-highlight-color:transparent;
+}
+
+button,
+a,
+input,
+textarea{
+    font-family:inherit;
+}
+
+/* =========================================================
+   BACKGROUND ILLUSTRATION
+========================================================= */
+
+.channel-bg{
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+    z-index:0;
+}
+
+.bg-orbit{
+    position:absolute;
+
+    width:470px;
+    height:470px;
+
+    border:1px solid rgba(96,165,250,.08);
+
+    border-radius:50%;
+
+    left:50%;
+    top:-240px;
+
+    transform:translateX(-50%) rotate(-18deg);
+}
+
+.bg-orbit::before,
+.bg-orbit::after{
+    content:"";
+
+    position:absolute;
+
+    border:1px solid rgba(34,211,238,.07);
+
+    border-radius:50%;
+}
+
+.bg-orbit::before{
+    inset:38px;
+}
+
+.bg-orbit::after{
+    inset:83px;
+}
+
+.channel-glow{
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(37,99,235,.19),
+            transparent 65%
+        );
+
+    filter:blur(25px);
+
+    top:-260px;
+    left:50%;
+
+    transform:translateX(-50%);
+}
+
+.glow-2{
+    position:absolute;
+
+    width:280px;
+    height:280px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(139,92,246,.12),
+            transparent 70%
+        );
+
+    right:-100px;
+    bottom:-90px;
+
+    filter:blur(20px);
+}
+
+.channel-grid{
+    position:absolute;
+    inset:0;
+
+    opacity:.13;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.04) 1px,
+            transparent 1px
+        );
+
+    background-size:40px 40px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,1),
+            rgba(0,0,0,.45),
+            transparent 85%
+        );
+}
+
+/* decorative floating lights */
+
+.float-dot{
+    position:absolute;
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    opacity:.8;
+
+    animation:
+        floatDot 5s
+        ease-in-out
+        infinite;
+}
+
+.dot-1{
+    left:12%;
+    top:19%;
+    background:var(--cyan);
+    box-shadow:0 0 18px var(--cyan);
+}
+
+.dot-2{
+    right:14%;
+    top:33%;
+    background:var(--purple);
+    box-shadow:0 0 18px var(--purple);
+    animation-delay:1s;
+}
+
+.dot-3{
+    left:21%;
+    bottom:18%;
+    background:var(--yellow);
+    box-shadow:0 0 18px var(--yellow);
+    animation-delay:2s;
+}
+
+.dot-4{
+    right:25%;
+    bottom:14%;
+    background:var(--green);
+    box-shadow:0 0 18px var(--green);
+    animation-delay:3s;
+}
+
+@keyframes floatDot{
+
+    0%,
+    100%{
+        transform:
+            translate3d(0,0,0)
+            scale(1);
+    }
+
+    50%{
+        transform:
+            translate3d(0,-18px,0)
+            scale(1.2);
+    }
+
+}
+
+/* =========================================================
+   START OVERLAY
+========================================================= */
+
+#start-overlay{
+    position:fixed;
+    inset:0;
+
+    z-index:1000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(37,99,235,.25),
+            rgba(2,6,23,.97) 70%
+        );
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    cursor:pointer;
+
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
+}
+
+.start-card{
+    width:min(88%,360px);
+
+    padding:28px 24px;
+
+    text-align:center;
+
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.10),
+            rgba(255,255,255,.03)
+        );
+
+    border:1px solid rgba(255,255,255,.11);
+
+    box-shadow:
+        0 30px 90px rgba(0,0,0,.55),
+        inset 0 1px rgba(255,255,255,.07);
+
+    animation:
+        startFloat
+        3.5s
+        ease-in-out
+        infinite;
+}
+
+.start-illustration{
+    width:90px;
+    height:90px;
+
+    margin:0 auto 18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(37,99,235,.35),
+            rgba(139,92,246,.30)
+        );
+
+    border:1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 15px 40px rgba(37,99,235,.25);
+}
+
+.start-illustration svg{
+    width:48px;
+    height:48px;
+
+    stroke:white;
+}
+
+#start-overlay h2{
+    margin:0;
+
+    font-size:31px;
+
+    font-weight:800;
+
+    letter-spacing:6px;
+}
+
+#start-overlay p{
+    margin:10px 0 0;
+
+    color:#93c5fd;
+
+    font-size:10px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+}
+
+.start-hint{
+    margin-top:18px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:8px 11px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.045);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    color:#a8b7c9;
+
+    font-size:9px;
+
+    font-weight:700;
+}
+
+.start-hint span{
+    width:6px;
+    height:6px;
+
+    background:#22c55e;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 10px #22c55e;
+}
+
+@keyframes startFloat{
+
+    0%,
+    100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-7px);
+    }
+
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+#top-channel{
+    position:fixed;
+
+    top:13px;
+    left:13px;
+    right:13px;
+
+    height:60px;
+
+    z-index:40;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 9px 0 11px;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(7,17,31,.84),
+            rgba(7,17,31,.62)
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    box-shadow:
+        0 18px 50px rgba(0,0,0,.3),
+        inset 0 1px rgba(255,255,255,.05);
+}
+
+/* brand */
+
+.channel-brand{
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    min-width:0;
+}
+
+.channel-logo{
+    width:38px;
+    height:38px;
+
+    flex:0 0 38px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    font-weight:800;
+    font-size:13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 8px 25px rgba(37,99,235,.35);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.channel-logo::after{
+    content:"";
+
+    position:absolute;
+
+    width:22px;
+    height:22px;
+
+    border:2px solid rgba(255,255,255,.28);
+
+    border-radius:50%;
+
+    transform:translate(10px,9px);
+}
+
+.channel-brand-text{
+    min-width:0;
+}
+
+.channel-name{
+    font-size:13px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+.channel-category{
+    margin-top:2px;
+
+    font-size:8px;
+
+    color:#66788f;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.6px;
+}
+
+/* action group */
+
+.channel-actions{
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+}
+
+#viewer-badge{
+    display:flex;
+    align-items:center;
+
+    gap:6px;
+
+    min-height:34px;
+
+    padding:0 10px;
+
+    border-radius:11px;
+
+    background:
+        rgba(34,197,94,.08);
+
+    border:
+        1px solid rgba(34,197,94,.17);
+
+    color:#cbd5e1;
+
+    font-size:10px;
+
+    font-weight:700;
+}
+
+#viewer-badge svg{
+    width:14px;
+    height:14px;
+
+    stroke:#4ade80;
+}
+
+#menu-btn{
+    border:0;
+
+    min-height:35px;
+
+    padding:0 13px;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    color:white;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:.4px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 7px 18px rgba(37,99,235,.30);
+
+    transition:.2s ease;
+}
+
+#menu-btn:hover{
+    transform:translateY(-1px);
+}
+
+#menu-btn:active{
+    transform:scale(.96);
+}
+
+/* =========================================================
+   MAIN AREA
+========================================================= */
+
+#channel-main{
+    position:fixed;
+
+    left:50%;
+    top:51%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width:min(
+        94%,
+        590px
+    );
+
+    height:auto;
+
+    z-index:10;
+}
+
+/* =========================================================
+   HERO HEADER
+========================================================= */
+
+.channel-header{
+    margin-bottom:12px;
+
+    position:relative;
+}
+
+.channel-kicker{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-bottom:8px;
+
+    padding:5px 9px;
+
+    border-radius:999px;
+
+    background:
+        rgba(37,99,235,.10);
+
+    border:
+        1px solid rgba(96,165,250,.17);
+
+    color:#93c5fd;
+
+    text-transform:uppercase;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    letter-spacing:1.7px;
+}
+
+.channel-kicker::before{
+    content:"";
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    box-shadow:
+        0 0 12px #22c55e;
+}
+
+.channel-header h1{
+    margin:0;
+
+    font-size:
+        clamp(
+            29px,
+            7vw,
+            42px
+        );
+
+    line-height:1.03;
+
+    letter-spacing:-1.4px;
+
+    font-weight:800;
+}
+
+.gradient-word{
+    display:inline-block;
+
+    background:
+        linear-gradient(
+            90deg,
+            #60a5fa,
+            #22d3ee,
+            #a78bfa
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+}
+
+.channel-header p{
+    margin:9px 0 0;
+
+    max-width:500px;
+
+    color:#8799b0;
+
+    font-size:11px;
+
+    line-height:1.6;
+}
+
+/* small floating stats */
+
+.hero-mini-row{
+    display:flex;
+
+    gap:7px;
+
+    margin-top:11px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+}
+
+.hero-mini-row::-webkit-scrollbar{
+    display:none;
+}
+
+.hero-chip{
+    flex:0 0 auto;
+
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+
+    padding:7px 9px;
+
+    border-radius:11px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.065);
+
+    font-size:9px;
+
+    color:#9fb0c4;
+
+    font-weight:700;
+}
+
+.hero-chip-icon{
+    display:flex;
+
+    width:22px;
+    height:22px;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:7px;
+
+    font-size:11px;
+
+    background:rgba(37,99,235,.14);
+}
+
+/* =========================================================
+   MEDIA
+========================================================= */
+
+#media-controls{
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.media-card{
+    position:relative;
+
+    width:100%;
+
+    padding:7px;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.105),
+            rgba(255,255,255,.025)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 30px 70px rgba(0,0,0,.44),
+        inset 0 1px rgba(255,255,255,.06);
+}
+
+.media-stage{
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:18px;
+
+    background:#020617;
+}
+
+/* decorative stage corner */
+
+.media-stage::after{
+    content:"";
+
+    position:absolute;
+
+    right:13px;
+    top:13px;
+
+    width:40px;
+    height:40px;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    border-radius:12px;
+
+    pointer-events:none;
+}
+
+.media-status{
+    position:absolute;
+
+    top:13px;
+    left:13px;
+
+    z-index:5;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 9px;
+
+    border-radius:8px;
+
+    background:
+        rgba(2,6,23,.70);
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    backdrop-filter:blur(10px);
+
+    font-size:8px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+}
+
+.media-status span{
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    box-shadow:
+        0 0 8px #22c55e;
+}
+
+#bg-video,
+#yt-video{
+    display:block;
+
+    width:100%;
+
+    /*
+       Auto-fit:
+       tinggi mengikuti lebar layar,
+       tetap punya batas minimum/maksimum.
+    */
+    aspect-ratio:16 / 9;
+
+    min-height:190px;
+    max-height:330px;
+
+    border:0;
+
+    border-radius:18px;
+
+    background:
+        radial-gradient(
+            circle,
+            #111827,
+            #020617
+        );
+
+    object-fit:cover;
+}
+
+/* video overlay */
+
+.video-overlay{
+    position:absolute;
+
+    left:16px;
+    right:16px;
+    bottom:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    pointer-events:none;
+}
+
+.video-live-pill{
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 9px;
+
+    border-radius:999px;
+
+    background:
+        rgba(2,6,23,.60);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    font-size:8px;
+
+    color:#dbeafe;
+
+    backdrop-filter:blur(8px);
+}
+
+.video-live-pill span{
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    box-shadow:
+        0 0 10px #22c55e;
+}
+
+.video-corner-art{
+    display:flex;
+
+    width:38px;
+    height:38px;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    font-size:17px;
+
+    backdrop-filter:blur(8px);
+}
+
+/* =========================================================
+   INFORMATION STRIP
+========================================================= */
+
+.info-strip{
+    margin-top:7px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+
+    padding:9px 11px;
+
+    border-radius:13px;
+
+    background:
+        rgba(255,255,255,.027);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+}
+
+.info-label{
+    display:flex;
+    align-items:center;
+
+    gap:6px;
+
+    min-width:0;
+
+    color:#8fa2ba;
+
+    font-size:9px;
+    font-weight:600;
+}
+
+.info-label strong{
+    color:#fff;
+}
+
+.info-time{
+    flex:0 0 auto;
+
+    font-size:8px;
+
+    color:#61728a;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   BANNER SLIDER
+========================================================= */
+
+.ad-banner-container{
+    position:relative;
+
+    width:100%;
+
+    /*
+       Banner selalu auto-fit berdasarkan lebar.
+    */
+    aspect-ratio:16 / 5;
+
+    min-height:58px;
+    max-height:115px;
+
+    display:flex;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    scroll-snap-type:x mandatory;
+
+    scroll-behavior:smooth;
+
+    border-radius:17px;
+
+    background:#0b1422;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.26);
+
+    scrollbar-width:none;
+}
+
+.ad-banner-container::-webkit-scrollbar{
+    display:none;
+}
+
+.banner-slide{
+    position:relative;
+
+    flex:
+        0 0 100%;
+
+    width:100%;
+    height:100%;
+
+    scroll-snap-align:center;
+
+    overflow:hidden;
+}
+
+.banner-slide img{
+    display:block;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    object-position:center;
+
+    pointer-events:none;
+
+    -webkit-user-drag:none;
+
+    transition:
+        transform .6s ease;
+}
+
+.banner-slide:hover img{
+    transform:scale(1.035);
+}
+
+.banner-caption{
+    position:absolute;
+
+    left:10px;
+    bottom:8px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:5px 8px;
+
+    border-radius:8px;
+
+    background:
+        rgba(2,6,23,.55);
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    color:white;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    backdrop-filter:blur(8px);
+}
+
+/* slider indicator */
+
+.banner-indicator{
+    position:absolute;
+
+    right:9px;
+    bottom:9px;
+
+    display:flex;
+
+    gap:4px;
+
+    z-index:3;
+}
+
+.banner-indicator span{
+    width:5px;
+    height:5px;
+
+    border-radius:999px;
+
+    background:
+        rgba(255,255,255,.42);
+
+    transition:.3s ease;
+}
+
+.banner-indicator span.active{
+    width:15px;
+
+    background:white;
+}
+
+/* =========================================================
+   CONTENT HEADER
+========================================================= */
+
+.content-title{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-top:1px;
+}
+
+.content-title strong{
+    font-size:10px;
+
+    letter-spacing:.7px;
+
+    font-weight:800;
+}
+
+.content-title span{
+    font-size:8px;
+
+    color:#607087;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.video-btn-group{
+    display:flex;
+
+    gap:8px;
+
+    overflow-x:auto;
+
+    padding-bottom:3px;
+
+    scrollbar-width:none;
+}
+
+.video-btn-group::-webkit-scrollbar{
+    display:none;
+}
+
+.video-btn{
+    position:relative;
+
+    min-height:38px;
+
+    flex:0 0 auto;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:8px 13px;
+
+    border:1px solid rgba(255,255,255,.09);
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.025)
+        );
+
+    color:#c8d4e3;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+
+    box-shadow:
+        0 7px 18px rgba(0,0,0,.12);
+}
+
+.video-btn:hover{
+    transform:translateY(-2px);
+
+    color:white;
+
+    border-color:
+        rgba(96,165,250,.35);
+
+    background:
+        rgba(37,99,235,.16);
+}
+
+.video-btn:active{
+    transform:scale(.96);
+}
+
+/* colored button dot */
+
+.video-btn::before{
+    content:"";
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:
+        #60a5fa;
+
+    box-shadow:
+        0 0 10px rgba(96,165,250,.75);
+}
+
+.video-btn:nth-child(2)::before{
+    background:#f59e0b;
+    box-shadow:0 0 10px rgba(245,158,11,.6);
+}
+
+.video-btn:nth-child(3)::before{
+    background:#22c55e;
+    box-shadow:0 0 10px rgba(34,197,94,.6);
+}
+
+.video-btn:nth-child(4)::before{
+    background:#ec4899;
+    box-shadow:0 0 10px rgba(236,72,153,.6);
+}
+
+.video-btn:nth-child(5)::before{
+    background:#a78bfa;
+    box-shadow:0 0 10px rgba(167,139,250,.6);
+}
+
+.video-btn.live-btn{
+    color:#fecaca;
+
+    border-color:
+        rgba(239,68,68,.30);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(239,68,68,.18),
+            rgba(127,29,29,.17)
+        );
+}
+
+.video-btn.live-btn::before{
+    background:#ef4444;
+
+    box-shadow:
+        0 0 12px #ef4444;
+}
+
+/* =========================================================
+   QUICK ILLUSTRATION ROW
+========================================================= */
+
+.illustration-row{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:7px;
+
+    margin-top:1px;
+}
+
+.art-card{
+    position:relative;
+
+    min-height:50px;
+
+    padding:8px;
+
+    overflow:hidden;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.02)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.07);
+}
+
+.art-card::before{
+    content:"";
+
+    position:absolute;
+
+    width:35px;
+    height:35px;
+
+    right:-9px;
+    top:-9px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.035);
+}
+
+.art-icon{
+    font-size:16px;
+}
+
+.art-label{
+    margin-top:4px;
+
+    font-size:7px;
+
+    color:#8191a7;
+
+    font-weight:800;
+
+    letter-spacing:.3px;
+}
+
+/* =========================================================
+   POPUP
+========================================================= */
+
+#live-ad-popup,
+#popup-menu{
+    position:fixed;
+    inset:0;
+
+    z-index:1000;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    background:
+        rgba(2,6,23,.78);
+
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+}
+
+#live-ad-popup{
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        opacity .3s ease,
+        visibility .3s ease;
+}
+
+#live-ad-popup.active{
+    opacity:1;
+    visibility:visible;
+}
+
+#popup-menu{
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        opacity .3s ease,
+        visibility .3s ease;
+}
+
+#popup-menu.active{
+    opacity:1;
+    visibility:visible;
+}
+
+/* =========================================================
+   LIVE AD
+========================================================= */
+
+.live-ad-content{
+    width:min(90%,390px);
+
+    padding:17px;
+
+    border-radius:23px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15,23,42,.98),
+            rgba(7,17,31,.98)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 35px 90px rgba(0,0,0,.6);
+
+    text-align:center;
+
+    animation:
+        modalPop
+        .35s
+        cubic-bezier(.16,1,.3,1);
+}
+
+.live-ad-content h3{
+    margin:0 0 12px;
+
+    font-size:17px;
+}
+
+.live-ad-content img{
+    width:100%;
+    height:auto;
+
+    aspect-ratio:16 / 8;
+
+    object-fit:cover;
+
+    border-radius:15px;
+
+    margin-bottom:12px;
+}
+
+.live-ad-content p{
+    margin:0 0 14px;
+
+    font-size:10px;
+
+    color:#94a3b8;
+
+    line-height:1.6;
+}
+
+.live-ad-close{
+    width:100%;
+
+    min-height:44px;
+
+    border:0;
+
+    border-radius:13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #dc2626
+        );
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   POPUP CONTENT
+========================================================= */
+
+.popup-content{
+    width:min(92%,500px);
+
+    height:min(88vh,700px);
+
+    padding:18px;
+
+    overflow:hidden;
+
+    border-radius:26px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15,23,42,.97),
+            rgba(7,17,31,.98)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 35px 100px rgba(0,0,0,.65);
+
+    transform:
+        translateY(20px)
+        scale(.96);
+
+    transition:
+        transform .3s cubic-bezier(.16,1,.3,1);
+
+    display:flex;
+    flex-direction:column;
+}
+
+#popup-menu.active .popup-content{
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+#menu-view,
+#read-view,
+#comment-view{
+    width:100%;
+    height:100%;
+
+    display:flex;
+    flex-direction:column;
+}
+
+#read-view,
+#comment-view{
+    display:none;
+}
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.menu-title{
+    margin:5px 0 3px;
+
+    font-size:20px;
+
+    font-weight:800;
+}
+
+.menu-subtitle{
+    margin:0 0 15px;
+
+    color:#63748b;
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.4px;
+}
+
+.menu-list{
+    list-style:none;
+
+    padding:0 3px 0 0;
+
+    margin:0;
+
+    flex:1;
+
+    overflow-y:auto;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:8px;
+}
+
+.menu-list button,
+.menu-list a{
+    width:100%;
+
+    min-height:49px;
+
+    padding:12px 13px;
+
+    border-radius:14px;
+
+    border:
+        1px solid rgba(255,255,255,.07);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.02)
+        );
+
+    color:#dce6f3;
+
+    text-decoration:none;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    text-align:left;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+}
+
+.menu-list button::after,
+.menu-list a::after{
+    content:"→";
+
+    color:#64748b;
+
+    font-size:15px;
+}
+
+.menu-list button:hover,
+.menu-list a:hover{
+    transform:
+        translateX(3px);
+
+    border-color:
+        rgba(96,165,250,.26);
+
+    background:
+        rgba(37,99,235,.11);
+
+    color:white;
+}
+
+#close-btn{
+    margin-top:10px;
+}
+
+.action-btn{
+    width:100%;
+
+    min-height:45px;
+
+    padding:11px 12px;
+
+    border-radius:13px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+}
+
+#close-btn{
+    background:
+        rgba(239,68,68,.10);
+
+    border:
+        1px solid rgba(239,68,68,.20);
+
+    color:#fca5a5;
+}
+
+.back-btn{
+    background:
+        rgba(37,99,235,.10);
+
+    border:
+        1px solid rgba(96,165,250,.18);
+
+    color:#bfdbfe;
+}
+
+.action-btn:hover{
+    filter:brightness(1.13);
+
+    transform:translateY(-1px);
+}
+
+/* =========================================================
+   ARTICLE
+========================================================= */
+
+#read-title{
+    margin:3px 0 13px;
+
+    padding-bottom:12px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+
+    font-size:18px;
+
+    line-height:1.3;
+}
+
+#content-display{
+    flex:1;
+
+    overflow-y:auto;
+
+    padding-right:8px;
+
+    margin-bottom:10px;
+
+    font-size:12px;
+
+    line-height:1.85;
+
+    color:#b8c6d7;
+
+    text-align:left;
+}
+
+#content-display h1,
+#content-display h2,
+#content-display h3{
+    color:#f8fafc;
+}
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+#comment-view h3{
+    margin:3px 0 13px;
+
+    padding-bottom:12px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+
+    font-size:18px;
+}
+
+.scroll-area{
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+
+    overflow-y:auto;
+
+    padding-right:3px;
+}
+
+#reply-indicator{
+    font-size:10px;
+
+    color:#fde047;
+
+    margin-bottom:7px;
+
+    background:
+        rgba(234,179,8,.08);
+
+    padding:9px;
+
+    border-radius:11px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border:
+        1px solid rgba(234,179,8,.16);
+}
+
+#cancel-reply{
+    cursor:pointer;
+}
+
+.chat-input{
+    width:100%;
+
+    height:54px;
+
+    resize:none;
+
+    padding:12px;
+
+    margin-bottom:7px;
+
+    border-radius:13px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:11px;
+}
+
+.chat-input:focus{
+    outline:none;
+
+    border-color:
+        rgba(96,165,250,.5);
+}
+
+#send-chat-btn{
+    margin-bottom:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    border:
+        none;
+
+    color:white;
+
+    box-shadow:
+        0 10px 22px rgba(37,99,235,.25);
+}
+
+#chat-list{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+}
+
+.chat-box{
+    max-width:88%;
+
+    padding:11px 12px;
+
+    border-radius:
+        15px
+        15px
+        15px
+        4px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid rgba(255,255,255,.065);
+
+    align-self:flex-start;
+
+    font-size:11px;
+
+    color:#e2e8f0;
+
+    animation:
+        slideUp .25s ease-out;
+}
+
+.chat-box.reply{
+    max-width:78%;
+
+    margin-left:21px;
+
+    background:
+        rgba(16,185,129,.07);
+
+    border-left:
+        2px solid #10b981;
+}
+
+.chat-box.self{
+    align-self:flex-end;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #2563eb
+        );
+
+    border:none;
+
+    border-radius:
+        15px
+        15px
+        4px
+        15px;
+}
+
+.chat-box.self.reply{
+    margin-left:0;
+    margin-right:21px;
+
+    background:
+        rgba(59,130,246,.12);
+
+    border-right:
+        2px solid #60a5fa;
+}
+
+.chat-header{
+    margin-bottom:5px;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    color:#64748b;
+}
+
+.user-id{
+    color:#a78bfa;
+}
+
+.chat-box.reply .user-id{
+    color:#34d399;
+}
+
+.chat-box.self .user-id{
+    color:#bfdbfe;
+}
+
+.chat-text{
+    line-height:1.55;
+
+    word-break:break-word;
+}
+
+.chat-actions{
+    margin-top:8px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:8px;
+}
+
+.reactions{
+    display:flex;
+    gap:4px;
+}
+
+.reaction-btn{
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius:14px;
+
+    padding:3px 7px;
+
+    background:
+        rgba(0,0,0,.16);
+
+    color:white;
+
+    font-size:9px;
+
+    cursor:pointer;
+}
+
+.btn-balas{
+    border:0;
+
+    background:none;
+
+    color:#fbbf24;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+    width:4px;
+    height:4px;
+}
+
+::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+::-webkit-scrollbar-thumb{
+    background:
+        rgba(255,255,255,.13);
+
+    border-radius:20px;
+}
+
+/* =========================================================
+   RIPPLE
+========================================================= */
+
+.ripple{
+    position:fixed;
+
+    width:0;
+    height:0;
+
+    border:
+        2px solid rgba(255,255,255,.32);
+
+    border-radius:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    pointer-events:none;
+
+    z-index:9999;
+
+    animation:
+        rippleAnim
+        .6s
+        cubic-bezier(.25,.46,.45,.94)
+        forwards;
+}
+
+@keyframes rippleAnim{
+
+    0%{
+        width:0;
+        height:0;
+        opacity:1;
+    }
+
+    100%{
+        width:130px;
+        height:130px;
+        opacity:0;
+    }
+
+}
+
+@keyframes slideUp{
+
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+@keyframes modalPop{
+
+    from{
+        opacity:0;
+        transform:
+            translateY(12px)
+            scale(.96);
+    }
+
+    to{
+        opacity:1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    #top-channel{
+        top:9px;
+        left:9px;
+        right:9px;
+
+        height:57px;
+
+        border-radius:18px;
+    }
+
+    .channel-logo{
+        width:34px;
+        height:34px;
+
+        flex-basis:34px;
+    }
+
+    .channel-category{
+        display:none;
+    }
+
+    #viewer-badge{
+        padding:0 8px;
+    }
+
+    #channel-main{
+        width:
+            calc(100% - 18px);
+
+        top:51%;
+    }
+
+    .channel-header{
+        margin-bottom:9px;
+    }
+
+    .channel-header h1{
+        font-size:
+            clamp(
+                26px,
+                7vw,
+                32px
             );
-        }
+    }
 
+    .channel-header p{
+        font-size:10px;
 
-        /* =========================================================
-           START OVERLAY
-        ========================================================= */
-        #start-overlay {
-            position: fixed;
-            inset: 0;
+        line-height:1.5;
+    }
 
-            z-index: 100;
+    .hero-mini-row{
+        margin-top:8px;
+    }
 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+    .hero-chip{
+        padding:6px 8px;
+    }
 
-            background:
-                radial-gradient(circle at center,
-                    rgba(37,99,235,.18),
-                    rgba(2,6,23,.94) 65%);
+    #bg-video,
+    #yt-video{
+        aspect-ratio:16 / 9;
 
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+        min-height:0;
 
-            cursor: pointer;
+        max-height:none;
+    }
 
-            transition:
-                opacity .6s ease,
-                visibility .6s ease;
-        }
+    .ad-banner-container{
+        aspect-ratio:16 / 5;
 
-        #start-overlay h2 {
-            margin: 0;
+        min-height:0;
+        max-height:none;
+    }
 
-            font-size: 38px;
-            font-weight: 800;
+    .illustration-row{
+        grid-template-columns:
+            repeat(4,1fr);
+    }
 
-            letter-spacing: 7px;
+    .art-card{
+        min-height:45px;
+        padding:7px;
+    }
 
-            color: white;
+    .art-icon{
+        font-size:14px;
+    }
 
-            text-shadow:
-                0 0 30px rgba(96,165,250,.65);
-        }
+    .art-label{
+        font-size:6.5px;
+    }
 
-        #start-overlay p {
-            margin-top: 14px;
+    .video-btn{
+        min-height:36px;
 
-            font-size: 12px;
-            font-weight: 600;
+        padding:
+            8px
+            11px;
+    }
 
-            color: #93c5fd;
+}
 
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+/* =========================================================
+   SHORT HEIGHT
+========================================================= */
 
-        @keyframes tapPulse {
-            0% {
-                transform: scale(.96);
-                opacity: .7;
-            }
+@media(max-height:720px){
 
-            100% {
-                transform: scale(1.04);
-                opacity: 1;
-            }
-        }
+    #channel-main{
+        top:54%;
+    }
 
+    .channel-header p{
+        display:none;
+    }
 
-        /* =========================================================
-           TOP CHANNEL BAR
-        ========================================================= */
-        #top-channel {
-            position: fixed;
-            left: 18px;
-            right: 18px;
-            top: 15px;
+    .hero-mini-row{
+        margin-top:7px;
+    }
 
-            height: 56px;
+    .illustration-row{
+        display:none;
+    }
 
-            z-index: 30;
+    .ad-banner-container{
+        aspect-ratio:16 / 4.6;
+    }
+}
 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+/* =========================================================
+   VERY SMALL SCREEN
+========================================================= */
 
-            padding: 0 10px 0 15px;
+@media(max-height:620px){
 
-            border-radius: 18px;
+    #top-channel{
+        height:52px;
+    }
 
-            background: rgba(7,17,31,.68);
+    .channel-header{
+        margin-bottom:6px;
+    }
 
-            border: 1px solid rgba(255,255,255,.09);
+    .channel-header h1{
+        font-size:25px;
+    }
 
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+    .hero-mini-row{
+        display:none;
+    }
 
-            box-shadow:
-                0 16px 40px rgba(0,0,0,.25),
-                inset 0 1px rgba(255,255,255,.04);
-        }
+    .media-card{
+        padding:5px;
+    }
 
+    #bg-video,
+    #yt-video{
+        border-radius:14px;
+    }
 
-        /* CHANNEL BRAND */
-        .channel-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-        }
+    .info-strip{
+        display:none;
+    }
 
-        .channel-logo {
-            width: 34px;
-            height: 34px;
+    .video-btn-group{
+        margin-top:0;
+    }
+}
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 10px;
-
-            font-size: 11px;
-            font-weight: 800;
-
-            color: white;
-
-            background:
-                linear-gradient(135deg,#2563eb,#7c3aed);
-
-            box-shadow:
-                0 5px 20px rgba(37,99,235,.35);
-        }
-
-        .channel-brand-text {
-            min-width: 0;
-        }
-
-        .channel-name {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: .4px;
-        }
-
-        .channel-category {
-            margin-top: 2px;
-
-            font-size: 9px;
-            color: #64748b;
-
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-
-            white-space: nowrap;
-        }
-
-
-        /* VIEWER */
-        #viewer-badge {
-            position: static;
-
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
-            padding: 7px 10px;
-
-            border-radius: 12px;
-
-            background: rgba(255,255,255,.035);
-
-            border: 1px solid rgba(255,255,255,.07);
-
-            color: #cbd5e1;
-
-            font-size: 11px;
-            font-weight: 700;
-
-            box-shadow: none;
-
-            backdrop-filter: none;
-        }
-
-        #viewer-badge svg {
-            width: 15px;
-            height: 15px;
-
-            stroke: #60a5fa;
-        }
-
-
-        /* MENU */
-        #menu-btn {
-            position: static;
-
-            padding: 9px 13px;
-
-            border: 1px solid rgba(255,255,255,.1);
-
-            border-radius: 12px;
-
-            background:
-                rgba(59,130,246,.13);
-
-            color: #bfdbfe;
-
-            font-size: 11px;
-            font-weight: 700;
-
-            cursor: pointer;
-
-            transition: .25s ease;
-        }
-
-        #menu-btn:hover {
-            background: rgba(59,130,246,.22);
-            transform: translateY(-1px);
-        }
-
-
-        /* TOP RIGHT */
-        .channel-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-
-        /* =========================================================
-           MAIN INFORMATION AREA
-        ========================================================= */
-        #channel-main {
-            position: fixed;
-
-            left: 50%;
-            top: 50%;
-
-            transform: translate(-50%,-50%);
-
-            width: min(94%, 520px);
-
-            z-index: 10;
-        }
-
-
-        /* CHANNEL HEADER */
-        .channel-header {
-            margin-bottom: 12px;
-        }
-
-        .channel-kicker {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-
-            margin-bottom: 7px;
-
-            font-size: 9px;
-            font-weight: 800;
-
-            color: #60a5fa;
-
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .channel-kicker::before {
-            content: "";
-
-            width: 6px;
-            height: 6px;
-
-            background: #22c55e;
-
-            border-radius: 50%;
-
-            box-shadow:
-                0 0 10px rgba(34,197,94,.8);
-        }
-
-        .channel-header h1 {
-            margin: 0;
-
-            font-size: clamp(25px,6vw,36px);
-
-            line-height: 1.12;
-
-            letter-spacing: -.8px;
-
-            font-weight: 800;
-        }
-
-        .channel-header p {
-            margin: 8px 0 0;
-
-            max-width: 430px;
-
-            color: #8fa1b7;
-
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-
-        /* =========================================================
-           MEDIA CARD
-        ========================================================= */
-        #media-controls {
-            position: static;
-
-            width: 100%;
-
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .media-card {
-            position: relative;
-
-            width: 100%;
-
-            padding: 7px;
-
-            border-radius: 22px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255,255,255,.1),
-                    rgba(255,255,255,.025)
-                );
-
-            border: 1px solid rgba(255,255,255,.09);
-
-            box-shadow:
-                0 28px 70px rgba(0,0,0,.4),
-                inset 0 1px rgba(255,255,255,.06);
-        }
-
-        .media-status {
-            position: absolute;
-
-            top: 16px;
-            left: 16px;
-
-            z-index: 5;
-
-            display: flex;
-            align-items: center;
-            gap: 6px;
-
-            padding: 6px 9px;
-
-            border-radius: 8px;
-
-            background: rgba(2,6,23,.72);
-
-            border: 1px solid rgba(255,255,255,.09);
-
-            backdrop-filter: blur(10px);
-
-            font-size: 9px;
-            font-weight: 800;
-
-            letter-spacing: 1px;
-        }
-
-        .media-status span {
-            width: 6px;
-            height: 6px;
-
-            background: #22c55e;
-
-            border-radius: 50%;
-
-            box-shadow:
-                0 0 8px #22c55e;
-        }
-
-        #bg-video,
-        #yt-video {
-            display: block;
-
-            width: 100%;
-            height: min(40vh, 270px);
-
-            border-radius: 17px;
-
-            background: #020617;
-
-            border: none;
-
-            object-fit: cover;
-
-            box-shadow:
-                inset 0 0 30px rgba(0,0,0,.4);
-
-            transition: opacity .5s ease;
-        }
-
-
-        /* =========================================================
-           INFORMATION STRIP
-        ========================================================= */
-        .info-strip {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: 9px 12px;
-
-            margin-top: 7px;
-
-            border-radius: 12px;
-
-            background: rgba(255,255,255,.025);
-
-            border: 1px solid rgba(255,255,255,.06);
-        }
-
-        .info-label {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
-            color: #94a3b8;
-
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .info-label strong {
-            color: #f8fafc;
-        }
-
-        .info-time {
-            color: #64748b;
-
-            font-size: 9px;
-            font-weight: 600;
-        }
-
-
-        /* =========================================================
-           BANNER
-        ========================================================= */
-        .ad-banner-container {
-            width: 100%;
-            height: 82px;
-
-            display: flex;
-
-            overflow-x: auto;
-
-            scroll-snap-type: x mandatory;
-
-            scroll-behavior: smooth;
-
-            border-radius: 16px;
-
-            background: rgba(255,255,255,.025);
-
-            border: 1px solid rgba(255,255,255,.07);
-
-            box-shadow:
-                0 12px 30px rgba(0,0,0,.2);
-
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .ad-banner-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .ad-banner-container img {
-            flex: 0 0 100%;
-
-            width: 100%;
-            height: 100%;
-
-            object-fit: cover;
-
-            scroll-snap-align: center;
-
-            -webkit-user-drag: none;
-        }
-
-
-        /* =========================================================
-           CONTENT CHANNEL BUTTONS
-        ========================================================= */
-        .content-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            margin-top: 2px;
-        }
-
-        .content-title strong {
-            font-size: 11px;
-            font-weight: 800;
-
-            letter-spacing: .5px;
-        }
-
-        .content-title span {
-            font-size: 9px;
-            color: #64748b;
-        }
-
-        .video-btn-group {
-            display: flex;
-
-            overflow-x: auto;
-
-            gap: 8px;
-
-            padding-bottom: 2px;
-
-            scrollbar-width: none;
-        }
-
-        .video-btn-group::-webkit-scrollbar {
-            display: none;
-        }
-
-        .video-btn {
-            flex: 0 0 auto;
-
-            min-height: 35px;
-
-            padding: 8px 13px;
-
-            border: 1px solid rgba(255,255,255,.08);
-
-            border-radius: 11px;
-
-            background: rgba(255,255,255,.035);
-
-            color: #aebdd0;
-
-            font-size: 10px;
-            font-weight: 700;
-
-            white-space: nowrap;
-
-            cursor: pointer;
-
-            transition: .25s ease;
-        }
-
-        .video-btn:hover {
-            background: rgba(255,255,255,.09);
-            color: white;
-        }
-
-        .video-btn:active {
-            transform: scale(.96);
-        }
-
-        .video-btn.live-btn {
-            background: rgba(239,68,68,.1);
-
-            border-color: rgba(239,68,68,.28);
-
-            color: #fca5a5;
-        }
-
-        .video-btn.live-btn:hover {
-            background: rgba(239,68,68,.18);
-            color: white;
-        }
-
-
-        /* =========================================================
-           LIVE AD POPUP
-        ========================================================= */
-        #live-ad-popup {
-            position: fixed;
-            inset: 0;
-
-            background: rgba(2,6,23,.82);
-
-            backdrop-filter: blur(14px);
-
-            z-index: 1000;
-
-            display: none;
-
-            justify-content: center;
-            align-items: center;
-
-            opacity: 0;
-
-            transition: opacity .35s ease;
-        }
-
-        #live-ad-popup.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .live-ad-content {
-            width: 90%;
-            max-width: 380px;
-
-            padding: 18px;
-
-            border-radius: 20px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(15,23,42,.95),
-                    rgba(7,17,31,.95)
-                );
-
-            border: 1px solid rgba(255,255,255,.09);
-
-            box-shadow:
-                0 30px 80px rgba(0,0,0,.65);
-
-            text-align: center;
-        }
-
-        .live-ad-content h3 {
-            margin: 0 0 12px;
-
-            font-size: 16px;
-        }
-
-        .live-ad-content img {
-            width: 100%;
-            height: 160px;
-
-            object-fit: cover;
-
-            border-radius: 13px;
-
-            margin-bottom: 13px;
-        }
-
-        .live-ad-content p {
-            margin: 0 0 15px;
-
-            font-size: 11px;
-
-            line-height: 1.6;
-
-            color: #94a3b8;
-        }
-
-        .live-ad-close {
-            width: 100%;
-
-            padding: 12px;
-
-            border: none;
-
-            border-radius: 12px;
-
-            background: #ef4444;
-
-            color: white;
-
-            font-size: 12px;
-            font-weight: 800;
-
-            cursor: pointer;
-        }
-
-
-        /* =========================================================
-           POPUP MENU
-        ========================================================= */
-        #popup-menu {
-            position: fixed;
-            inset: 0;
-
-            background: rgba(2,6,23,.75);
-
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-
-            display: flex;
-
-            justify-content: center;
-            align-items: center;
-
-            z-index: 50;
-
-            opacity: 0;
-            visibility: hidden;
-
-            transition:
-                opacity .35s ease,
-                visibility .35s ease;
-        }
-
-        #popup-menu.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .popup-content {
-            width: min(92%, 490px);
-            height: min(86vh, 680px);
-
-            padding: 18px;
-
-            border-radius: 24px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(15,23,42,.94),
-                    rgba(7,17,31,.96)
-                );
-
-            border: 1px solid rgba(255,255,255,.09);
-
-            box-shadow:
-                0 35px 100px rgba(0,0,0,.65),
-                inset 0 1px rgba(255,255,255,.05);
-
-            transform:
-                translateY(30px)
-                scale(.96);
-
-            transition:
-                transform .35s cubic-bezier(.16,1,.3,1);
-
-            display: flex;
-            flex-direction: column;
-
-            overflow: hidden;
-        }
-
-        #popup-menu.active .popup-content {
-            transform:
-                translateY(0)
-                scale(1);
-        }
-
-        #menu-view,
-        #read-view,
-        #comment-view {
-            display: flex;
-            flex-direction: column;
-
-            height: 100%;
-            width: 100%;
-        }
-
-        #read-view,
-        #comment-view {
-            display: none;
-        }
-
-
-        /* MENU HEADER */
-        .menu-title {
-            margin: 5px 0 4px;
-
-            font-size: 19px;
-
-            font-weight: 800;
-
-            text-align: left;
-        }
-
-        .menu-subtitle {
-            margin: 0 0 16px;
-
-            font-size: 10px;
-
-            color: #64748b;
-
-            letter-spacing: 1.2px;
-
-            text-transform: uppercase;
-        }
-
-        .menu-list {
-            list-style: none;
-
-            padding: 0;
-            margin: 0;
-
-            flex-grow: 1;
-
-            overflow-y: auto;
-
-            display: flex;
-            flex-direction: column;
-
-            gap: 8px;
-
-            padding-right: 3px;
-        }
-
-        .menu-list button,
-        .menu-list a {
-            width: 100%;
-
-            padding: 13px 14px;
-
-            background: rgba(255,255,255,.035);
-
-            border: 1px solid rgba(255,255,255,.065);
-
-            border-radius: 13px;
-
-            color: #dbe5f2;
-
-            font-size: 12px;
-            font-weight: 700;
-
-            text-align: left;
-
-            cursor: pointer;
-
-            text-decoration: none;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            transition: .25s ease;
-        }
-
-        .menu-list button::after,
-        .menu-list a::after {
-            content: '›';
-
-            font-size: 18px;
-
-            color: #475569;
-        }
-
-        .menu-list button:hover,
-        .menu-list a:hover {
-            background: rgba(255,255,255,.07);
-
-            border-color: rgba(255,255,255,.13);
-
-            transform: translateX(3px);
-        }
-
-
-        /* =========================================================
-           ARTICLE VIEW
-        ========================================================= */
-        #read-title {
-            margin: 3px 0 14px;
-
-            padding-bottom: 13px;
-
-            border-bottom: 1px solid rgba(255,255,255,.08);
-
-            font-size: 18px;
-
-            line-height: 1.3;
-
-            text-align: left;
-        }
-
-        #content-display {
-            flex-grow: 1;
-
-            overflow-y: auto;
-
-            padding-right: 10px;
-
-            margin-bottom: 10px;
-
-            font-size: 13px;
-
-            line-height: 1.85;
-
-            text-align: justify;
-
-            color: #b8c5d6;
-        }
-
-        #content-display h1,
-        #content-display h2,
-        #content-display h3 {
-            color: #f8fafc;
-        }
-
-
-        /* =========================================================
-           ACTION BUTTON
-        ========================================================= */
-        .action-btn {
-            width: 100%;
-
-            padding: 12px;
-
-            border-radius: 13px;
-
-            border: 1px solid rgba(255,255,255,.08);
-
-            font-size: 12px;
-
-            font-weight: 800;
-
-            cursor: pointer;
-
-            transition: .25s ease;
-        }
-
-        #close-btn {
-            margin-top: 10px;
-
-            background: rgba(239,68,68,.08);
-
-            color: #fca5a5;
-
-            border-color: rgba(239,68,68,.2);
-        }
-
-        .back-btn {
-            background: rgba(59,130,246,.1);
-
-            color: #93c5fd;
-
-            border-color: rgba(59,130,246,.2);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.15);
-        }
-
-
-        /* =========================================================
-           CHAT
-        ========================================================= */
-        #comment-view h3 {
-            margin: 3px 0 14px;
-
-            padding-bottom: 13px;
-
-            border-bottom: 1px solid rgba(255,255,255,.08);
-
-            font-size: 18px;
-
-            text-align: left;
-        }
-
-        .scroll-area {
-            flex-grow: 1;
-
-            display: flex;
-            flex-direction: column;
-
-            overflow-y: auto;
-
-            padding-right: 4px;
-        }
-
-        #reply-indicator {
-            font-size: 11px;
-
-            color: #fde047;
-
-            margin-bottom: 8px;
-
-            background: rgba(234,179,8,.08);
-
-            padding: 9px 11px;
-
-            border-radius: 11px;
-
-            display: flex;
-
-            justify-content: space-between;
-            align-items: center;
-
-            border: 1px solid rgba(234,179,8,.16);
-        }
-
-        #cancel-reply {
-            cursor: pointer;
-        }
-
-        .chat-input {
-            width: 100%;
-            height: 54px;
-
-            border-radius: 14px;
-
-            padding: 13px 14px;
-
-            margin-bottom: 7px;
-
-            resize: none;
-
-            background: rgba(255,255,255,.035);
-
-            border: 1px solid rgba(255,255,255,.08);
-
-            color: white;
-
-            font-size: 12px;
-        }
-
-        .chat-input:focus {
-            outline: none;
-
-            border-color: rgba(96,165,250,.5);
-
-            background: rgba(255,255,255,.05);
-        }
-
-        #send-chat-btn {
-            margin-top: 0;
-            margin-bottom: 12px;
-
-            background: #2563eb;
-
-            color: white;
-
-            box-shadow:
-                0 8px 20px rgba(37,99,235,.25);
-        }
-
-        #chat-list {
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 9px;
-        }
-
-        .chat-box {
-            max-width: 88%;
-
-            padding: 11px 13px;
-
-            border-radius: 15px 15px 15px 4px;
-
-            background: rgba(255,255,255,.05);
-
-            border: 1px solid rgba(255,255,255,.06);
-
-            align-self: flex-start;
-
-            color: #e2e8f0;
-
-            font-size: 12px;
-
-            animation: slideUp .25s ease-out;
-        }
-
-        .chat-box.reply {
-            max-width: 78%;
-
-            margin-left: 22px;
-
-            background: rgba(16,185,129,.07);
-
-            border-left: 2px solid #10b981;
-        }
-
-        .chat-box.self {
-            align-self: flex-end;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #1d4ed8,
-                    #2563eb
-                );
-
-            border: none;
-
-            border-radius: 15px 15px 4px 15px;
-        }
-
-        .chat-box.self.reply {
-            margin-left: 0;
-            margin-right: 22px;
-
-            background: rgba(59,130,246,.12);
-
-            border-right: 2px solid #60a5fa;
-        }
-
-        .chat-header {
-            margin-bottom: 5px;
-
-            font-size: 9px;
-
-            font-weight: 800;
-
-            color: #64748b;
-        }
-
-        .user-id {
-            color: #a78bfa;
-        }
-
-        .chat-box.reply .user-id {
-            color: #34d399;
-        }
-
-        .chat-box.self .user-id {
-            color: #bfdbfe;
-        }
-
-        .chat-text {
-            line-height: 1.55;
-
-            word-wrap: break-word;
-        }
-
-        .chat-actions {
-            display: flex;
-
-            justify-content: space-between;
-            align-items: center;
-
-            margin-top: 8px;
-
-            gap: 8px;
-        }
-
-        .reactions {
-            display: flex;
-
-            gap: 4px;
-        }
-
-        .reaction-btn {
-            background: rgba(0,0,0,.16);
-
-            border: 1px solid rgba(255,255,255,.08);
-
-            border-radius: 14px;
-
-            padding: 3px 7px;
-
-            color: white;
-
-            font-size: 10px;
-
-            cursor: pointer;
-        }
-
-        .btn-balas {
-            background: none;
-            border: none;
-
-            color: #fbbf24;
-
-            font-size: 10px;
-            font-weight: 800;
-
-            cursor: pointer;
-        }
-
-
-        /* =========================================================
-           SCROLLBAR
-        ========================================================= */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,.12);
-
-            border-radius: 20px;
-        }
-
-
-        /* =========================================================
-           RIPPLE
-        ========================================================= */
-        .ripple {
-            position: fixed;
-
-            width: 0;
-            height: 0;
-
-            border: 2px solid rgba(255,255,255,.35);
-
-            border-radius: 50%;
-
-            transform: translate(-50%,-50%);
-
-            pointer-events: none;
-
-            z-index: 9999;
-
-            animation:
-                rippleAnim .6s
-                cubic-bezier(.25,.46,.45,.94)
-                forwards;
-        }
-
-        @keyframes rippleAnim {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
-            }
-
-            100% {
-                width: 120px;
-                height: 120px;
-                opacity: 0;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-
-        /* =========================================================
-           MOBILE
-        ========================================================= */
-        @media (max-width: 600px) {
-
-            #top-channel {
-                left: 10px;
-                right: 10px;
-                top: 10px;
-            }
-
-            #channel-main {
-                width: calc(100% - 20px);
-            }
-
-            .channel-header {
-                margin-bottom: 9px;
-            }
-
-            .channel-header h1 {
-                font-size: 25px;
-            }
-
-            .channel-header p {
-                font-size: 11px;
-            }
-
-            #bg-video,
-            #yt-video {
-                height: 31vh;
-                min-height: 190px;
-            }
-
-            .ad-banner-container {
-                height: 70px;
-            }
-
-            .channel-category {
-                display: none;
-            }
-
-            #viewer-badge {
-                padding: 6px 8px;
-            }
-
-            #viewer-badge span {
-                font-size: 10px;
-            }
-
-            .channel-logo {
-                width: 31px;
-                height: 31px;
-            }
-        }
-
-
-        @media (max-height: 700px) {
-
-            #channel-main {
-                top: 53%;
-            }
-
-            #bg-video,
-            #yt-video {
-                height: 26vh;
-            }
-
-            .ad-banner-container {
-                height: 64px;
-            }
-
-            .channel-header p {
-                display: none;
-            }
-        }
-    </style>
+</style>
 </head>
 
 <body>
 
-    <!-- =========================================================
-         CHANNEL BACKGROUND
-    ========================================================== -->
-    <div class="channel-bg">
-        <div class="channel-glow"></div>
-        <div class="channel-grid"></div>
-    </div>
+<!-- =========================================================
+     BACKGROUND
+========================================================= -->
+
+<div class="channel-bg">
+
+    <div class="channel-glow"></div>
+
+    <div class="bg-orbit"></div>
+
+    <div class="glow-2"></div>
+
+    <div class="channel-grid"></div>
+
+    <div class="float-dot dot-1"></div>
+    <div class="float-dot dot-2"></div>
+    <div class="float-dot dot-3"></div>
+    <div class="float-dot dot-4"></div>
+
+</div>
 
 
-    <!-- =========================================================
-         START OVERLAY
-    ========================================================== -->
-    <div id="start-overlay">
+<!-- =========================================================
+     START
+========================================================= -->
+
+<div id="start-overlay">
+
+    <div class="start-card">
+
+        <div class="start-illustration">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="1.7"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+
+                <circle cx="12"
+                        cy="12"
+                        r="8"></circle>
+
+                <path d="M10 8.8L16 12L10 15.2V8.8Z"></path>
+
+            </svg>
+
+        </div>
+
         <h2>TAP</h2>
-        <p></p>
-    </div>
 
+        <p>
+            Buka kanal informasi
+        </p>
 
-    <!-- =========================================================
-         LIVE AD POPUP
-    ========================================================== -->
-    <div id="live-ad-popup">
+        <div class="start-hint">
 
-        <div class="live-ad-content">
+            <span></span>
 
-            <h3>Konten</h3>
-
-            <img id="live-ad-img"
-                 src="banner1.jpeg"
-                 alt="Banner Informasi"
-                 onerror="this.src='https://via.placeholder.com/400x200/0f172a/FFFFFF?text=BANNER+INFORMASI'">
-
-            <p>
-                Terima kasih telah mengikuti kanal informasi ARINEX.
-            </p>
-
-            <button class="live-ad-close"
-                    onclick="closeLiveAd()">
-                Tutup
-            </button>
-
-        </div>
-    </div>
-
-
-    <!-- =========================================================
-         TOP CHANNEL BAR
-    ========================================================== -->
-    <div id="top-channel">
-
-        <div class="channel-brand">
-
-            <div class="channel-logo">
-                Ŕ
-            </div>
-
-            <div class="channel-brand-text">
-
-                <div class="channel-name">
-                    RanaArifin
-                </div>
-
-                <div class="channel-category">
-                    Cahannel
-                </div>
-
-            </div>
+            Tekan untuk memulai
 
         </div>
 
+    </div>
 
-        <div class="channel-actions">
+</div>
 
-            <!-- VIEWER -->
-            <div id="viewer-badge">
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke-width="2"
-                     stroke-linecap="round"
-                     stroke-linejoin="round">
+<!-- =========================================================
+     LIVE POPUP
+========================================================= -->
 
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+<div id="live-ad-popup">
 
-                    <circle cx="12"
-                            cy="12"
-                            r="3"></circle>
+    <div class="live-ad-content">
 
-                </svg>
+        <h3>Beranda</h3>
 
-                <span id="viewers-count">
-                    Load...
-                </span>
+        <img
+            id="live-ad-img"
+            src="banner1.jpeg"
+            alt="Banner Informasi"
+            onerror="
+                this.src='https://via.placeholder.com/800x400/0f172a/FFFFFF?text=ARINEX'
+            "
+        >
 
+        <p>
+            Kanal Saya
+        </p>
+
+        <button
+            class="live-ad-close"
+            onclick="closeLiveAd()">
+
+            Tutup
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+
+<div id="top-channel">
+
+    <div class="channel-brand">
+
+        <div class="channel-logo">
+            R
+        </div>
+
+        <div class="channel-brand-text">
+
+            <div class="channel-name">
+                RanaArifin
             </div>
 
-
-            <!-- MENU -->
-            <button id="menu-btn">
-                MENU
-            </button>
+            <div class="channel-category">
+                Information Channel
+            </div>
 
         </div>
 
     </div>
 
 
-    <!-- =========================================================
-         MAIN CHANNEL
-    ========================================================== -->
-    <main id="channel-main">
+    <div class="channel-actions">
 
-        <div class="channel-header">
+        <div id="viewer-badge">
 
-            <div class="channel-kicker">
-                Konten
-            </div>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
 
-            <h1>
-                kanal<br>
+                <path
+                    d="M1 12s4-8 11-8
+                       11 8 11 8
+                       -4 8-11 8
+                       -11-8-11-8z">
+                </path>
+
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="3">
+                </circle>
+
+            </svg>
+
+            <span id="viewers-count">
+                Load...
+            </span>
+
+        </div>
+
+
+        <button id="menu-btn">
+            MENU
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main id="channel-main">
+
+    <div class="channel-header">
+
+        <div class="channel-kicker">
+            CHANNEL AKTIF
+        </div>
+
+        <h1>
+            kanal
+            <span class="gradient-word">
                 Me
-            </h1>
+            </span>
+        </h1>
 
-            <p>
-                Ruang informasi, tayangan, dokumentasi,
-                dan berbagai konten yang tersedia dalam satu kanal.
-            </p>
+        <p>
+            Bukan apa apa Gk ada kerjaan 
+        </p>
+
+
+        <div class="hero-mini-row">
+
+            <div class="hero-chip">
+
+                <div class="hero-chip-icon">
+                    ✦
+                </div>
+
+                Info info
+
+            </div>
+
+            <div class="hero-chip">
+
+                <div class="hero-chip-icon">
+                    ▶
+                </div>
+
+                Tayangan
+
+            </div>
+
+            <div class="hero-chip">
+
+                <div class="hero-chip-icon">
+                    ◈
+                </div>
+
+                Dokumentasi
+
+            </div>
+
+            <div class="hero-chip">
+
+                <div class="hero-chip-icon">
+                    ◎
+                </div>
+
+                Interaksi
+
+            </div>
 
         </div>
 
+    </div>
 
-        <!-- =====================================================
-             MEDIA
-        ====================================================== -->
-        <div id="media-controls">
 
-            <div class="media-card">
+    <!-- =====================================================
+         MEDIA
+    ====================================================== -->
+
+    <div id="media-controls">
+
+        <div class="media-card">
+
+            <div class="media-stage">
 
                 <div class="media-status">
+
                     <span></span>
+
                     CHANNEL
+
                 </div>
 
-                <video id="bg-video"
-                       playsinline>
 
-                    <source src="020901.mp4"
-                            type="video/mp4">
+                <video
+                    id="bg-video"
+                    playsinline>
+
+                    <source
+                        src="020901.mp4"
+                        type="video/mp4">
 
                 </video>
 
-                <iframe id="yt-video"
-                        style="display:none;"
-                        allow="autoplay; encrypted-media; fullscreen"
-                        allowfullscreen>
+
+                <iframe
+                    id="yt-video"
+                    style="display:none;"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    allowfullscreen>
                 </iframe>
 
 
-                <div class="info-strip">
+                <div class="video-overlay">
 
-                    <div class="info-label">
-                        <strong>Eboard</strong>
-                        <span>•</span>
-                        <span>Channel</span>
+                    <div class="video-live-pill">
+
+                        <span></span>
+
+                        NOW PLAYING
+
                     </div>
 
-                    <div class="info-time">
-                        INFORMATION
+                    <div class="video-corner-art">
+                        ✦
                     </div>
 
                 </div>
@@ -1594,272 +2713,500 @@
             </div>
 
 
-            <!-- =================================================
-                 BANNER
-            ================================================== -->
-            <div class="ad-banner-container"
-                 id="ad-banner-slider">
+            <div class="info-strip">
 
-                <img src="banner1.jpeg"
-                     alt="Informasi 1"
-                     onerror="this.src='https://via.placeholder.com/800x200/0f172a/FFFFFF?text=INFORMASI+1'">
+                <div class="info-label">
 
-                <img src="banner2.png"
-                     alt="Informasi 2"
-                     onerror="this.src='https://via.placeholder.com/800x200/1e293b/FFFFFF?text=INFORMASI+2'">
+                    <strong>
+                        Eboard
+                    </strong>
 
-                <img src="banner3.png"
-                     alt="Informasi 3"
-                     onerror="this.src='https://via.placeholder.com/800x200/334155/FFFFFF?text=INFORMASI+3'">
+                    <span>
+                        •
+                    </span>
 
-                <img src="banner4.png"
-                     alt="Informasi 4"
-                     onerror="this.src='https://via.placeholder.com/800x200/1e293b/FFFFFF?text=INFORMASI+4'">
+                    <span>
+                        Channel
+                    </span>
 
-                <img src="banner5.png"
-                     alt="Informasi 5"
-                     onerror="this.src='https://via.placeholder.com/800x200/334155/FFFFFF?text=INFORMASI+5'">
+                </div>
 
-                <img src="banner6.png"
-                     alt="Informasi 6"
-                     onerror="this.src='https://via.placeholder.com/800x200/0f172a/FFFFFF?text=INFORMASI+6'">
-
-            </div>
-
-
-            <!-- =================================================
-                 CONTENT CATEGORY
-            ================================================== -->
-            <div class="content-title">
-
-                <strong>
-                    PILIHAN KONTEN
-                </strong>
-
-                <span>
-                    CHANNEL
-                </span>
-
-            </div>
-
-
-            <div class="video-btn-group">
-
-                <button class="video-btn"
-                        onclick="changeVideo('arinex.mp4')">
-                    Default
-                </button>
-
-                <button class="video-btn"
-                        onclick="changeVideo('iklan.mp4')">
-                    Trial.muv
-                </button>
-
-                <button class="video-btn"
-                        onclick="changeVideo('hutri.mp4')">
-                    #81 🇮🇩
-                </button>
-
-                <button class="video-btn"
-                        onclick="changeVideo('020901.mp3')">
-                    September
-                </button>
-
-                <button class="video-btn"
-                        onclick="changeVideo('https://youtu.be/b-QHj32B4SQ?si=e0y5lG8PqKFBIvMu')">
-                    Trial.YTM-PI7U
-                </button>
-
-                <button class="video-btn live-btn"
-                        onclick="changeVideo('https://www.youtube.com/live/pkfcV-OiTk4?feature=shared', true)">
-                    🔴 LIVE
-                </button>
+                <div class="info-time">
+                    INFORMATION
+                </div>
 
             </div>
 
         </div>
 
-    </main>
 
+        <!-- =================================================
+             BANNER
+        ================================================== -->
 
-    <!-- =========================================================
-         POPUP MENU
-    ========================================================== -->
-    <div id="popup-menu">
+        <div
+            class="ad-banner-container"
+            id="ad-banner-slider">
 
-        <div class="popup-content">
+            <div class="banner-slide">
 
+                <img
+                    src="banner1.jpeg"
+                    alt="Informasi 1"
+                    onerror="
+                        this.src='https://via.placeholder.com/1200x375/0f172a/FFFFFF?text=INFORMASI+1'
+                    "
+                >
 
-            <!-- =================================================
-                 MENU VIEW
-            ================================================== -->
-            <div id="menu-view">
-
-                <h3 class="menu-title">
-                    Puser
-                </h3>
-
-                <p class="menu-subtitle">
-                    Info infola
-                </p>
-
-                <ul class="menu-list">
-
-                    <li>
-                        <a href="dokumen.html">
-                            1. The Assembly
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="https://app.arinex.my.id">
-                            2. PPBO (Construction)
-                        </a>
-                    </li>
-
-                    <li>
-
-                        <button
-                            data-title="Behavioral Approach"
-                            data-content="Antara Nurani dan Bertahan Hidup<br><br>Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.">
-
-                            3. Behavioral Approach
-
-                        </button>
-
-                    </li>
-
-
-                    <li>
-
-                        <button
-                            data-title="Sebelum Esok"
-                            data-content="<h2 style='margin-top:0;'>Bayang-Bayang Obsesi di Tengah Tuntutan Sosial</h2><p>Layar gawai dan etalase kehidupan orang lain sering kali memancarkan ilusi yang menyilaukan. Di tengah masyarakat modern yang serba cepat, nilai seseorang kerap kali direduksi menjadi seberapa besar pencapaian material yang bisa mereka pamerkan. Dari sinilah lahir sebuah fenomena sosial yang menggerogoti dari dalam: gengsi yang bermutasi menjadi obsesi.</p><h3>Analisis Masalah: Keterasingan Diri dan Hancurnya Batasan</h3><p>Tuntutan untuk terlihat sukses dan mapan menciptakan tekanan psikologis yang luar biasa. Ketika gengsi mengambil alih, standar kebahagiaan tidak lagi ditentukan oleh diri sendiri, melainkan oleh pandangan orang lain.</p><h3>Persiapan untuk Besok</h3><p>Malam ini adalah batas waktu sebelum roda tuntutan kembali berputar esok hari. Agar tidak terus terseret dalam pusaran obsesi yang merusak, persiapan yang dibutuhkan bukanlah strategi untuk berlari lebih cepat, melainkan keberanian untuk berhenti sejenak.</p><blockquote style='font-style:italic;background:rgba(255,255,255,.05);padding:15px;border-left:3px solid #3b82f6;margin-left:0;border-radius:4px;'>Kesuksesan sejati tidak diukur dari seberapa riuh tepuk tangan orang lain, melainkan dari seberapa damai kau bisa menatap pantulan dirimu sendiri di cermin.</blockquote><p>Esok adalah lembaran yang baru. Jangan biarkan gengsi mendikte setiap keputusanmu, dan jangan biarkan obsesi merampas kewarasan serta nuranimu.</p>">
-
-                            4. Sebelum Esok
-
-                        </button>
-
-                    </li>
-
-
-                    <li>
-                        <a href="dashboard.html">
-                            5. Profile
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="learn.html">
-                            6. Survey Evaluasi (Dapatkan Voucher)
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="https://dokumentasi.arinex.my.id/dokumentasi_fnb_db.html">
-                            7. Dokumentasi Databases PostgreSQL
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="https://chat-indol-xi.vercel.app/">
-                            8. GC
-                        </a>
-                    </li>
-
-                    <li>
-                        <button id="open-anonim-btn">
-                            9. Interaksi (Anonim)
-                        </button>
-                    </li>
-
-                </ul>
-
-
-                <button id="close-btn"
-                        class="action-btn">
-
-                    Tutup Menu
-
-                </button>
+                <div class="banner-caption">
+                    ✦ INFORMASI
+                </div>
 
             </div>
 
 
-            <!-- =================================================
-                 READ VIEW
-            ================================================== -->
-            <div id="read-view">
+            <div class="banner-slide">
 
-                <h3 id="read-title">
-                    Judul
-                </h3>
+                <img
+                    src="banner2.png"
+                    alt="Informasi 2"
+                    onerror="
+                        this.src='https://via.placeholder.com/1200x375/1e293b/FFFFFF?text=INFORMASI+2'
+                    "
+                >
 
-                <div id="content-display"></div>
-
-                <button class="back-btn action-btn">
-                    ← Kembali
-                </button>
+                <div class="banner-caption">
+                    ◈ UPDATE
+                </div>
 
             </div>
 
 
-            <!-- =================================================
-                 CHAT VIEW
-            ================================================== -->
-            <div id="comment-view">
+            <div class="banner-slide">
 
-                <h3>
-                    Interaksi Anonim
-                </h3>
+                <img
+                    src="banner3.png"
+                    alt="Informasi 3"
+                    onerror="
+                        this.src='https://via.placeholder.com/1200x375/334155/FFFFFF?text=INFORMASI+3'
+                    "
+                >
 
+                <div class="banner-caption">
+                    ● CHANNEL
+                </div>
 
-                <div class="scroll-area"
-                     id="chat-scroll-area">
-
-                    <div id="reply-indicator"
-                         style="display:none;">
-
-                        <span id="reply-text">
-                            Membalas...
-                        </span>
-
-                        <span id="cancel-reply">
-                            ✖
-                        </span>
-
-                    </div>
+            </div>
 
 
-                    <textarea
-                        id="chat-input"
-                        class="chat-input"
-                        placeholder="Tulis sesuatu..."></textarea>
+            <div class="banner-slide">
 
+                <img
+                    src="banner4.png"
+                    alt="Informasi 4"
+                    onerror="
+                        this.src='https://via.placeholder.com/1200x375/1e293b/FFFFFF?text=INFORMASI+4'
+                    "
+                >
+
+                <div class="banner-caption">
+                    ✦ ARINEX
+                </div>
+
+            </div>
+
+
+            <div class="banner-slide">
+
+                <img
+                    src="banner5.png"
+                    alt="Informasi 5"
+                    onerror="
+                        this.src='https://via.placeholder.com/1200x375/334155/FFFFFF?text=INFORMASI+5'
+                    "
+                >
+
+                <div class="banner-caption">
+                    ◉ FEATURE
+                </div>
+
+            </div>
+
+
+            <div class="banner-slide">
+
+                <img
+                    src="banner6.png"
+                    alt="Informasi 6"
+                    onerror="
+                        this.src='https://via.placeholder.com/1200x375/0f172a/FFFFFF?text=INFORMASI+6'
+                    "
+                >
+
+                <div class="banner-caption">
+                    + MORE
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- banner dots -->
+
+        <div
+            class="banner-indicator"
+            id="banner-indicator">
+
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <div class="content-title">
+
+            <strong>
+                PILIHAN KONTEN
+            </strong>
+
+            <span>
+                SWIPE
+            </span>
+
+        </div>
+
+
+        <div class="video-btn-group">
+
+            <button
+                class="video-btn"
+                onclick="changeVideo('arinex.mp4')">
+
+                Default
+
+            </button>
+
+
+            <button
+                class="video-btn"
+                onclick="changeVideo('iklan.mp4')">
+
+                Trial.muv
+
+            </button>
+
+
+            <button
+                class="video-btn"
+                onclick="changeVideo('hutri.mp4')">
+
+                #81 🇮🇩
+
+            </button>
+
+
+            <button
+                class="video-btn"
+                onclick="changeVideo('020901.mp3')">
+
+                September
+
+            </button>
+
+
+            <button
+                class="video-btn"
+                onclick="
+                    changeVideo(
+                        'https://youtu.be/b-QHj32B4SQ?si=e0y5lG8PqKFBIvMu'
+                    )
+                ">
+
+                Trial.YTM-PI7U
+
+            </button>
+
+
+            <button
+                class="video-btn live-btn"
+                onclick="
+                    changeVideo(
+                        'https://www.youtube.com/live/pkfcV-OiTk4?feature=shared',
+                        true
+                    )
+                ">
+
+                🔴 LIVE
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             ILLUSTRATION
+        ================================================== -->
+
+        <div class="illustration-row">
+
+            <div class="art-card">
+
+                <div class="art-icon">
+                    🛰️
+                </div>
+
+                <div class="art-label">
+                    CHANNEL
+                </div>
+
+            </div>
+
+
+            <div class="art-card">
+
+                <div class="art-icon">
+                    ⚡
+                </div>
+
+                <div class="art-label">
+                    UPDATE
+                </div>
+
+            </div>
+
+
+            <div class="art-card">
+
+                <div class="art-icon">
+                    🎬
+                </div>
+
+                <div class="art-label">
+                    MEDIA
+                </div>
+
+            </div>
+
+
+            <div class="art-card">
+
+                <div class="art-icon">
+                    💬
+                </div>
+
+                <div class="art-label">
+                    INTERAKSI
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     POPUP MENU
+========================================================= -->
+
+<div id="popup-menu">
+
+    <div class="popup-content">
+
+        <!-- MENU -->
+
+        <div id="menu-view">
+
+            <h3 class="menu-title">
+                Puser
+            </h3>
+
+            <p class="menu-subtitle">
+                Info infola
+            </p>
+
+
+            <ul class="menu-list">
+
+                <li>
+                    <a href="dokumen.html">
+                        1. The Assembly
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="https://app.arinex.my.id">
+                        2. PPBO (Construction)
+                    </a>
+                </li>
+
+
+                <li>
 
                     <button
-                        id="send-chat-btn"
-                        class="action-btn">
+                        data-title="Behavioral Approach"
+                        data-content="Antara Nurani dan Bertahan Hidup<br><br>Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.">
 
-                        Kirim Pesan
+                        3. Behavioral Approach
 
                     </button>
 
-
-                    <div id="send-status"
-                         style="
-                         text-align:center;
-                         font-size:11px;
-                         color:#34d399;
-                         display:none;
-                         margin-bottom:10px;">
-
-                        Pesan Terkirim!
-
-                    </div>
+                </li>
 
 
-                    <div style="
+                <li>
+
+                    <button
+                        data-title="Sebelum Esok"
+                        data-content="<h2 style='margin-top:0;'>Bayang-Bayang Obsesi di Tengah Tuntutan Sosial</h2><p>Layar gawai dan etalase kehidupan orang lain sering kali memancarkan ilusi yang menyilaukan. Di tengah masyarakat modern yang serba cepat, nilai seseorang kerap kali direduksi menjadi seberapa besar pencapaian material yang bisa mereka pamerkan. Dari sinilah lahir sebuah fenomena sosial yang menggerogoti dari dalam: gengsi yang bermutasi menjadi obsesi.</p><h3>Analisis Masalah: Keterasingan Diri dan Hancurnya Batasan</h3><p>Tuntutan untuk terlihat sukses dan mapan menciptakan tekanan psikologis yang luar biasa. Ketika gengsi mengambil alih, standar kebahagiaan tidak lagi ditentukan oleh diri sendiri, melainkan oleh pandangan orang lain.</p><h3>Persiapan untuk Besok</h3><p>Malam ini adalah batas waktu sebelum roda tuntutan kembali berputar esok hari. Agar tidak terus terseret dalam pusaran obsesi yang merusak, persiapan yang dibutuhkan bukanlah strategi untuk berlari lebih cepat, melainkan keberanian untuk berhenti sejenak.</p><blockquote style='font-style:italic;background:rgba(255,255,255,.05);padding:15px;border-left:3px solid #3b82f6;margin-left:0;border-radius:4px;'>Kesuksesan sejati tidak diukur dari seberapa riuh tepuk tangan orang lain, melainkan dari seberapa damai kau bisa menatap pantulan dirimu sendiri di cermin.</blockquote><p>Esok adalah lembaran yang baru. Jangan biarkan gengsi mendikte setiap keputusanmu, dan jangan biarkan obsesi merampas kewarasan serta nuranimu.</p>">
+
+                        4. Sebelum Esok
+
+                    </button>
+
+                </li>
+
+
+                <li>
+                    <a href="dashboard.html">
+                        5. Profile
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="learn.html">
+                        6. Survey Evaluasi (Dapatkan Voucher)
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="https://dokumentasi.arinex.my.id/dokumentasi_fnb_db.html">
+                        7. Dokumentasi Databases PostgreSQL
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="https://chat-indol-xi.vercel.app/">
+                        8. GC
+                    </a>
+                </li>
+
+
+                <li>
+                    <button id="open-anonim-btn">
+                        9. Interaksi (Anonim)
+                    </button>
+                </li>
+
+            </ul>
+
+
+            <button
+                id="close-btn"
+                class="action-btn">
+
+                Tutup Menu
+
+            </button>
+
+        </div>
+
+
+        <!-- READ -->
+
+        <div id="read-view">
+
+            <h3 id="read-title">
+                Judul
+            </h3>
+
+            <div id="content-display"></div>
+
+            <button
+                class="back-btn action-btn">
+
+                ← Kembali
+
+            </button>
+
+        </div>
+
+
+        <!-- CHAT -->
+
+        <div id="comment-view">
+
+            <h3>
+                Interaksi Anonim
+            </h3>
+
+
+            <div
+                class="scroll-area"
+                id="chat-scroll-area">
+
+                <div
+                    id="reply-indicator"
+                    style="display:none;">
+
+                    <span id="reply-text">
+                        Membalas...
+                    </span>
+
+                    <span id="cancel-reply">
+                        ✖
+                    </span>
+
+                </div>
+
+
+                <textarea
+                    id="chat-input"
+                    class="chat-input"
+                    placeholder="Tulis sesuatu...">
+                </textarea>
+
+
+                <button
+                    id="send-chat-btn"
+                    class="action-btn">
+
+                    Kirim Pesan
+
+                </button>
+
+
+                <div
+                    id="send-status"
+                    style="
+                        text-align:center;
+                        font-size:10px;
+                        color:#34d399;
+                        display:none;
+                        margin-bottom:10px;">
+
+                    Pesan Terkirim!
+
+                </div>
+
+
+                <div
+                    style="
                         display:flex;
                         justify-content:space-between;
                         align-items:center;
@@ -1867,717 +3214,950 @@
                         padding-bottom:8px;
                         border-bottom:1px solid rgba(255,255,255,.08);">
 
-                        <span style="
-                            font-size:11px;
+                    <span
+                        style="
+                            font-size:10px;
                             font-weight:700;">
 
-                            Obrolan Publik
+                        Obrolan Publik
 
-                        </span>
-
-                        <span id="user-identity"
-                              style="
-                              color:#60a5fa;
-                              font-size:10px;
-                              background:rgba(59,130,246,.1);
-                              padding:4px 7px;
-                              border-radius:8px;">
-
-                        </span>
-
-                    </div>
+                    </span>
 
 
-                    <div id="chat-list">
+                    <span
+                        id="user-identity"
+                        style="
+                            color:#60a5fa;
+                            font-size:9px;
+                            background:rgba(59,130,246,.1);
+                            padding:4px 7px;
+                            border-radius:8px;">
 
-                        <p style="
-                            text-align:center;
-                            opacity:.5;
-                            font-size:11px;">
-
-                            Memuat data...
-
-                        </p>
-
-                    </div>
+                    </span>
 
                 </div>
 
 
-                <button class="back-btn action-btn">
+                <div id="chat-list">
 
-                    ← Kembali
+                    <p
+                        style="
+                            text-align:center;
+                            opacity:.5;
+                            font-size:10px;">
 
-                </button>
+                        Memuat data...
+
+                    </p>
+
+                </div>
 
             </div>
+
+
+            <button
+                class="back-btn action-btn">
+
+                ← Kembali
+
+            </button>
 
         </div>
 
     </div>
 
-
-    <!-- =========================================================
-         BANNER SLIDER
-    ========================================================== -->
-    <script>
-
-        const bannerSlider =
-            document.getElementById('ad-banner-slider');
-
-        const bannerImages =
-            bannerSlider.querySelectorAll('img');
-
-        let currentSlideIndex = 0;
-
-        let slideTimer;
+</div>
 
 
-        function goToNextSlide() {
+<!-- =========================================================
+     BANNER SLIDER
+========================================================= -->
 
-            currentSlideIndex++;
+<script>
 
-            if (
-                currentSlideIndex >=
-                bannerImages.length
-            ) {
-                currentSlideIndex = 0;
-            }
+const bannerSlider =
+    document.getElementById(
+        'ad-banner-slider'
+    );
 
-            bannerSlider.scrollTo({
-                left:
-                    currentSlideIndex *
-                    bannerSlider.clientWidth,
+const bannerSlides =
+    bannerSlider.querySelectorAll(
+        '.banner-slide'
+    );
 
-                behavior: 'smooth'
-            });
+const bannerDots =
+    document.querySelectorAll(
+        '#banner-indicator span'
+    );
+
+let currentSlideIndex = 0;
+
+let slideTimer = null;
+
+
+/* -----------------------------------------
+   UPDATE DOT
+----------------------------------------- */
+
+function updateBannerIndicator(){
+
+    bannerDots.forEach(
+        (dot,index) => {
+
+            dot.classList.toggle(
+                'active',
+                index === currentSlideIndex
+            );
+
         }
+    );
+
+}
 
 
-        function startAutoSlide() {
+/* -----------------------------------------
+   GO NEXT
+----------------------------------------- */
 
-            slideTimer =
-                setInterval(
-                    goToNextSlide,
-                    4500
-                );
-        }
+function goToNextSlide(){
+
+    currentSlideIndex++;
+
+    if(
+        currentSlideIndex >=
+        bannerSlides.length
+    ){
+
+        currentSlideIndex = 0;
+
+    }
+
+    bannerSlider.scrollTo({
+
+        left:
+            currentSlideIndex *
+            bannerSlider.clientWidth,
+
+        behavior:'smooth'
+
+    });
+
+    updateBannerIndicator();
+
+}
 
 
-        function stopAutoSlide() {
+/* -----------------------------------------
+   START
+----------------------------------------- */
 
-            clearInterval(slideTimer);
-        }
+function startAutoSlide(){
 
+    stopAutoSlide();
 
-        startAutoSlide();
-
-
-        bannerSlider.addEventListener(
-            'touchstart',
-            stopAutoSlide,
-            { passive:true }
+    slideTimer =
+        setInterval(
+            goToNextSlide,
+            4200
         );
 
+}
 
-        bannerSlider.addEventListener(
-            'touchend',
+
+/* -----------------------------------------
+   STOP
+----------------------------------------- */
+
+function stopAutoSlide(){
+
+    if(slideTimer){
+
+        clearInterval(slideTimer);
+
+        slideTimer = null;
+
+    }
+
+}
+
+
+/* -----------------------------------------
+   SWIPE
+----------------------------------------- */
+
+bannerSlider.addEventListener(
+    'touchstart',
+    stopAutoSlide,
+    {
+        passive:true
+    }
+);
+
+
+bannerSlider.addEventListener(
+    'touchend',
+    () => {
+
+        setTimeout(
             () => {
 
-                setTimeout(() => {
-
-                    currentSlideIndex =
-                        Math.round(
-                            bannerSlider.scrollLeft /
-                            bannerSlider.clientWidth
-                        );
-
-                    startAutoSlide();
-
-                },500);
-
-            },
-            { passive:true }
-        );
-
-    </script>
-
-
-    <!-- =========================================================
-         FIREBASE & MAIN LOGIC
-    ========================================================== -->
-    <script type="module">
-
-        import {
-            initializeApp
-        }
-        from
-        "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-
-        import {
-            getDatabase,
-            ref,
-            push,
-            onValue,
-            serverTimestamp,
-            update,
-            increment
-        }
-        from
-        "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
-
-
-        /* ======================================================
-           FIREBASE CONFIG
-        ====================================================== */
-
-        const firebaseConfig = {
-
-            apiKey:
-                "AIzaSyAxf2w0makvkXAD1zBMSJyV4ZD0f05FvDc",
-
-            authDomain:
-                "profil-db4e9.firebaseapp.com",
-
-            databaseURL:
-                "https://profil-db4e9-default-rtdb.firebaseio.com",
-
-            projectId:
-                "profil-db4e9",
-
-            storageBucket:
-                "profil-db4e9.firebasestorage.app",
-
-            messagingSenderId:
-                "897423797460",
-
-            appId:
-                "1:897423797460:web:88b1ef8537397c023d1f41",
-
-            measurementId:
-                "G-G1Y4QE8J06"
-
-        };
-
-
-        const app =
-            initializeApp(
-                firebaseConfig
-            );
-
-
-        const db =
-            getDatabase(app);
-
-
-        /* ======================================================
-           ANON ID
-        ====================================================== */
-
-        let deviceUserId =
-            localStorage.getItem(
-                'arinex_anon_id'
-            );
-
-
-        if (!deviceUserId) {
-
-            const randomString =
-                Math.random()
-                .toString(36)
-                .substring(2,7)
-                .toUpperCase();
-
-
-            deviceUserId =
-                'ID-' + randomString;
-
-
-            localStorage.setItem(
-                'arinex_anon_id',
-                deviceUserId
-            );
-        }
-
-
-        document
-            .getElementById('user-identity')
-            .innerText =
-            "Kamu: " + deviceUserId;
-
-
-        /* ======================================================
-           SECURITY
-        ====================================================== */
-
-        document.addEventListener(
-            'contextmenu',
-            event =>
-                event.preventDefault()
-        );
-
-
-        document.addEventListener(
-            'keydown',
-            event => {
-
-                if (
-                    event.ctrlKey &&
-                    (
-                        event.key.toLowerCase() === 'c' ||
-                        event.key.toLowerCase() === 'x' ||
-                        event.key.toLowerCase() === 'a'
-                    )
-                ) {
-                    event.preventDefault();
-                }
-
-            }
-        );
-
-
-        /* ======================================================
-           RIPPLE
-        ====================================================== */
-
-        document.addEventListener(
-            'pointerdown',
-            function(e) {
-
-                let ripple =
-                    document.createElement(
-                        'div'
+                currentSlideIndex =
+                    Math.round(
+                        bannerSlider.scrollLeft /
+                        bannerSlider.clientWidth
                     );
 
-                ripple.className =
-                    'ripple';
+                updateBannerIndicator();
 
+                startAutoSlide();
 
-                ripple.style.left =
-                    e.clientX + 'px';
-
-
-                ripple.style.top =
-                    e.clientY + 'px';
-
-
-                document.body.appendChild(
-                    ripple
-                );
-
-
-                setTimeout(
-                    () => ripple.remove(),
-                    600
-                );
-
-            }
+            },
+            300
         );
 
-
-        /* ======================================================
-           VIEWER
-        ====================================================== */
-
-        const bgVideo =
-            document.getElementById(
-                'bg-video'
-            );
+    },
+    {
+        passive:true
+    }
+);
 
 
-        const startOverlay =
-            document.getElementById(
-                'start-overlay'
-            );
+/* -----------------------------------------
+   CLICK DOT
+----------------------------------------- */
 
+bannerDots.forEach(
+    (dot,index) => {
 
-        let liveAdInterval = null;
-
-
-        startOverlay.addEventListener(
+        dot.addEventListener(
             'click',
             () => {
 
-                startOverlay.style.opacity =
-                    '0';
+                currentSlideIndex =
+                    index;
 
+                bannerSlider.scrollTo({
 
-                setTimeout(
-                    () => {
+                    left:
+                        currentSlideIndex *
+                        bannerSlider.clientWidth,
 
-                        startOverlay.style.display =
-                            'none';
+                    behavior:'smooth'
 
-                    },
-                    500
-                );
+                });
 
+                updateBannerIndicator();
 
-                bgVideo.muted = false;
-
-
-                bgVideo
-                    .play()
-                    .catch(
-                        e =>
-                            console.log(e)
-                    );
-
-
-                const hasViewed =
-                    localStorage.getItem(
-                        'arinex_has_viewed'
-                    );
-
-
-                if (!hasViewed) {
-
-                    const statistikRef =
-                        ref(
-                            db,
-                            'statistik_web'
-                        );
-
-
-                    update(
-                        statistikRef,
-                        {
-                            total_viewers:
-                                increment(1)
-                        }
-                    )
-                    .then(() => {
-
-                        localStorage.setItem(
-                            'arinex_has_viewed',
-                            'true'
-                        );
-
-                    })
-                    .catch(
-                        error =>
-                            console.error(
-                                "Gagal mencatat viewer:",
-                                error
-                            )
-                    );
-                }
+                startAutoSlide();
 
             }
         );
 
+    }
+);
 
-        /* ======================================================
-           VIEWER REALTIME
-        ====================================================== */
 
-        const viewCountRef =
-            ref(
-                db,
-                'statistik_web/total_viewers'
+/* -----------------------------------------
+   START
+----------------------------------------- */
+
+startAutoSlide();
+
+</script>
+
+
+<!-- =========================================================
+     FIREBASE
+========================================================= -->
+
+<script type="module">
+
+import {
+    initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+import {
+    getDatabase,
+    ref,
+    push,
+    onValue,
+    serverTimestamp,
+    update,
+    increment
+}
+from
+"https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+
+/* ======================================================
+   FIREBASE CONFIG
+====================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAxf2w0makvkXAD1zBMSJyV4ZD0f05FvDc",
+
+    authDomain:
+        "profil-db4e9.firebaseapp.com",
+
+    databaseURL:
+        "https://profil-db4e9-default-rtdb.firebaseio.com",
+
+    projectId:
+        "profil-db4e9",
+
+    storageBucket:
+        "profil-db4e9.firebasestorage.app",
+
+    messagingSenderId:
+        "897423797460",
+
+    appId:
+        "1:897423797460:web:88b1ef8537397c023d1f41",
+
+    measurementId:
+        "G-G1Y4QE8J06"
+
+};
+
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const db =
+    getDatabase(app);
+
+
+/* ======================================================
+   ANON ID
+====================================================== */
+
+let deviceUserId =
+    localStorage.getItem(
+        'arinex_anon_id'
+    );
+
+
+if(!deviceUserId){
+
+    const randomString =
+        Math.random()
+            .toString(36)
+            .substring(2,7)
+            .toUpperCase();
+
+    deviceUserId =
+        'ID-' + randomString;
+
+    localStorage.setItem(
+        'arinex_anon_id',
+        deviceUserId
+    );
+
+}
+
+
+document
+    .getElementById(
+        'user-identity'
+    )
+    .innerText =
+    'Kamu: ' + deviceUserId;
+
+
+/* ======================================================
+   PROTECTION
+====================================================== */
+
+document.addEventListener(
+    'contextmenu',
+    event =>
+        event.preventDefault()
+);
+
+
+document.addEventListener(
+    'keydown',
+    event => {
+
+        if(
+            event.ctrlKey &&
+            (
+                event.key.toLowerCase() === 'c' ||
+                event.key.toLowerCase() === 'x' ||
+                event.key.toLowerCase() === 'a' ||
+                event.key.toLowerCase() === 'u'
+            )
+        ){
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+/* ======================================================
+   RIPPLE
+====================================================== */
+
+document.addEventListener(
+    'pointerdown',
+    function(e){
+
+        const ripple =
+            document.createElement(
+                'div'
+            );
+
+        ripple.className =
+            'ripple';
+
+        ripple.style.left =
+            e.clientX + 'px';
+
+        ripple.style.top =
+            e.clientY + 'px';
+
+        document.body.appendChild(
+            ripple
+        );
+
+        setTimeout(
+            () => ripple.remove(),
+            600
+        );
+
+    }
+);
+
+
+/* ======================================================
+   START / VIEWER
+====================================================== */
+
+const bgVideo =
+    document.getElementById(
+        'bg-video'
+    );
+
+const startOverlay =
+    document.getElementById(
+        'start-overlay'
+    );
+
+let liveAdInterval = null;
+
+
+startOverlay.addEventListener(
+    'click',
+    () => {
+
+        startOverlay.style.opacity =
+            '0';
+
+        setTimeout(
+            () => {
+
+                startOverlay.style.display =
+                    'none';
+
+            },
+            500
+        );
+
+
+        bgVideo.muted =
+            false;
+
+        bgVideo
+            .play()
+            .catch(
+                error =>
+                    console.log(error)
             );
 
 
-        onValue(
-            viewCountRef,
-            snapshot => {
+        const hasViewed =
+            localStorage.getItem(
+                'arinex_has_viewed'
+            );
 
-                if (snapshot.exists()) {
 
-                    document
-                        .getElementById(
-                            'viewers-count'
-                        )
-                        .innerText =
-                        snapshot.val();
+        if(!hasViewed){
+
+            const statistikRef =
+                ref(
+                    db,
+                    'statistik_web'
+                );
+
+
+            update(
+                statistikRef,
+                {
+                    total_viewers:
+                        increment(1)
+                }
+            )
+            .then(
+                () => {
+
+                    localStorage.setItem(
+                        'arinex_has_viewed',
+                        'true'
+                    );
 
                 }
+            )
+            .catch(
+                error =>
+                    console.error(
+                        'Gagal mencatat viewer:',
+                        error
+                    )
+            );
 
-            }
+        }
+
+    }
+);
+
+
+/* ======================================================
+   VIEWER REALTIME
+====================================================== */
+
+const viewCountRef =
+    ref(
+        db,
+        'statistik_web/total_viewers'
+    );
+
+
+onValue(
+    viewCountRef,
+    snapshot => {
+
+        if(snapshot.exists()){
+
+            document
+                .getElementById(
+                    'viewers-count'
+                )
+                .innerText =
+                snapshot.val();
+
+        }
+
+    }
+);
+
+
+/* ======================================================
+   VIDEO
+====================================================== */
+
+window.changeVideo =
+function(
+    srcUrl,
+    isLive = false
+){
+
+    const ytVideo =
+        document.getElementById(
+            'yt-video'
         );
 
 
-        /* ======================================================
-           VIDEO SYSTEM
-        ====================================================== */
+    if(liveAdInterval){
 
-        window.changeVideo =
-            function(
-                srcUrl,
-                isLive = false
-            ) {
+        clearInterval(
+            liveAdInterval
+        );
 
-                const ytVideo =
-                    document.getElementById(
-                        'yt-video'
-                    );
+        liveAdInterval = null;
+
+    }
 
 
-                if (liveAdInterval) {
+    if(
+        srcUrl.includes(
+            'youtube.com'
+        ) ||
+        srcUrl.includes(
+            'youtu.be'
+        )
+    ){
 
-                    clearInterval(
-                        liveAdInterval
-                    );
+        bgVideo.style.display =
+            'none';
 
-                    liveAdInterval = null;
-
-                }
-
-
-                if (
-                    srcUrl.includes(
-                        'youtube.com'
-                    ) ||
-                    srcUrl.includes(
-                        'youtu.be'
-                    )
-                ) {
-
-                    bgVideo.style.display =
-                        'none';
-
-                    bgVideo.pause();
+        bgVideo.pause();
 
 
-                    let videoId = "";
+        let videoId = '';
 
 
-                    if (
-                        srcUrl.includes('v=')
-                    ) {
+        if(srcUrl.includes('v=')){
 
-                        videoId =
-                            srcUrl
-                            .split('v=')[1]
-                            .substring(0,11);
+            videoId =
+                srcUrl
+                    .split('v=')[1]
+                    .split('&')[0]
+                    .substring(0,11);
 
-                    }
+        }
 
-                    else if (
-                        srcUrl.includes('youtu.be/')
-                    ) {
+        else if(
+            srcUrl.includes(
+                'youtu.be/'
+            )
+        ){
 
-                        videoId =
-                            srcUrl
-                            .split('youtu.be/')[1]
-                            .substring(0,11);
+            videoId =
+                srcUrl
+                    .split('youtu.be/')[1]
+                    .split('?')[0]
+                    .substring(0,11);
 
-                    }
+        }
 
-                    else if (
-                        srcUrl.includes('/live/')
-                    ) {
+        else if(
+            srcUrl.includes(
+                '/live/'
+            )
+        ){
 
-                        videoId =
-                            srcUrl
-                            .split('/live/')[1]
-                            .substring(0,11);
+            videoId =
+                srcUrl
+                    .split('/live/')[1]
+                    .split('?')[0]
+                    .substring(0,11);
 
-                    }
-
-
-                    ytVideo.src =
-                        `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
-
-
-                    ytVideo.style.display =
-                        'block';
+        }
 
 
-                    if (isLive) {
-
-                        setTimeout(
-                            () => {
-
-                                if (
-                                    ytVideo.requestFullscreen
-                                ) {
-
-                                    ytVideo
-                                        .requestFullscreen()
-                                        .catch(
-                                            err =>
-                                                console.log(
-                                                    "Fullscreen dibatasi browser:",
-                                                    err
-                                                )
-                                        );
-
-                                }
-
-                                else if (
-                                    ytVideo.webkitRequestFullscreen
-                                ) {
-
-                                    ytVideo
-                                        .webkitRequestFullscreen();
-
-                                }
-
-                            },
-                            800
-                        );
+        ytVideo.src =
+            `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
 
 
-                        /*
-                           Interval asli dipertahankan
-                           sesuai kode Anda: 30000 ms.
-                        */
+        ytVideo.style.display =
+            'block';
 
-                        liveAdInterval =
-                            setInterval(
-                                triggerLiveAdPopup,
-                                30000
+
+        if(isLive){
+
+            setTimeout(
+                () => {
+
+                    if(
+                        ytVideo.requestFullscreen
+                    ){
+
+                        ytVideo
+                            .requestFullscreen()
+                            .catch(
+                                err =>
+                                    console.log(
+                                        'Fullscreen dibatasi browser:',
+                                        err
+                                    )
                             );
 
                     }
 
-                }
+                    else if(
+                        ytVideo.webkitRequestFullscreen
+                    ){
 
-                else {
+                        ytVideo
+                            .webkitRequestFullscreen();
 
-                    ytVideo.style.display =
-                        'none';
+                    }
 
-                    ytVideo.src = "";
-
-
-                    bgVideo.src =
-                        srcUrl;
-
-
-                    bgVideo.style.display =
-                        'block';
+                },
+                800
+            );
 
 
-                    bgVideo.style.opacity =
-                        '1';
+            liveAdInterval =
+                setInterval(
+                    triggerLiveAdPopup,
+                    30000
+                );
+
+        }
+
+    }
+
+    else{
+
+        ytVideo.style.display =
+            'none';
+
+        ytVideo.src = '';
 
 
-                    bgVideo.muted =
-                        false;
+        bgVideo.src =
+            srcUrl;
+
+        bgVideo.style.display =
+            'block';
+
+        bgVideo.style.opacity =
+            '1';
+
+        bgVideo.muted =
+            false;
 
 
-                    bgVideo
-                        .play()
-                        .catch(
-                            e =>
-                                console.log(e)
+        bgVideo
+            .play()
+            .catch(
+                error =>
+                    console.log(error)
+            );
+
+    }
+
+};
+
+
+/* ======================================================
+   LIVE AD
+====================================================== */
+
+window.triggerLiveAdPopup =
+function(){
+
+    const popup =
+        document.getElementById(
+            'live-ad-popup'
+        );
+
+    const imgElement =
+        document.getElementById(
+            'live-ad-img'
+        );
+
+
+    const banners = [
+
+        'banner1.jpeg',
+        'banner2.png',
+        'banner3.png',
+        'banner4.png',
+        'banner5.png',
+        'banner6.png'
+
+    ];
+
+
+    const randomBanner =
+        banners[
+            Math.floor(
+                Math.random() *
+                banners.length
+            )
+        ];
+
+
+    imgElement.src =
+        randomBanner;
+
+
+    popup.classList.add(
+        'active'
+    );
+
+};
+
+
+/* ======================================================
+   CLOSE LIVE
+====================================================== */
+
+window.closeLiveAd =
+function(){
+
+    document
+        .getElementById(
+            'live-ad-popup'
+        )
+        .classList.remove(
+            'active'
+        );
+
+};
+
+
+/* ======================================================
+   MENU
+====================================================== */
+
+const popupMenu =
+    document.getElementById(
+        'popup-menu'
+    );
+
+const menuView =
+    document.getElementById(
+        'menu-view'
+    );
+
+const readView =
+    document.getElementById(
+        'read-view'
+    );
+
+const commentView =
+    document.getElementById(
+        'comment-view'
+    );
+
+
+document
+    .getElementById(
+        'menu-btn'
+    )
+    .addEventListener(
+        'click',
+        () => {
+
+            popupMenu.classList.add(
+                'active'
+            );
+
+            menuView.style.display =
+                'flex';
+
+            readView.style.display =
+                'none';
+
+            commentView.style.display =
+                'none';
+
+        }
+    );
+
+
+document
+    .getElementById(
+        'close-btn'
+    )
+    .addEventListener(
+        'click',
+        () => {
+
+            popupMenu.classList.remove(
+                'active'
+            );
+
+        }
+    );
+
+
+/* ======================================================
+   ARTICLE
+====================================================== */
+
+document
+    .querySelectorAll(
+        'button[data-content]'
+    )
+    .forEach(
+        btn => {
+
+            btn.addEventListener(
+                'click',
+                function(){
+
+                    document
+                        .getElementById(
+                            'read-title'
+                        )
+                        .textContent =
+                        this.getAttribute(
+                            'data-title'
                         );
 
-                }
 
-            };
-
-
-        /* ======================================================
-           LIVE AD
-        ====================================================== */
-
-        window.triggerLiveAdPopup =
-            function() {
-
-                const popup =
-                    document.getElementById(
-                        'live-ad-popup'
-                    );
-
-
-                const imgElement =
-                    document.getElementById(
-                        'live-ad-img'
-                    );
-
-
-                const banners = [
-
-                    'banner1.jpeg',
-                    'banner2.png',
-                    'banner3.png',
-                    'banner4.png',
-                    'banner5.png',
-                    'banner6.png'
-
-                ];
-
-
-                const randomBanner =
-                    banners[
-                        Math.floor(
-                            Math.random() *
-                            banners.length
+                    document
+                        .getElementById(
+                            'content-display'
                         )
-                    ];
+                        .innerHTML =
+                        this.getAttribute(
+                            'data-content'
+                        );
 
-
-                imgElement.src =
-                    randomBanner;
-
-
-                popup.classList.add(
-                    'active'
-                );
-
-            };
-
-
-        window.closeLiveAd =
-            function() {
-
-                const popup =
-                    document.getElementById(
-                        'live-ad-popup'
-                    );
-
-
-                popup.classList.remove(
-                    'active'
-                );
-
-            };
-
-
-        /* ======================================================
-           MENU NAVIGATION
-        ====================================================== */
-
-        const popupMenu =
-            document.getElementById(
-                'popup-menu'
-            );
-
-
-        const menuView =
-            document.getElementById(
-                'menu-view'
-            );
-
-
-        const readView =
-            document.getElementById(
-                'read-view'
-            );
-
-
-        const commentView =
-            document.getElementById(
-                'comment-view'
-            );
-
-
-        document
-            .getElementById('menu-btn')
-            .addEventListener(
-                'click',
-                () => {
-
-                    popupMenu.classList.add(
-                        'active'
-                    );
 
                     menuView.style.display =
+                        'none';
+
+                    readView.style.display =
                         'flex';
+
+
+                    document
+                        .getElementById(
+                            'content-display'
+                        )
+                        .scrollTop =
+                        0;
+
+                }
+            );
+
+        }
+    );
+
+
+/* ======================================================
+   ANONIM
+====================================================== */
+
+document
+    .getElementById(
+        'open-anonim-btn'
+    )
+    .addEventListener(
+        'click',
+        () => {
+
+            menuView.style.display =
+                'none';
+
+            commentView.style.display =
+                'flex';
+
+        }
+    );
+
+
+/* ======================================================
+   BACK BUTTON
+====================================================== */
+
+document
+    .querySelectorAll(
+        '.back-btn'
+    )
+    .forEach(
+        btn => {
+
+            btn.addEventListener(
+                'click',
+                () => {
 
                     readView.style.display =
                         'none';
@@ -2585,627 +4165,619 @@
                     commentView.style.display =
                         'none';
 
-                }
-            );
-
-
-        document
-            .getElementById('close-btn')
-            .addEventListener(
-                'click',
-                () =>
-                    popupMenu.classList.remove(
-                        'active'
-                    )
-            );
-
-
-        document
-            .querySelectorAll(
-                'button[data-content]'
-            )
-            .forEach(btn => {
-
-                btn.addEventListener(
-                    'click',
-                    function() {
-
-                        document
-                            .getElementById(
-                                'read-title'
-                            )
-                            .textContent =
-                            this.getAttribute(
-                                'data-title'
-                            );
-
-
-                        document
-                            .getElementById(
-                                'content-display'
-                            )
-                            .innerHTML =
-                            this.getAttribute(
-                                'data-content'
-                            );
-
-
-                        menuView.style.display =
-                            'none';
-
-                        readView.style.display =
-                            'flex';
-
-
-                        document
-                            .getElementById(
-                                'content-display'
-                            )
-                            .scrollTop = 0;
-
-                    }
-                );
-
-            });
-
-
-        document
-            .getElementById(
-                'open-anonim-btn'
-            )
-            .addEventListener(
-                'click',
-                () => {
-
                     menuView.style.display =
-                        'none';
-
-                    commentView.style.display =
                         'flex';
 
                 }
             );
 
-
-        document
-            .querySelectorAll('.back-btn')
-            .forEach(btn => {
-
-                btn.addEventListener(
-                    'click',
-                    () => {
-
-                        readView.style.display =
-                            'none';
-
-                        commentView.style.display =
-                            'none';
-
-                        menuView.style.display =
-                            'flex';
-
-                    }
-                );
-
-            });
+        }
+    );
 
 
-        /* ======================================================
-           CHAT
-        ====================================================== */
+/* ======================================================
+   CHAT
+====================================================== */
 
-        const chatInput =
-            document.getElementById(
-                'chat-input'
-            );
+const chatInput =
+    document.getElementById(
+        'chat-input'
+    );
 
+const sendChatBtn =
+    document.getElementById(
+        'send-chat-btn'
+    );
 
-        const sendChatBtn =
-            document.getElementById(
-                'send-chat-btn'
-            );
+const chatList =
+    document.getElementById(
+        'chat-list'
+    );
 
+const sendStatus =
+    document.getElementById(
+        'send-status'
+    );
 
-        const chatList =
-            document.getElementById(
-                'chat-list'
-            );
+const replyIndicator =
+    document.getElementById(
+        'reply-indicator'
+    );
 
+const replyText =
+    document.getElementById(
+        'reply-text'
+    );
 
-        const sendStatus =
-            document.getElementById(
-                'send-status'
-            );
-
-
-        const replyIndicator =
-            document.getElementById(
-                'reply-indicator'
-            );
-
-
-        const replyText =
-            document.getElementById(
-                'reply-text'
-            );
-
-
-        const cancelReplyBtn =
-            document.getElementById(
-                'cancel-reply'
-            );
+const cancelReplyBtn =
+    document.getElementById(
+        'cancel-reply'
+    );
 
 
-        const chatRef =
-            ref(
-                db,
-                'pesan_anonim'
-            );
+const chatRef =
+    ref(
+        db,
+        'pesan_anonim'
+    );
+
+let parentMessageId = null;
 
 
-        let parentMessageId = null;
+/* ======================================================
+   CANCEL REPLY
+====================================================== */
+
+cancelReplyBtn.addEventListener(
+    'click',
+    () => {
+
+        parentMessageId =
+            null;
+
+        replyIndicator.style.display =
+            'none';
+
+        chatInput.placeholder =
+            'Tulis sesuatu...';
+
+    }
+);
 
 
-        cancelReplyBtn.addEventListener(
-            'click',
+/* ======================================================
+   SEND CHAT
+====================================================== */
+
+sendChatBtn.addEventListener(
+    'click',
+    () => {
+
+        const pesanText =
+            chatInput.value.trim();
+
+
+        if(pesanText === ''){
+            return;
+        }
+
+
+        sendChatBtn.textContent =
+            'Mengirim...';
+
+        sendChatBtn.disabled =
+            true;
+
+
+        push(
+            chatRef,
+            {
+
+                userId:
+                    deviceUserId,
+
+                teks:
+                    pesanText,
+
+                waktu:
+                    serverTimestamp(),
+
+                parentId:
+                    parentMessageId,
+
+                reactions:{
+                    wow:0,
+                    super:0,
+                    haha:0
+                }
+
+            }
+        )
+        .then(
             () => {
 
-                parentMessageId = null;
+                chatInput.value =
+                    '';
+
+                sendStatus.style.display =
+                    'block';
+
+
+                setTimeout(
+                    () => {
+
+                        sendStatus.style.display =
+                            'none';
+
+                    },
+                    3000
+                );
+
+
+                parentMessageId =
+                    null;
 
                 replyIndicator.style.display =
                     'none';
 
                 chatInput.placeholder =
-                    "Tulis sesuatu...";
+                    'Tulis sesuatu...';
+
+
+                const scrollArea =
+                    document.getElementById(
+                        'chat-scroll-area'
+                    );
+
+
+                scrollArea.scrollTop =
+                    scrollArea.scrollHeight;
 
             }
-        );
+        )
+        .catch(
+            error => {
 
+                console.error(
+                    error
+                );
 
-        sendChatBtn.addEventListener(
-            'click',
+                alert(
+                    'Gagal mengirim.'
+                );
+
+            }
+        )
+        .finally(
             () => {
 
-                const pesanText =
-                    chatInput.value.trim();
+                sendChatBtn.textContent =
+                    'Kirim Pesan';
 
-
-                if (
-                    pesanText !== ""
-                ) {
-
-                    sendChatBtn.textContent =
-                        "Mengirim...";
-
-
-                    sendChatBtn.disabled =
-                        true;
-
-
-                    push(
-                        chatRef,
-                        {
-                            userId:
-                                deviceUserId,
-
-                            teks:
-                                pesanText,
-
-                            waktu:
-                                serverTimestamp(),
-
-                            parentId:
-                                parentMessageId,
-
-                            reactions: {
-                                wow: 0,
-                                super: 0,
-                                haha: 0
-                            }
-                        }
-                    )
-                    .then(() => {
-
-                        chatInput.value =
-                            "";
-
-                        sendStatus.style.display =
-                            "block";
-
-
-                        setTimeout(
-                            () =>
-                                sendStatus.style.display =
-                                    "none",
-                            3000
-                        );
-
-
-                        parentMessageId =
-                            null;
-
-
-                        replyIndicator.style.display =
-                            'none';
-
-
-                        chatInput.placeholder =
-                            "Tulis sesuatu...";
-
-
-                        const scrollArea =
-                            document.getElementById(
-                                'chat-scroll-area'
-                            );
-
-
-                        scrollArea.scrollTop =
-                            scrollArea.scrollHeight;
-
-                    })
-                    .catch(
-                        () =>
-                            alert(
-                                "Gagal mengirim."
-                            )
-                    )
-                    .finally(() => {
-
-                        sendChatBtn.textContent =
-                            "Kirim Pesan";
-
-
-                        sendChatBtn.disabled =
-                            false;
-
-                    });
-
-                }
+                sendChatBtn.disabled =
+                    false;
 
             }
         );
 
-
-        /* ======================================================
-           CHAT REALTIME
-        ====================================================== */
-
-        onValue(
-            chatRef,
-            snapshot => {
-
-                chatList.innerHTML =
-                    "";
+    }
+);
 
 
-                if (
-                    snapshot.exists()
-                ) {
+/* ======================================================
+   ESCAPE HTML
+   Mencegah teks komentar menjadi HTML aktif.
+====================================================== */
 
-                    const data =
-                        snapshot.val();
+function escapeHTML(value){
+
+    return String(value ?? '')
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+        .replace(
+            /</g,
+            '&lt;'
+        )
+        .replace(
+            />/g,
+            '&gt;'
+        )
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+        .replace(
+            /'/g,
+            '&#039;'
+        );
+
+}
 
 
-                    const mainComments =
-                        [];
+/* ======================================================
+   CHAT REALTIME
+====================================================== */
+
+onValue(
+    chatRef,
+    snapshot => {
+
+        chatList.innerHTML =
+            '';
 
 
-                    const repliesMap =
-                        {};
+        if(snapshot.exists()){
+
+            const data =
+                snapshot.val();
 
 
-                    Object.keys(data)
-                        .forEach(key => {
+            const mainComments =
+                [];
 
-                            const msg = {
-                                id: key,
-                                ...data[key]
+            const repliesMap =
+                {};
+
+
+            Object.keys(data)
+                .forEach(
+                    key => {
+
+                        const msg = {
+
+                            id:key,
+                            ...data[key]
+
+                        };
+
+
+                        if(!msg.reactions){
+
+                            msg.reactions = {
+
+                                wow:0,
+                                super:0,
+                                haha:0
+
                             };
 
-
-                            if (
-                                !msg.reactions
-                            ) {
-
-                                msg.reactions = {
-                                    wow: 0,
-                                    super: 0,
-                                    haha: 0
-                                };
-
-                            }
+                        }
 
 
-                            if (
-                                !msg.parentId
-                            ) {
+                        if(!msg.parentId){
 
-                                mainComments.push(
-                                    msg
-                                );
+                            mainComments.push(
+                                msg
+                            );
 
-                            }
+                        }
 
-                            else {
+                        else{
 
-                                if (
-                                    !repliesMap[
-                                        msg.parentId
-                                    ]
-                                ) {
-
-                                    repliesMap[
-                                        msg.parentId
-                                    ] = [];
-
-                                }
-
+                            if(
+                                !repliesMap[
+                                    msg.parentId
+                                ]
+                            ){
 
                                 repliesMap[
                                     msg.parentId
-                                ].push(
-                                    msg
-                                );
+                                ] = [];
 
                             }
 
-                        });
 
-
-                    mainComments
-                        .reverse()
-                        .forEach(mainMsg => {
-
-                            chatList.appendChild(
-                                createMessageDOM(
-                                    mainMsg,
-                                    false
-                                )
+                            repliesMap[
+                                msg.parentId
+                            ].push(
+                                msg
                             );
 
+                        }
 
-                            if (
-                                repliesMap[
-                                    mainMsg.id
-                                ]
-                            ) {
-
-                                repliesMap[
-                                    mainMsg.id
-                                ].forEach(
-                                    replyMsg =>
-                                        chatList.appendChild(
-                                            createMessageDOM(
-                                                replyMsg,
-                                                true
-                                            )
-                                        )
-                                );
-
-                            }
-
-                        });
-
-                }
-
-                else {
-
-                    chatList.innerHTML =
-                        "<p style='text-align:center;opacity:.5;font-size:11px;'>Belum ada obrolan. Jadilah yang pertama!</p>";
-
-                }
-
-            }
-        );
-
-
-        /* ======================================================
-           MESSAGE DOM
-        ====================================================== */
-
-        function createMessageDOM(
-            msg,
-            isReply
-        ) {
-
-            const box =
-                document.createElement(
-                    'div'
+                    }
                 );
 
 
-            const isSelf =
-                msg.userId ===
-                deviceUserId;
+            mainComments
+                .reverse()
+                .forEach(
+                    mainMsg => {
+
+                        chatList.appendChild(
+                            createMessageDOM(
+                                mainMsg,
+                                false
+                            )
+                        );
 
 
-            box.className =
-                `chat-box
-                ${isReply ? 'reply' : ''}
-                ${isSelf ? 'self' : ''}`;
+                        if(
+                            repliesMap[
+                                mainMsg.id
+                            ]
+                        ){
 
-
-            const displayName =
-                isSelf
-                    ? 'Kamu'
-                    : msg.userId;
-
-
-            box.innerHTML = `
-
-                <div class="chat-header">
-
-                    <span class="user-id">
-                        ${displayName}
-                    </span>
-
-                </div>
-
-
-                <div class="chat-text">
-                    ${msg.teks}
-                </div>
-
-
-                <div class="chat-actions">
-
-                    <div class="reactions">
-
-                        <button
-                            class="reaction-btn"
-                            data-type="wow"
-                            data-id="${msg.id}">
-
-                            😮
-                            ${msg.reactions.wow || 0}
-
-                        </button>
-
-
-                        <button
-                            class="reaction-btn"
-                            data-type="super"
-                            data-id="${msg.id}">
-
-                            ❤️
-                            ${msg.reactions.super || 0}
-
-                        </button>
-
-
-                        <button
-                            class="reaction-btn"
-                            data-type="haha"
-                            data-id="${msg.id}">
-
-                            😂
-                            ${msg.reactions.haha || 0}
-
-                        </button>
-
-                    </div>
-
-
-                    ${
-                        !isReply
-                        ?
-                        `<button
-                            class="btn-balas"
-                            data-id="${msg.id}"
-                            data-user="${msg.userId}">
-                            Balas
-                        </button>`
-                        :
-                        ''
-                    }
-
-                </div>
-
-            `;
-
-
-            if (!isReply) {
-
-                box
-                    .querySelector(
-                        '.btn-balas'
-                    )
-                    .addEventListener(
-                        'click',
-                        (e) => {
-
-                            parentMessageId =
-                                e.target
-                                .getAttribute(
-                                    'data-id'
-                                );
-
-
-                            const targetUser =
-                                e.target
-                                .getAttribute(
-                                    'data-user'
-                                );
-
-
-                            replyIndicator
-                                .style.display =
-                                'flex';
-
-
-                            replyText.innerText =
-                                `Membalas ${
-                                    isSelf
-                                        ? 'pesanmu sendiri'
-                                        : targetUser
-                                }`;
-
-
-                            chatInput.placeholder =
-                                "Tulis balasan...";
-
-
-                            document
-                                .getElementById(
-                                    'chat-scroll-area'
-                                )
-                                .scrollTop = 0;
-
-
-                            chatInput.focus();
+                            repliesMap[
+                                mainMsg.id
+                            ].forEach(
+                                replyMsg =>
+                                    chatList.appendChild(
+                                        createMessageDOM(
+                                            replyMsg,
+                                            true
+                                        )
+                                    )
+                            );
 
                         }
-                    );
 
+                    }
+                );
+
+        }
+
+        else{
+
+            chatList.innerHTML =
+                `
+                <p
+                    style="
+                        text-align:center;
+                        opacity:.5;
+                        font-size:10px;">
+
+                    Belum ada obrolan.
+                    Jadilah yang pertama!
+
+                </p>
+                `;
+
+        }
+
+    }
+);
+
+
+/* ======================================================
+   MESSAGE DOM
+====================================================== */
+
+function createMessageDOM(
+    msg,
+    isReply
+){
+
+    const box =
+        document.createElement(
+            'div'
+        );
+
+
+    const isSelf =
+        msg.userId ===
+        deviceUserId;
+
+
+    box.className =
+        `
+        chat-box
+        ${isReply ? 'reply' : ''}
+        ${isSelf ? 'self' : ''}
+        `;
+
+
+    const displayName =
+        isSelf
+            ? 'Kamu'
+            : escapeHTML(
+                msg.userId
+            );
+
+
+    const safeText =
+        escapeHTML(
+            msg.teks
+        );
+
+
+    box.innerHTML =
+        `
+
+        <div class="chat-header">
+
+            <span class="user-id">
+
+                ${displayName}
+
+            </span>
+
+        </div>
+
+
+        <div class="chat-text">
+
+            ${safeText}
+
+        </div>
+
+
+        <div class="chat-actions">
+
+            <div class="reactions">
+
+                <button
+                    class="reaction-btn"
+                    data-type="wow"
+                    data-id="${msg.id}">
+
+                    😮
+                    ${msg.reactions.wow || 0}
+
+                </button>
+
+
+                <button
+                    class="reaction-btn"
+                    data-type="super"
+                    data-id="${msg.id}">
+
+                    ❤️
+                    ${msg.reactions.super || 0}
+
+                </button>
+
+
+                <button
+                    class="reaction-btn"
+                    data-type="haha"
+                    data-id="${msg.id}">
+
+                    😂
+                    ${msg.reactions.haha || 0}
+
+                </button>
+
+            </div>
+
+
+            ${
+                !isReply
+                ?
+                `
+                <button
+                    class="btn-balas"
+                    data-id="${msg.id}"
+                    data-user="${escapeHTML(msg.userId)}">
+
+                    Balas
+
+                </button>
+                `
+                :
+                ''
             }
 
+        </div>
+        `;
 
-            box
-                .querySelectorAll(
-                    '.reaction-btn'
-                )
-                .forEach(btn => {
 
-                    btn.addEventListener(
-                        'click',
-                        e => {
+    /* -----------------------------------------
+       REPLY
+    ----------------------------------------- */
 
-                            const type =
-                                e.currentTarget
+    if(!isReply){
+
+        box
+            .querySelector(
+                '.btn-balas'
+            )
+            .addEventListener(
+                'click',
+                e => {
+
+                    parentMessageId =
+                        e.target.getAttribute(
+                            'data-id'
+                        );
+
+
+                    const targetUser =
+                        e.target.getAttribute(
+                            'data-user'
+                        );
+
+
+                    replyIndicator.style.display =
+                        'flex';
+
+
+                    replyText.innerText =
+                        `Membalas ${
+                            isSelf
+                                ? 'pesanmu sendiri'
+                                : targetUser
+                        }`;
+
+
+                    chatInput.placeholder =
+                        'Tulis balasan...';
+
+
+                    const scrollArea =
+                        document.getElementById(
+                            'chat-scroll-area'
+                        );
+
+
+                    scrollArea.scrollTop =
+                        0;
+
+
+                    chatInput.focus();
+
+                }
+            );
+
+    }
+
+
+    /* -----------------------------------------
+       REACTION
+    ----------------------------------------- */
+
+    box
+        .querySelectorAll(
+            '.reaction-btn'
+        )
+        .forEach(
+            btn => {
+
+                btn.addEventListener(
+                    'click',
+                    e => {
+
+                        const type =
+                            e.currentTarget
                                 .getAttribute(
                                     'data-type'
                                 );
 
 
-                            const id =
-                                e.currentTarget
+                        const id =
+                            e.currentTarget
                                 .getAttribute(
                                     'data-id'
                                 );
 
 
-                            update(
-                                ref(
-                                    db,
-                                    `pesan_anonim/${id}/reactions`
-                                ),
-                                {
-                                    [type]:
-                                        increment(1)
-                                }
-                            );
+                        update(
+                            ref(
+                                db,
+                                `pesan_anonim/${id}/reactions`
+                            ),
+                            {
 
-                        }
-                    );
+                                [type]:
+                                    increment(1)
 
-                });
+                            }
+                        );
+
+                    }
+                );
+
+            }
+        );
 
 
-            return box;
+    return box;
 
-        }
+}
 
-    </script>
+</script>
 
 </body>
 </html>
