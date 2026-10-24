@@ -5,52 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#006666">
 <title>Rana Arifin — Portal Dashboard</title>
+<!--
+=====================================================================
+ PANDUAN UPDATE CEPAT
+ Hampir semua konten diatur di bagian "1. KONFIGURASI" pada <script>.
+---------------------------------------------------------------------
+ • Tambah MEDIA     → tambah satu baris di MEDIA   { t:'Judul', src:'file.mp4' }
+                      (src boleh .mp4 / .mp3 / tautan YouTube biasa, youtu.be, atau /live/)
+ • Tambah INFORMASI → taruh gambar di folder yang sama, lalu tambah baris di BANNERS { src:'banner7.png' }
+ • Tambah MENU      → tambah baris di MENU (id harus unik). Pakai href:'...' untuk tautan,
+                      atau open:'id-jendela' untuk membuka jendela
+ • Tambah ARTIKEL   → tambah <template id="a3"> berisi teks, lalu daftarkan di ARTICLES
+ • Tambah WIDGET    → salin satu blok <aside class="widget" data-wid="..."> (data-wid unik)
+ • Tambah JENDELA   → salin blok <section class="win" id="w-..."> lalu buat menu open:'w-...'
+ • Reset tata letak → hapus data situs di browser (localStorage: menu_order, wg_media, wg_info)
+=====================================================================
+-->
 <style>
+/* ===== 1. DASAR & TEMA =====
+   Warna latar desktop (hijau tosca) diatur di body{background}. */
 :root{--face:#c0c0c0;--hi:#fff;--sh:#808080;--dk:#404040}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{height:100%;margin:0}
-body{background:#008080;color:#000;font:13px/1.45 Tahoma,Verdana,Geneva,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-textarea{-webkit-user-select:text;user-select:text}
+body{background:#008080;color:#000;font:13px/1.45 Tahoma,Verdana,Geneva,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none} /* teks tidak bisa diseleksi */
+textarea{-webkit-user-select:text;user-select:text} /* kolom ketik chat tetap bisa dipakai */
 img,a{-webkit-user-drag:none}
 button,a{font:inherit;color:inherit}
 :focus-visible{outline:1px dotted #fff;outline-offset:1px}
+
+/* ===== 2. HEADER (nama + jumlah pengunjung) ===== */
 #top{position:fixed;inset:0 0 auto 0;height:calc(38px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 14px 0;display:flex;align-items:center;justify-content:space-between;background:#006666;border-bottom:2px solid #00b3b3;color:#fff;font-size:15px;text-shadow:1px 1px 0 #000;z-index:50}
 .vis{display:flex;align-items:center;gap:6px}
 .vis svg{width:22px;height:22px;filter:drop-shadow(1px 1px 0 rgba(0,0,0,.5))}
+
+/* ===== 3. DESKTOP & IKON MENU =====
+   Posisi ikon diatur JS (kisi + geser untuk mengurutkan). Jangan isi left/top di sini.
+   Ukuran sel kisi (100x104) ada di JS: CW, CH. */
 .desk{position:fixed;inset:calc(38px + env(safe-area-inset-top,0px)) 0 env(safe-area-inset-bottom,0px) 0}
 .icons{position:absolute;inset:0}
-.di{position:absolute;width:92px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;background:none;border:1px dotted transparent;color:#fff;text-align:center;text-decoration:none;text-shadow:1px 1px 0 #000;cursor:pointer;font-size:12px;line-height:1.2;touch-action:none}
+.di{position:absolute;left:0;top:0;width:92px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;background:none;border:1px dotted transparent;color:#fff;text-align:center;text-decoration:none;text-shadow:1px 1px 0 #000;cursor:pointer;font-size:12px;line-height:1.2;touch-action:none;transition:left .18s,top .18s} /* transition = animasi saat menu lain bergeser */
 .di svg{width:40px;height:40px;filter:drop-shadow(1px 1px 0 rgba(0,0,0,.45));pointer-events:none}
 .di:hover,.di:focus-visible,.di.drag{background:rgba(0,70,70,.6);border-color:#fff}
-.di.drag{opacity:.85;z-index:4}
+.di.drag{opacity:.85;z-index:4;transition:none}
+
+/* ===== 4. JENDELA (.win) & WIDGET (.widget) — gaya dasar bersama ===== */
 .win,.widget{position:absolute;flex-direction:column;width:min(560px,calc(100% - 8px));max-height:calc(100% - 8px);background:var(--face);border:2px solid;border-color:var(--hi) var(--dk) var(--dk) var(--hi);box-shadow:1px 1px 0 #000;padding:2px}
-.win{display:none}
-.widget{display:flex;z-index:5;width:min(340px,calc(100% - 8px));min-width:240px;overflow:hidden;resize:horizontal}
-.widget.min{resize:none}.widget.min .wb{display:none}
+.win{display:none} /* jendela tersembunyi sampai dibuka lewat menu */
+.widget{display:flex;z-index:5;width:min(340px,calc(100% - 8px));min-width:240px;max-width:calc(100% - 8px);overflow:hidden;resize:horizontal} /* resize = tarik pojok kanan bawah untuk melebarkan */
+.widget.min{resize:none}
+.widget.min .wb{display:none} /* ciut: hanya judul */
 .widget .wb{padding:6px}
 .tbar{display:flex;align-items:center;gap:6px;padding:3px 4px;background:linear-gradient(90deg,#005f5f,#22a8a8);color:#fff;font-weight:700;cursor:move;touch-action:none}
 .win:not(.act) .tbar{background:linear-gradient(90deg,#808080,#b5b5b5)}
 .tbar svg{width:16px;height:16px;flex:none}
 .tt{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wb{padding:8px;overflow:auto;flex:1}
+@media (max-width:700px){.win{left:4px!important;top:4px!important;height:calc(100% - 8px)}} /* HP: jendela penuh layar */
+
+/* ===== 5. KOMPONEN ===== */
 .b{background:var(--face);border:2px solid;border-color:var(--hi) var(--dk) var(--dk) var(--hi);padding:2px 10px;cursor:pointer;color:#000}
 .b:active,.b.on{border-color:var(--dk) var(--hi) var(--hi) var(--dk)}
 .b.on{background:#dcdcdc;font-weight:700}
 .x{width:20px;height:18px;padding:0;line-height:1;font-weight:700}
-.sunk,.stage{background:#fff;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh);padding:8px}
-.stage{background:#000;padding:0;aspect-ratio:16/9}
-.stage video,.stage iframe{width:100%;height:100%;border:0;display:block}
+.sunk{background:#fff;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh);padding:8px}
 .live{color:#0a7a2a;font-weight:700}
+/* Media: tinggi mengikuti rasio video (diatur JS), video tidak dipotong (contain) */
+.stage{width:100%;max-height:60vh;aspect-ratio:16/9;background:#000;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh)}
+.stage video,.stage iframe{width:100%;height:100%;border:0;display:block;object-fit:contain;background:#000}
 #now{margin:6px 0;font-size:12px}
 #chips{display:flex;flex-wrap:wrap;gap:5px}
 #chips .b{padding:1px 8px;font-size:12px}
-.slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;aspect-ratio:16/6;background:#000}
-.slides img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center}
-.nav2{display:flex;gap:6px;margin-top:8px}
+/* Banner: tinggi mengikuti gambar yang tampil (diatur JS), gambar utuh tanpa dipotong */
+.bn-view{overflow:hidden;background:#000;transition:height .3s;touch-action:pan-y}
+.bn-track{display:flex;align-items:flex-start;transition:transform .35s}
+.bn-track img{flex:0 0 100%;width:100%;height:auto;display:block}
+.bn-track img.bad{min-height:80px;background:#e6e6e6}
+.nav2{display:flex;gap:6px;margin-top:6px;align-items:center;justify-content:space-between;font-size:12px}
+/* Artikel */
 #abody{margin-top:8px;line-height:1.7;max-height:48vh;overflow:auto}
 #abody h2,#abody h3{margin:12px 0 4px}
 #abody blockquote{margin:10px 0;padding:8px 12px;border-left:4px solid #008080;background:#eef;font-style:italic}
+/* Chat */
 textarea{width:100%;height:68px;resize:none;padding:6px;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh);font:inherit}
 .reply-ind{display:none;justify-content:space-between;background:#ffffcc;border:1px solid #999;padding:3px 6px;margin-bottom:6px}
 .reply-ind button{border:0;background:none;cursor:pointer}
@@ -61,10 +97,12 @@ textarea{width:100%;height:68px;resize:none;padding:6px;border:2px solid;border-
 .who{font-size:11px;font-weight:700;color:#555}
 .act2{display:flex;justify-content:space-between;gap:6px;margin-top:5px}
 .act2 .b{padding:0 6px;font-size:12px}
-@media (max-width:700px){.win{left:4px!important;top:4px!important;height:calc(100% - 8px)}}
 </style>
 </head>
 <body>
+<!-- ===== KUMPULAN IKON SVG (sprite) =====
+  Tambah ikon baru: salin satu <symbol>, ganti id ("i-nama"), lalu pakai di MENU → icon:'i-nama'.
+  Ikon tersedia: i-user, i-media, i-note, i-noti, i-chat, i-lib, i-folder, i-hat, i-clip, i-db, i-group, i-eye -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <defs><g id="pad"><rect x="6" y="6" width="20" height="23" fill="#fff6a8"/><rect x="6" y="6" width="20" height="5" fill="#e0525e"/><path d="M10 16h12M10 20h12M10 24h7" fill="none" stroke="#6b8bd6"/><path d="M9.5 3v6M14 3v6M18.5 3v6M23 3v6" fill="none" stroke-width="2.4" stroke-linecap="round"/></g></defs>
 <symbol id="i-user" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><circle cx="16" cy="10" r="6" fill="#ffd58a"/><path d="M4 29c0-8 5-12 12-12s12 4 12 12z" fill="#3a7bd5"/></symbol>
@@ -81,54 +119,52 @@ textarea{width:100%;height:68px;resize:none;padding:6px;border:2px solid;border-
 <symbol id="i-eye" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M2 16c4-7 9-10 14-10s10 3 14 10c-4 7-9 10-14 10S6 23 2 16z" fill="#fff"/><circle cx="16" cy="16" r="5.5" fill="#2a7de1"/><circle cx="16" cy="16" r="2.3" fill="#000"/></symbol>
 </svg>
 
+<!-- ===== HEADER: nama + jumlah pengunjung (angka diisi Firebase di bagian paling bawah) ===== -->
 <header id="top"><b>Rana Arifin</b><span class="vis" title="Total pengunjung"><svg><use href="#i-eye"/></svg><b id="viewers-count">…</b></span></header>
 
 <main class="desk" id="desk">
-<nav class="icons" aria-label="Menu utama">
-  <a class="di" data-id="p" href="dashboard.html" draggable="false"><svg><use href="#i-user"/></svg>Profil</a>
-  <button class="di" data-id="i" data-open="w-info"><svg><use href="#i-noti"/></svg>Informasi</button>
-  <button class="di" data-id="a" data-open="w-artikel"><svg><use href="#i-note"/></svg>Artikel</button>
-  <button class="di" data-id="c" data-open="w-chat"><svg><use href="#i-chat"/></svg>Interaksi</button>
-  <a class="di" data-id="l" href="library.html" draggable="false"><svg><use href="#i-lib"/></svg>Library</a>
-  <a class="di" data-id="as" href="dokumen.html" draggable="false"><svg><use href="#i-folder"/></svg>The Assembly</a>
-  <a class="di" data-id="pp" href="https://app.arinex.my.id" draggable="false"><svg><use href="#i-hat"/></svg>PPBO (Construction)</a>
-  <a class="di" data-id="s" href="learn.html" title="Dapat voucher" draggable="false"><svg><use href="#i-clip"/></svg>Survey Evaluasi</a>
-  <a class="di" data-id="db" href="https://dokumentasi.arinex.my.id/dokumentasi_fnb_db.html" draggable="false"><svg><use href="#i-db"/></svg>Dokumentasi PostgreSQL</a>
-  <a class="di" data-id="g" href="https://chat-indol-xi.vercel.app/" draggable="false"><svg><use href="#i-group"/></svg>Grup Chat</a>
-</nav>
 
-<aside class="widget" id="wg" aria-label="Widget media">
-  <div class="tbar"><svg><use href="#i-media"/></svg><span class="tt">Media</span><button class="b x" id="wg-min" aria-label="Ciutkan widget">–</button></div>
+<!-- ===== MENU: ikon dibuat otomatis oleh JS dari daftar MENU (lihat "1. KONFIGURASI") ===== -->
+<nav class="icons" id="menu" aria-label="Menu utama"></nav>
+
+<!-- ===== WIDGET =====
+  Semua widget otomatis bisa digeser (tarik judul), dilebarkan (tarik pojok kanan bawah), dan diciutkan (tombol – / +).
+  data-wid    : nama unik (dipakai menyimpan posisi di browser)
+  data-anchor : posisi awal → tl (kiri atas), tr (kanan atas), bl (kiri bawah), br (kanan bawah)
+  Untuk widget baru: salin salah satu blok di bawah, ganti data-wid, judul, dan isi .wb -->
+
+<!-- WIDGET MEDIA — tombol pilihan diisi JS dari MEDIA; rasio layar mengikuti video -->
+<aside class="widget" data-wid="media" data-anchor="br" aria-label="Widget media">
+  <div class="tbar"><svg><use href="#i-media"/></svg><span class="tt">Media</span><button class="b x" aria-label="Ciutkan widget">–</button></div>
   <div class="wb">
-    <div class="stage"><video id="vid" controls playsinline preload="metadata"><source src="020901.mp4" type="video/mp4"></video><iframe id="yt" hidden title="Video YouTube" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>
-    <div id="now">Sedang diputar: <b id="now-t">Default</b></div>
-    <div id="chips">
-      <button class="b on" data-src="020901.mp4" data-t="Default">Default</button>
-      <button class="b" data-src="iklan.mp4" data-t="Trial.muv">Trial.muv</button>
-      <button class="b" data-src="hutri.mp4" data-t="#81 🇮🇩">#81 🇮🇩</button>
-      <button class="b" data-src="020901.mp3" data-t="September">September</button>
-      <button class="b" data-src="https://youtu.be/b-QHj32B4SQ?si=e0y5lG8PqKFBIvMu" data-t="Trial.YTM-PI7U">Trial.YTM-PI7U</button>
-      <button class="b" data-src="https://www.youtube.com/live/pkfcV-OiTk4?feature=shared" data-t="Live">● Live</button>
-    </div>
+    <div class="stage" id="stage"><video id="vid" controls playsinline preload="metadata"></video><iframe id="yt" hidden title="Video YouTube" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>
+    <div id="now">Sedang diputar: <b id="now-t"></b></div>
+    <div id="chips"></div>
   </div>
 </aside>
 
-<section class="win" id="w-info" aria-label="Informasi terbaru">
-  <div class="tbar"><svg><use href="#i-noti"/></svg><span class="tt">Informasi terbaru</span><button class="b x" aria-label="Tutup">✕</button></div>
+<!-- WIDGET INFORMASI — gambar diisi JS dari BANNERS; tinggi mengikuti gambar -->
+<aside class="widget" data-wid="info" data-anchor="tr" aria-label="Widget informasi">
+  <div class="tbar"><svg><use href="#i-noti"/></svg><span class="tt">Informasi</span><button class="b x" aria-label="Ciutkan widget">–</button></div>
   <div class="wb">
-    <div class="slides" id="slides"></div>
-    <div class="nav2"><button class="b" id="prev">◄ Sebelumnya</button><button class="b" id="next">Berikutnya ►</button></div>
+    <div class="bn-view" id="bn-view"><div class="bn-track" id="bn-track"></div></div>
+    <div class="nav2"><button class="b" id="prev" aria-label="Sebelumnya">◄</button><span id="bn-n"></span><button class="b" id="next" aria-label="Berikutnya">►</button></div>
   </div>
-</section>
+</aside>
 
+<!-- ===== JENDELA =====
+  Jendela dibuka lewat menu {open:'id-jendela'}. Untuk jendela baru: salin blok, ganti id (awali "w-"), judul, dan isi .wb -->
+
+<!-- JENDELA ARTIKEL — tombol judul diisi JS dari ARTICLES -->
 <section class="win" id="w-artikel" aria-label="Artikel">
   <div class="tbar"><svg><use href="#i-note"/></svg><span class="tt">Artikel</span><button class="b x" aria-label="Tutup">✕</button></div>
   <div class="wb">
-    <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="b" data-a="a1">Behavioral Approach</button><button class="b" data-a="a2">Sebelum Esok</button></div>
+    <div id="art-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     <div class="sunk" id="abody">Pilih salah satu artikel di atas untuk membaca.</div>
   </div>
 </section>
 
+<!-- JENDELA INTERAKSI — chat anonim (logika Firebase ada di <script type="module"> paling bawah) -->
 <section class="win" id="w-chat" aria-label="Interaksi anonim">
   <div class="tbar"><svg><use href="#i-chat"/></svg><span class="tt">Interaksi anonim</span><button class="b x" aria-label="Tutup">✕</button></div>
   <div class="wb">
@@ -141,86 +177,280 @@ textarea{width:100%;height:68px;resize:none;padding:6px;border:2px solid;border-
 </section>
 </main>
 
+<!-- ===== ISI ARTIKEL =====
+  Tambah artikel: (1) salin satu <template id="a3">…</template> dan isi teksnya (boleh HTML: <p>, <h3>, <blockquote>),
+  (2) daftarkan di ARTICLES pada script: {id:'a3', title:'Judul'} -->
 <template id="a1">Realitas adalah hamparan kanvas luas yang dilukis dengan perpaduan tinta air mata dan tawa, sebuah panggung sunyi tempat cahaya dan bayangan senantiasa menari dalam ritme yang tak tertebak.<br><br>Di atas panggung ini, sifat manusia tergelar dalam spektrum yang utuh. Kita sering kali menyaksikan pekatnya keserakahan yang mengikis nurani, rasa dengki yang meracuni akar persaudaraan, hingga pengkhianatan yang dengan mudah mematahkan rantai kepercayaan. Manusia bisa menjadi serigala bagi sesamanya, memburu apa saja demi memuaskan dahaga kekuasaan.<br><br>Namun, di sela-sela kelamnya kegelapan itu, mekar pula rona-rona kebaikan yang paling benderang. Ada ketulusan hati yang sudi berkorban tanpa mengharap balas, belas kasih yang diam-diam merangkul mereka yang terperosok jatuh, serta cinta tanpa pamrih yang mampu menghangatkan jiwa-jiwa yang kedinginan. Kita adalah harmoni yang paradoks; perpaduan antara rapuhnya malaikat dan kelamnya iblis, berjalan beriringan dalam satu wujud fana.<br><br>Meski begitu, gelombang lautan tak selalu ramah pada mereka yang hanya mengandalkan kelembutan. Terkadang, badai menuntut ketegasan yang menyakitkan. <b>Dengan keadaan seperti ini, kadang kita harus sedikit ego dan tidak berperasaan untuk terus bertahan di dunia yang kejam ini. Itulah dunia dan itulah realitas.</b><br><br>Membangun benteng pelindung dan menebalkan dinding hati bukanlah pertanda bahwa kita telah kehilangan kemanusiaan, melainkan sebuah cara jiwa merangkai tamengnya. Kita belajar melangkah di antara sisi terang dan gelap, menyadari seutuhnya bahwa untuk melindungi sisa kebaikan di dalam dada, terkadang kita harus menatap tajamnya kenyataan dengan mata yang tak kalah tajam.</template>
 <template id="a2"><h2 style="margin-top:0">Bayang-Bayang Obsesi di Tengah Tuntutan Sosial</h2><p>Layar gawai dan etalase kehidupan orang lain sering kali memancarkan ilusi yang menyilaukan. Di tengah masyarakat modern yang serba cepat, nilai seseorang kerap kali direduksi menjadi seberapa besar pencapaian material yang bisa mereka pamerkan. Dari sinilah lahir sebuah fenomena sosial yang menggerogoti dari dalam: gengsi yang bermutasi menjadi obsesi.</p><h3>Analisis Masalah: Keterasingan Diri dan Hancurnya Batasan</h3><p>Tuntutan untuk terlihat sukses dan mapan menciptakan tekanan psikologis yang luar biasa. Ketika gengsi mengambil alih, standar kebahagiaan tidak lagi ditentukan oleh diri sendiri, melainkan oleh pandangan orang lain.</p><h3>Persiapan untuk Besok</h3><p>Malam ini adalah batas waktu sebelum roda tuntutan kembali berputar esok hari. Agar tidak terus terseret dalam pusaran obsesi yang merusak, persiapan yang dibutuhkan bukanlah strategi untuk berlari lebih cepat, melainkan keberanian untuk berhenti sejenak.</p><blockquote>Kesuksesan sejati tidak diukur dari seberapa riuh tepuk tangan orang lain, melainkan dari seberapa damai kau bisa menatap pantulan dirimu sendiri di cermin.</blockquote><p>Esok adalah lembaran yang baru. Jangan biarkan gengsi mendikte setiap keputusanmu, dan jangan biarkan obsesi merampas kewarasan serta nuranimu.</p></template>
 
 <script>
-const $=id=>document.getElementById(id),D=$('desk'),W=[...document.querySelectorAll('.win')],I=[...document.querySelectorAll('.di')],vid=$('vid'),yt=$('yt'),wg=$('wg');
-const load=k=>{try{return JSON.parse(localStorage.getItem(k))||{}}catch{return{}}},save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+/* ===================================================================
+   1. KONFIGURASI — bagian yang paling sering diedit
+   =================================================================== */
 
-/* Anti salin & klik kanan (penghalang dasar) */
+/* MENU: ikon di desktop. Urutan awal = urutan di bawah; pengunjung bisa menggesernya
+   (menu lain ikut bergeser) dan urutannya disimpan di browser.
+     id    : kode unik — jangan sama dengan menu lain
+     label : teks di bawah ikon
+     icon  : id <symbol> dari kumpulan ikon SVG di atas halaman
+     href  : tautan halaman   — ATAU —
+     open  : id jendela yang dibuka (mis. 'w-chat')
+     title : (opsional) tooltip
+   Contoh menambah menu:  {id:'x1', label:'Galeri', icon:'i-folder', href:'galeri.html'}, */
+const MENU=[
+  {id:'p',  label:'Profil',                 icon:'i-user',   href:'dashboard.html'},
+  {id:'a',  label:'Artikel',                icon:'i-note',   open:'w-artikel'},
+  {id:'c',  label:'Interaksi',              icon:'i-chat',   open:'w-chat'},
+  {id:'l',  label:'Library',                icon:'i-lib',    href:'library.html'},
+  {id:'as', label:'The Assembly',           icon:'i-folder', href:'dokumen.html'},
+  {id:'pp', label:'PPBO (Construction)',    icon:'i-hat',    href:'https://app.arinex.my.id'},
+  {id:'s',  label:'Survey Evaluasi',        icon:'i-clip',   href:'learn.html', title:'Dapat voucher'},
+  {id:'db', label:'Dokumentasi PostgreSQL', icon:'i-db',     href:'https://dokumentasi.arinex.my.id/dokumentasi_fnb_db.html'},
+  {id:'g',  label:'Grup Chat',              icon:'i-group',  href:'https://chat-indol-xi.vercel.app/'}
+];
+
+/* MEDIA: pilihan di widget Media. Item pertama = default.
+     t   : judul tombol
+     src : file video/audio (.mp4/.mp3) ATAU tautan YouTube (video biasa, youtu.be, atau /live/)
+   Contoh menambah media:  {t:'Video Baru', src:'video-baru.mp4'}, */
+const MEDIA=[
+  {t:'Default',        src:'020901.mp4'},
+  {t:'Trial.muv',      src:'iklan.mp4'},
+  {t:'#81 🇮🇩',         src:'hutri.mp4'},
+  {t:'September',      src:'020901.mp3'},
+  {t:'Trial.YTM-PI7U', src:'https://youtu.be/b-QHj32B4SQ?si=e0y5lG8PqKFBIvMu'},
+  {t:'● Live',         src:'https://www.youtube.com/live/pkfcV-OiTk4?feature=shared'}
+];
+
+/* BANNERS: gambar di widget Informasi. Tinggi widget menyesuaikan tiap gambar (tidak dipotong).
+     src : nama file gambar (taruh di folder yang sama)   alt : (opsional) deskripsi
+   Contoh menambah informasi:  {src:'banner7.png', alt:'Pengumuman baru'}, */
+const BANNERS=[
+  {src:'banner1.jpeg'},{src:'banner2.png'},{src:'banner3.png'},
+  {src:'banner4.png'},{src:'banner5.png'},{src:'banner6.png'}
+];
+
+/* SLIDE_MS: jeda ganti banner otomatis (milidetik). Isi 0 untuk mematikan. */
+const SLIDE_MS=5000;
+
+/* ARTICLES: daftar di jendela Artikel. id harus sama dengan <template id="..."> di bawah halaman. */
+const ARTICLES=[
+  {id:'a1', title:'Behavioral Approach'},
+  {id:'a2', title:'Sebelum Esok'}
+];
+
+/* ===================================================================
+   2. UTILITAS UMUM
+   =================================================================== */
+const $=id=>document.getElementById(id);
+const D=$('desk'),vid=$('vid'),yt=$('yt'),stage=$('stage');
+const load=k=>{try{return JSON.parse(localStorage.getItem(k))||{}}catch{return{}}}; // baca pengaturan tersimpan
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};           // simpan pengaturan
+
+/* Letakkan elemen di (x,y) dan jaga agar tetap di dalam desktop */
+const put=(el,x,y)=>{
+  el.style.left=Math.max(0,Math.min(x,D.clientWidth-el.offsetWidth))+'px';
+  el.style.top=Math.max(0,Math.min(y,D.clientHeight-el.offsetHeight))+'px';
+};
+
+/* Penggeser serba guna (mouse & sentuh).
+   el=elemen yang bergerak, h=bagian yang ditarik, ok(e)=boleh mulai tarik?,
+   onMove(el)=dipanggil saat bergerak, onEnd(el)=dipanggil saat dilepas */
+function mv(el,h,ok,onMove,onEnd){
+  let s,go;
+  h.addEventListener('pointerdown',e=>{
+    if(e.button||!ok(e))return;
+    s=[e.clientX,e.clientY,el.offsetLeft,el.offsetTop];go=false;
+    try{h.setPointerCapture(e.pointerId)}catch{}
+  });
+  h.addEventListener('pointermove',e=>{
+    if(!s)return;
+    const dx=e.clientX-s[0],dy=e.clientY-s[1];
+    if(!go&&Math.hypot(dx,dy)<6)return;           // abaikan getaran kecil (agar klik biasa tetap jalan)
+    go=true;el.classList.add('drag');put(el,s[2]+dx,s[3]+dy);onMove&&onMove(el);
+  });
+  const up=()=>{if(!s)return;s=null;el.classList.remove('drag');if(go){h._t=Date.now();onEnd&&onEnd(el)}};
+  h.addEventListener('pointerup',up);h.addEventListener('pointercancel',up);
+}
+
+/* ===================================================================
+   3. PROTEKSI TAMPILAN — teks tidak bisa disalin & klik kanan diblokir
+   (hanya penghalang dasar). Hapus blok ini untuk menonaktifkan.
+   =================================================================== */
 const inTA=()=>document.activeElement&&document.activeElement.tagName==='TEXTAREA';
 addEventListener('contextmenu',e=>e.preventDefault());
 ['copy','cut'].forEach(t=>addEventListener(t,e=>{if(!inTA())e.preventDefault()}));
 addEventListener('selectstart',e=>{if(!(e.target.closest&&e.target.closest('textarea')))e.preventDefault()});
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&'acus'.includes(e.key.toLowerCase())&&!inTA())e.preventDefault()});
 
-/* Geser: ikon, jendela, widget */
-const put=(el,x,y)=>{el.style.left=Math.max(0,Math.min(x,D.clientWidth-el.offsetWidth))+'px';el.style.top=Math.max(0,Math.min(y,D.clientHeight-el.offsetHeight))+'px'};
-function mv(el,h,ok,end){
-  let s,go;
-  h.addEventListener('pointerdown',e=>{if(e.button||!ok(e))return;s=[e.clientX,e.clientY,el.offsetLeft,el.offsetTop];go=false;h.setPointerCapture(e.pointerId)});
-  h.addEventListener('pointermove',e=>{if(!s)return;const dx=e.clientX-s[0],dy=e.clientY-s[1];if(!go&&Math.hypot(dx,dy)<6)return;go=true;el.classList.add('drag');put(el,s[2]+dx,s[3]+dy)});
-  const up=()=>{if(!s)return;s=null;el.classList.remove('drag');if(go){h._t=Date.now();end&&end()}};
-  h.addEventListener('pointerup',up);h.addEventListener('pointercancel',up);
-}
+/* ===================================================================
+   4. MENU (IKON DESKTOP) — dibuat dari MENU, bisa digeser & menu lain ikut bergeser
+   =================================================================== */
+const CW=100,CH=104,PAD=10;   // lebar sel, tinggi sel, margin kisi (px)
+let rows=1;                    // jumlah baris per kolom (dihitung ulang di layout())
+const byId={};
 
-/* Ikon menu */
-const ip=load('ico_pos'),rows=Math.max(1,Math.floor((D.clientHeight-12)/104));
-I.forEach((el,i)=>{
-  const id=el.dataset.id,p=ip[id]||[10+Math.floor(i/rows)*100,10+i%rows*104];
-  put(el,p[0],p[1]);
-  mv(el,el,()=>true,()=>{ip[id]=[el.offsetLeft,el.offsetTop];save('ico_pos',ip)});
+MENU.forEach(m=>{
+  const el=document.createElement(m.href?'a':'button');
+  el.className='di';el.dataset.id=m.id;
+  if(m.href){el.href=m.href;el.draggable=false}
+  if(m.title)el.title=m.title;
+  el.innerHTML='<svg><use href="#'+m.icon+'"/></svg>'+m.label;
+  $('menu').append(el);byId[m.id]=el;
+
+  // tarik untuk memindahkan → menu lain bergeser mengikuti
+  mv(el,el,()=>true,iconMove,iconEnd);
+  // setelah ditarik, cegah "klik" yang ikut terpicu (supaya tidak membuka tautan)
   el.addEventListener('click',e=>{if(Date.now()-(el._t||0)<350){e.preventDefault();e.stopImmediatePropagation()}},true);
-  if(el.dataset.open)el.addEventListener('click',()=>openW(el.dataset.open));
+  if(m.open)el.addEventListener('click',()=>openW(m.open));
 });
 
-/* Jendela */
+/* Urutan ikon: dari browser (jika ada) + menu baru yang belum tersimpan */
+const savedOrder=load('menu_order');
+const order=(Array.isArray(savedOrder)?savedOrder:[]).filter(id=>byId[id]);
+MENU.forEach(m=>{if(!order.includes(m.id))order.push(m.id)});
+
+/* Posisi sel ke-k: mengisi ke bawah dulu, lalu pindah kolom */
+const slot=k=>[PAD+Math.floor(k/rows)*CW,PAD+k%rows*CH];
+/* Tempatkan semua ikon sesuai urutan (skip = ikon yang sedang ditarik) */
+function layout(skip){
+  rows=Math.max(1,Math.floor((D.clientHeight-PAD)/CH));
+  order.forEach((id,k)=>{
+    const el=byId[id];if(el===skip)return;
+    const p=slot(k);el.style.left=p[0]+'px';el.style.top=p[1]+'px';
+  });
+}
+/* Saat ikon ditarik: cari sel terdekat, sisipkan di sana, ikon lain bergeser */
+function iconMove(el){
+  const cx=el.offsetLeft+el.offsetWidth/2,cy=el.offsetTop+el.offsetHeight/2;
+  const cols=Math.ceil(order.length/rows);
+  const c=Math.max(0,Math.min(cols-1,Math.floor((cx-PAD/2)/CW)));
+  const r=Math.max(0,Math.min(rows-1,Math.floor((cy-PAD/2)/CH)));
+  const to=Math.min(order.length-1,c*rows+r),from=order.indexOf(el.dataset.id);
+  if(to!==from){order.splice(from,1);order.splice(to,0,el.dataset.id);layout(el)}
+}
+/* Saat dilepas: ikon masuk ke selnya & urutan disimpan */
+function iconEnd(){layout();save('menu_order',order)}
+layout();
+
+/* ===================================================================
+   5. JENDELA (.win) — dibuka dari menu {open:'id'}, bisa digeser lewat judul
+   =================================================================== */
+const W=[...document.querySelectorAll('.win')];
 let z=10,n=0;
 const front=w=>{w.style.zIndex=++z;W.forEach(x=>x.classList.toggle('act',x===w))};
-function openW(id){const w=$(id);
-  if(!w.dataset.p){w.dataset.p=1;if(innerWidth>700){w.style.left=30+n%6*30+'px';w.style.top=16+n%6*30+'px'}n++}
-  w.style.display='flex';front(w)}
-function closeW(w){w.style.display='none';delete w.dataset.p}
+function openW(id){
+  const w=$(id);
+  if(!w.dataset.p){w.dataset.p=1;if(innerWidth>700){w.style.left=30+n%6*30+'px';w.style.top=16+n%6*30+'px'}n++} // posisi bertingkat
+  w.style.display='flex';front(w);
+}
+const closeW=w=>{w.style.display='none';delete w.dataset.p};
 W.forEach(w=>{
   w.querySelector('.x').onclick=()=>closeW(w);
   w.addEventListener('pointerdown',()=>front(w));
   mv(w,w.querySelector('.tbar'),e=>innerWidth>700&&!e.target.closest('button'));
 });
 
-/* Widget media (geser, ubah lebar, ciutkan; posisi diingat) */
-const sv=load('wg_st'),saveW=()=>save('wg_st',{x:wg.offsetLeft,y:wg.offsetTop,w:wg.offsetWidth,min:wg.classList.contains('min')});
-const mb=$('wg-min'),lbl=()=>{const m=wg.classList.contains('min');mb.textContent=m?'+':'–';mb.setAttribute('aria-label',m?'Buka widget':'Ciutkan widget')};
-if(sv.w&&innerWidth>700)wg.style.width=sv.w+'px';
-if(sv.min??innerWidth<=700)wg.classList.add('min');
-lbl();
-put(wg,sv.x??D.clientWidth-wg.offsetWidth-12,sv.y??D.clientHeight-wg.offsetHeight-12);
-mb.onclick=()=>{wg.classList.toggle('min');lbl();put(wg,wg.offsetLeft,wg.offsetTop);saveW()};
-mv(wg,wg.querySelector('.tbar'),e=>!e.target.closest('button'),saveW);
-let rt;new ResizeObserver(()=>{clearTimeout(rt);rt=setTimeout(saveW,300)}).observe(wg);
-addEventListener('resize',()=>{I.concat(wg).forEach(e=>put(e,e.offsetLeft,e.offsetTop))});
+/* ===================================================================
+   6. WIDGET MEDIA — isi dari MEDIA; tinggi layar mengikuti rasio video
+   =================================================================== */
+const chips=MEDIA.map((m,i)=>{
+  const b=document.createElement('button');
+  b.className='b'+(i?'':' on');b.textContent=m.t;b.onclick=()=>playMedia(m,b);
+  $('chips').append(b);return b;
+});
+function playMedia(m,b){
+  chips.forEach(x=>x.classList.toggle('on',x===b));$('now-t').textContent=m.t;
+  const id=(m.src.match(/(?:v=|youtu\.be\/|\/live\/)([\w-]{11})/)||[])[1]; // ambil ID YouTube (jika tautan YouTube)
+  if(id){ // YouTube → iframe, rasio 16:9
+    vid.pause();vid.hidden=true;yt.hidden=false;stage.style.aspectRatio='16/9';
+    yt.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
+  }else{  // file video/audio → <video>
+    yt.hidden=true;yt.src='about:blank';vid.hidden=false;vid.src=m.src;vid.play().catch(()=>{});
+  }
+}
+// begitu video siap, samakan rasio kotak dengan rasio video asli → tidak terpotong
+vid.addEventListener('loadedmetadata',()=>{stage.style.aspectRatio=vid.videoWidth?vid.videoWidth+'/'+vid.videoHeight:'16/9'});
+if(MEDIA.length){vid.src=MEDIA[0].src;$('now-t').textContent=MEDIA[0].t}
 
-/* Pemutar media */
-const chips=document.querySelectorAll('#chips .b');
-chips.forEach(c=>c.onclick=()=>{
-  chips.forEach(x=>x.classList.remove('on'));c.classList.add('on');$('now-t').textContent=c.dataset.t;
-  const s=c.dataset.src,m=s.match(/(?:v=|youtu\.be\/|\/live\/)([\w-]{11})/);
-  if(m){vid.pause();vid.hidden=true;yt.hidden=false;yt.src='https://www.youtube.com/embed/'+m[1]+'?autoplay=1&rel=0&playsinline=1'}
-  else{yt.hidden=true;yt.src='about:blank';vid.hidden=false;vid.src=s;vid.play().catch(()=>{})}
+/* ===================================================================
+   7. WIDGET INFORMASI — banner dari BANNERS; tinggi mengikuti gambar
+   =================================================================== */
+const BV=$('bn-view'),BT=$('bn-track'),BN=$('bn-n');
+let bi=0,bTimer;
+BANNERS.forEach((b,i)=>{
+  const m=document.createElement('img');
+  m.src=b.src;m.alt=b.alt||'Informasi '+(i+1);m.draggable=false;
+  m.onload=bnFit;                                  // gambar selesai dimuat → sesuaikan tinggi
+  m.onerror=()=>{m.classList.add('bad');bnFit()};  // file tidak ada → kotak abu-abu kecil
+  BT.append(m);
+});
+function bnFit(){const im=BT.children[bi];if(im)BV.style.height=im.clientHeight+'px'} // tinggi = tinggi gambar aktif
+function bnGo(i){
+  bi=(i+BANNERS.length)%BANNERS.length;
+  BT.style.transform='translateX('+(-bi*100)+'%)';
+  BN.textContent=(bi+1)+' / '+BANNERS.length;bnFit();
+}
+function bnAuto(){ // geser otomatis (berhenti saat disorot kursor atau widget diciutkan)
+  clearInterval(bTimer);
+  if(BANNERS.length>1&&SLIDE_MS)bTimer=setInterval(()=>{if(BV.offsetWidth&&!BV.matches(':hover'))bnGo(bi+1)},SLIDE_MS);
+}
+new ResizeObserver(bnFit).observe(BV); // widget dilebarkan/dibuka → hitung ulang tinggi
+$('prev').onclick=()=>{bnGo(bi-1);bnAuto()};
+$('next').onclick=()=>{bnGo(bi+1);bnAuto()};
+let sx=null; // geser (swipe) di layar sentuh
+BV.addEventListener('pointerdown',e=>sx=e.clientX);
+BV.addEventListener('pointerup',e=>{if(sx!==null&&Math.abs(e.clientX-sx)>40){bnGo(bi+(e.clientX<sx?1:-1));bnAuto()}sx=null});
+bnGo(0);bnAuto();
+
+/* ===================================================================
+   8. JENDELA ARTIKEL — tombol dari ARTICLES, isi dari <template id="..."> di bawah
+   =================================================================== */
+ARTICLES.forEach(a=>{
+  const b=document.createElement('button');
+  b.className='b';b.textContent=a.title;
+  b.onclick=()=>{[...$('art-btns').children].forEach(x=>x.classList.toggle('on',x===b));$('abody').innerHTML=$(a.id).innerHTML};
+  $('art-btns').append(b);
 });
 
-/* Informasi */
-const S=$('slides');
-for(let i=1;i<=6;i++){const m=document.createElement('img');m.src='banner'+i+(i==1?'.jpeg':'.png');m.alt='Informasi '+i;m.draggable=false;m.onerror=()=>m.style.visibility='hidden';S.append(m)}
-$('prev').onclick=()=>S.scrollBy({left:-S.clientWidth,behavior:'smooth'});
-$('next').onclick=()=>S.scrollBy({left:S.clientWidth,behavior:'smooth'});
-
-/* Artikel */
-const ab=document.querySelectorAll('[data-a]');
-ab.forEach(b=>b.onclick=()=>{ab.forEach(x=>x.classList.toggle('on',x===b));$('abody').innerHTML=$(b.dataset.a).innerHTML});
+/* ===================================================================
+   9. MESIN WIDGET — berlaku untuk SEMUA <aside class="widget">
+   Fitur: geser, lebarkan, ciutkan; posisi/lebar/status disimpan per data-wid.
+   =================================================================== */
+function initWidget(el){
+  const key='wg_'+el.dataset.wid,st=load(key),tb=el.querySelector('.tbar'),bt=el.querySelector('.x');
+  const isMin=()=>el.classList.contains('min');
+  const lbl=()=>{bt.textContent=isMin()?'+':'–';bt.setAttribute('aria-label',isMin()?'Buka widget':'Ciutkan widget')};
+  const store=()=>{el._auto=false;save(key,{x:el.offsetLeft,y:el.offsetTop,w:el.offsetWidth,min:isMin()})};
+  // _auto = belum pernah dipindah pengunjung → tetap menempel di pojok data-anchor
+  el._auto=st.x===undefined;
+  el._place=()=>{
+    if(el._auto){const a=el.dataset.anchor||'br'; // tl / tr / bl / br
+      put(el,a[1]==='r'?D.clientWidth-el.offsetWidth-12:12,a[0]==='t'?12:D.clientHeight-el.offsetHeight-12);
+    }else put(el,el.offsetLeft,el.offsetTop);
+  };
+  if(st.w&&innerWidth>700)el.style.width=st.w+'px';
+  if(st.min??innerWidth<=700)el.classList.add('min'); // di HP awalnya diciutkan
+  if(!el._auto){el.style.left=st.x+'px';el.style.top=st.y+'px'}
+  lbl();el._place();
+  bt.onclick=()=>{el.classList.toggle('min');lbl();el._place();store()};
+  mv(el,tb,e=>!e.target.closest('button'),null,store);
+  let lw=el.offsetWidth,t;
+  new ResizeObserver(()=>{ // ukuran berubah (isi dimuat / dilebarkan) → rapikan posisi
+    const wide=el.offsetWidth!==lw;lw=el.offsetWidth;el._place();
+    if(wide){clearTimeout(t);t=setTimeout(store,300)}
+  }).observe(el);
+}
+const WG=[...document.querySelectorAll('.widget')];
+WG.forEach(initWidget);
+addEventListener('resize',()=>{layout();WG.forEach(w=>w._place())});
 </script>
 
 <script type="module">
+/* ===== 10. FIREBASE — jumlah pengunjung (header) & chat anonim =====
+   • Pengunjung : dihitung 1x per browser, ditulis ke statistik_web/total_viewers
+   • Chat       : pesan di pesan_anonim (balasan memakai parentId, reaksi wow/super/haha)
+   Ganti konfigurasi Firebase di initializeApp({...}) bila memakai proyek lain. */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, serverTimestamp, update, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
