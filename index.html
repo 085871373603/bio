@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#006666">
-<title>Rana Arifin — Portal Dashboard</title>
+<meta name="theme-color" content="#6F8A35">
+<title>Rana Arifin — Dashboard</title>
 <!--
 =====================================================================
  PANDUAN UPDATE CEPAT
  Urutan halaman: HEADER → BANNER (permanen) → PEMUTAR MEDIA (permanen) → MENU (3 per baris)
  Hampir semua konten diatur di bagian "1. KONFIGURASI" pada <script>.
+ TEMA: Windows XP Luna Olive Green — ganti warna di :root (--xp-*) pada <style>.
 ---------------------------------------------------------------------
  • Tambah BANNER    → taruh gambar di folder yang sama, tambah baris di BANNERS
                       { src:'promo.jpg', href:'https://toko.com/produk', alt:'Promo' }
@@ -24,90 +25,110 @@
 =====================================================================
 -->
 <style>
-/* ===== 1. DASAR & TEMA =====
-   Warna latar (hijau tosca) diatur di body{background}. */
-:root{--face:#c0c0c0;--hi:#fff;--sh:#808080;--dk:#404040}
+/* ===== 1. TEMA: WINDOWS XP LUNA — OLIVE GREEN =====
+   Warna tema ada di :root (--xp-*). Latar langit + bukit ada di body{background}. */
+:root{--xp-face:#ECE9D8;--xp-frame:#6F8A35;--xp-frame-dark:#4E6724;--xp-border:#003C74;--xp-input-border:#7F9DB9;--xp-group:#D0D0BF;--xp-shadow:#ACA899;--xp-select:#316AC5}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{margin:0}
-body{background:#008080;min-height:100vh;color:#000;font:13px/1.45 Tahoma,Verdana,Geneva,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none} /* teks tidak bisa diseleksi */
+html,body{margin:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none} /* teks tidak bisa diseleksi */
 textarea{-webkit-user-select:text;user-select:text} /* kolom ketik chat tetap bisa dipakai */
-img,a{-webkit-user-drag:none}
+svg,img,a{-webkit-user-drag:none}
 button,a{font:inherit;color:inherit}
-:focus-visible{outline:1px dotted #fff;outline-offset:1px}
+:focus-visible{outline:1px dotted #000;outline-offset:2px}
+body{font-family:Tahoma,'Segoe UI',Verdana,sans-serif;font-size:12px;color:#000;min-height:100vh;padding:calc(16px + env(safe-area-inset-top,0px)) 10px calc(24px + env(safe-area-inset-bottom,0px));
+  background:
+    radial-gradient(60px 22px at 18% 22%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%),
+    radial-gradient(90px 28px at 30% 28%,rgba(255,255,255,.75),rgba(255,255,255,0) 70%),
+    radial-gradient(80px 24px at 72% 16%,rgba(255,255,255,.8),rgba(255,255,255,0) 70%),
+    radial-gradient(130% 55% at 22% 112%,#7cc03a 0%,#58a024 42%,rgba(88,160,36,0) 43%),
+    radial-gradient(120% 50% at 88% 114%,#66ae2c 0%,#3f8a1a 46%,rgba(63,138,26,0) 47%),
+    linear-gradient(180deg,#1f5fd0 0%,#4a8fe3 38%,#8ec2f1 62%,#c7e3f8 78%,#6fa83c 78.2%,#4b9122 100%);
+  background-attachment:fixed}
 
-/* ===== 2. HEADER (menempel di atas saat halaman digulir) ===== */
-#top{position:sticky;top:0;z-index:50;height:calc(38px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 14px 0;display:flex;justify-content:center;align-items:center;background:#006666;border-bottom:2px solid #00b3b3;color:#fff;font-size:15px;text-shadow:1px 1px 0 #000}
-.hin{width:100%;max-width:640px;display:flex;align-items:center;justify-content:space-between}
-.vis{display:flex;align-items:center;gap:6px}
-.vis svg{width:22px;height:22px;filter:drop-shadow(1px 1px 0 rgba(0,0,0,.5))}
+/* ===== 2. JENDELA XP (.window = halaman utama, .win = jendela Artikel/Interaksi) ===== */
+.window,.win{background:var(--xp-frame);border:1px solid var(--xp-frame-dark);border-radius:8px 8px 0 0;padding:0 3px 3px;box-shadow:2px 3px 12px rgba(0,0,0,.55)}
+.main{max-width:640px;margin:0 auto}
+.title-bar{height:29px;margin:0 -3px;padding:0 5px 0 8px;border-radius:7px 7px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px;color:#fff;font-family:'Trebuchet MS',Tahoma,sans-serif;font-weight:bold;font-size:13px;text-shadow:1px 1px 0 #3B4D1A;
+  background:linear-gradient(180deg,#C2D58A 0%,#9CB45B 4%,#8FAA4F 8%,#83A044 14%,#7A9839 24%,#7A993C 56%,#86A444 70%,#7C9A40 86%,#66812F 94%,#4E6724 100%)}
+.main .title-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50} /* judul halaman menempel di atas saat digulir */
+.title-text{display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden;white-space:nowrap}
+.ico{width:16px;height:16px;flex:none}
+.vis{display:flex;align-items:center;gap:5px;font-size:12px} /* jumlah pengunjung (ikon mata) */
+.caps{display:flex;gap:2px}
+.cap{width:21px;height:21px;padding:0;border:1px solid #fff;border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-shadow:none;background:radial-gradient(120% 120% at 85% 90%,#E4977A 0%,#D2552B 45%,#B8391A 100%)}
+.cap svg{width:19px;height:19px;display:block}
+.cap:hover{filter:brightness(1.12)}
+.window-body{background:var(--xp-face);padding:12px}
+/* Jendela yang bisa digeser: muncul di atas halaman, digeser lewat judulnya */
+#desk{position:fixed;inset:0;z-index:60;pointer-events:none}
+.win{position:absolute;display:none;flex-direction:column;pointer-events:auto;width:min(560px,calc(100% - 8px));max-height:calc(100% - 8px)}
+.win .window-body{overflow:auto;flex:1}
+.win .title-bar{cursor:move;touch-action:none}
+.win:not(.act) .title-bar{background:linear-gradient(180deg,#D7E0BB 0%,#B9C795 8%,#AFBE88 50%,#A3B37B 90%,#8E9F66 100%);text-shadow:1px 1px 0 #6D7A4F} /* jendela tidak aktif lebih pucat */
+@media (max-width:700px){.win{left:4px!important;top:4px!important;height:calc(100% - 8px)}} /* HP: jendela penuh layar */
+@media (max-width:640px){body{padding-left:6px;padding-right:6px}.window-body{padding:8px}}
 
-/* ===== 3. TATA LETAK: satu kolom di tengah — Banner → Media → Menu ===== */
-.page{max-width:640px;margin:0 auto;padding:12px 10px calc(28px + env(safe-area-inset-bottom,0px))}
-.frame{background:var(--face);border:2px solid;border-color:var(--hi) var(--dk) var(--dk) var(--hi);box-shadow:1px 1px 0 #000;padding:2px;margin-bottom:12px}
+fieldset{border:1px solid var(--xp-group);border-radius:3px;margin:0 0 12px;padding:10px 12px;min-width:0}
+legend{margin-left:6px;padding:0 3px;color:#0046D5;font-size:12px}
 
-/* ===== 4. BANNER (permanen; tinggi mengikuti gambar, tidak dipotong) ===== */
-.banner{position:relative}
-.bn-view{overflow:hidden;background:#000;transition:height .3s;touch-action:pan-y}
+/* ===== 3. BANNER (permanen; tinggi mengikuti gambar, tidak dipotong) ===== */
+.bn-wrap{position:relative;background:#fff;border:1px solid var(--xp-input-border)}
+.bn-view{overflow:hidden;transition:height .3s;touch-action:pan-y}
 .bn-track{display:flex;align-items:flex-start;transition:transform .45s}
 .sl{flex:0 0 100%;min-width:0;display:block}
 .sl img{width:100%;height:auto;display:block}
-.sl.bad{min-height:80px;background:#e6e6e6}
+.sl.bad{min-height:80px;background:#E6E3D2}
 a.sl{cursor:pointer}
-.bn-ar{position:absolute;top:calc(50% - 20px);width:26px;height:36px;padding:0;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:18px;cursor:pointer;z-index:2}
-#prev{left:2px}#next{right:2px}
-.bn-dots{display:flex;gap:6px;justify-content:center;padding:6px 0 3px}
-.dot{width:10px;height:10px;padding:0;background:var(--face);border:2px solid;border-color:var(--hi) var(--dk) var(--dk) var(--hi);cursor:pointer}
-.dot.on{background:#008080;border-color:var(--dk) var(--hi) var(--hi) var(--dk)}
+.bn-ar{position:absolute;top:calc(50% - 18px);width:24px;height:36px;padding:0;border:1px solid #fff;border-radius:3px;background:rgba(78,103,36,.7);color:#fff;font-size:18px;cursor:pointer;z-index:2}
+.bn-ar:hover{background:rgba(78,103,36,.9)}
+#prev{left:4px}#next{right:4px}
+.bn-dots{display:flex;gap:6px;justify-content:center;padding:8px 0 0}
+.dot{width:11px;height:11px;padding:0;border:1px solid var(--xp-border);border-radius:3px;background:linear-gradient(180deg,#fff,#D6D0C5);cursor:pointer}
+.dot.on{background:var(--xp-select);box-shadow:inset 0 0 0 1px #9DB6D5}
 .banner.one .bn-ar,.banner.one .bn-dots{display:none} /* 1 banner saja → tanpa panah/titik */
 
-/* ===== 5. PEMUTAR MEDIA (permanen; rasio kotak mengikuti video, tidak dipotong) ===== */
-.stage{width:100%;max-height:60vh;aspect-ratio:16/9;background:#000;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh)}
+/* ===== 4. PEMUTAR MEDIA (permanen; rasio kotak mengikuti video, tidak dipotong) ===== */
+.stage{width:100%;max-height:60vh;aspect-ratio:16/9;background:#000;border:1px solid var(--xp-input-border)}
 .stage video,.stage iframe{width:100%;height:100%;border:0;display:block;object-fit:contain;background:#000}
 #now{margin:6px 0;font-size:12px}
-#chips{display:flex;flex-wrap:wrap;gap:5px}
-#chips .b{padding:1px 8px;font-size:12px}
+#chips{display:flex;flex-wrap:wrap;gap:6px}
+#chips .b{min-height:21px;padding:1px 9px}
 
-/* ===== 6. MENU (kolom per baris diatur COLS di JS; posisi ikon diatur JS) =====
+/* ===== 5. MENU (kolom per baris diatur COLS di JS; posisi ikon diatur JS) =====
    Jangan isi left/top/width ikon di CSS. Tinggi sel (CH) ada di JS. */
 #menu{position:relative}
-.di{position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;background:none;border:1px dotted transparent;color:#fff;text-align:center;text-decoration:none;text-shadow:1px 1px 0 #000;cursor:pointer;font-size:12px;line-height:1.2;touch-action:pan-y;transition:left .18s,top .18s} /* transition = animasi saat menu lain bergeser */
-.di svg{width:44px;height:44px;filter:drop-shadow(1px 1px 0 rgba(0,0,0,.45));pointer-events:none}
-.di:hover,.di:focus-visible,.di.drag{background:rgba(0,70,70,.6);border-color:#fff}
-.di.drag{opacity:.85;z-index:4;transition:none}
+.di{position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;background:none;border:1px solid transparent;border-radius:3px;color:#000;text-align:center;text-decoration:none;cursor:pointer;font:12px/1.2 Tahoma,Verdana,sans-serif;touch-action:pan-y;transition:left .18s,top .18s} /* transition = animasi saat menu lain bergeser */
+.di svg{width:44px;height:44px;pointer-events:none}
+.di:hover,.di:focus-visible{background:rgba(49,106,197,.12);border-color:#9DB6D5}
+.di.drag{background:var(--xp-select);border-color:var(--xp-select);color:#fff;opacity:.9;z-index:4;transition:none}
 
-/* ===== 7. JENDELA (.win) — muncul di atas halaman, bisa digeser lewat judul ===== */
-#desk{position:fixed;inset:0;z-index:60;pointer-events:none}
-.win{position:absolute;display:none;flex-direction:column;pointer-events:auto;width:min(560px,calc(100% - 8px));max-height:calc(100% - 8px);background:var(--face);border:2px solid;border-color:var(--hi) var(--dk) var(--dk) var(--hi);box-shadow:1px 1px 0 #000;padding:2px}
-.tbar{display:flex;align-items:center;gap:6px;padding:3px 4px;background:linear-gradient(90deg,#005f5f,#22a8a8);color:#fff;font-weight:700;cursor:move;touch-action:none}
-.win:not(.act) .tbar{background:linear-gradient(90deg,#808080,#b5b5b5)}
-.frame .tbar{cursor:default;touch-action:auto} /* judul kartu permanen: tidak bisa digeser */
-.tbar svg{width:16px;height:16px;flex:none}
-.tt{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wb{padding:8px;overflow:auto;flex:1}
-.frame .wb{padding:6px}
-@media (max-width:700px){.win{left:4px!important;top:4px!important;height:calc(100% - 8px)}} /* HP: jendela penuh layar */
-
-/* ===== 8. KOMPONEN UMUM: tombol, panel, artikel, chat ===== */
-.b{background:var(--face);border:2px solid;border-color:var(--hi) var(--dk) var(--dk) var(--hi);padding:2px 10px;cursor:pointer;color:#000}
-.b:active,.b.on{border-color:var(--dk) var(--hi) var(--hi) var(--dk)}
-.b.on{background:#dcdcdc;font-weight:700}
-.x{width:20px;height:18px;padding:0;line-height:1;font-weight:700}
-.sunk{background:#fff;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh);padding:8px}
-.live{color:#0a7a2a;font-weight:700}
+/* ===== 6. KOMPONEN: tombol XP, panel, artikel, chat ===== */
+.b{font-family:Tahoma,sans-serif;font-size:12px;color:#000;min-height:23px;padding:2px 12px;cursor:pointer;border:1px solid var(--xp-border);border-radius:3px;background:linear-gradient(180deg,#FFF 0%,#F4F3EE 40%,#ECEBE6 86%,#D6D0C5 100%)}
+.b:hover:not(:active){box-shadow:inset 0 0 0 1px #F8B330,inset 0 0 0 2px #FDD889}
+.b:active,.b.on{background:linear-gradient(180deg,#CDCABB 0%,#E3E3DB 8%,#E5E5DE 94%,#F2F2F1 100%);box-shadow:inset 1px 1px 0 #B3AF9C}
+.b.on{font-weight:bold}
+.btn-primary{font-weight:bold;box-shadow:inset 0 0 0 2px #98B8EA}
+.sunk{background:#fff;border:1px solid var(--xp-input-border);padding:8px}
+.live{color:#2E7D1E;font-weight:bold}
 #abody{margin-top:8px;line-height:1.7;max-height:48vh;overflow:auto}
 #abody h2,#abody h3{margin:12px 0 4px}
-#abody blockquote{margin:10px 0;padding:8px 12px;border-left:4px solid #008080;background:#eef;font-style:italic}
-textarea{width:100%;height:68px;resize:none;padding:6px;border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh);font:inherit}
-.reply-ind{display:none;justify-content:space-between;background:#ffffcc;border:1px solid #999;padding:3px 6px;margin-bottom:6px}
+#abody blockquote{margin:10px 0;padding:8px 12px;border-left:4px solid var(--xp-frame);background:#F3F1E6;font-style:italic}
+textarea{width:100%;height:68px;resize:none;padding:4px 6px;font:12px Tahoma,sans-serif;border:1px solid var(--xp-input-border);border-radius:0;background:#fff;outline:none}
+textarea:focus{box-shadow:0 0 0 1px #fff,0 0 0 2px #9DB6D5}
+.reply-ind{display:none;justify-content:space-between;background:#FFFFE1;border:1px solid #000;padding:3px 6px;margin-bottom:6px}
 .reply-ind button{border:0;background:none;cursor:pointer}
-#chat-list{max-height:260px;overflow:auto;margin-top:8px}
-.msg{border:2px solid;border-color:var(--sh) var(--hi) var(--hi) var(--sh);background:#fff;padding:6px 8px;margin-bottom:6px;word-break:break-word}
-.msg.self{background:#ffffcc}
-.msg.reply{margin-left:18px;border-left:4px solid #008080}
-.who{font-size:11px;font-weight:700;color:#555}
+#chat-list{max-height:260px;overflow:auto;margin-top:8px;border:1px solid var(--xp-input-border);background:#fff;padding:6px}
+.msg{border:1px solid #D6D2C2;background:#fff;padding:6px 8px;margin-bottom:6px;word-break:break-word}
+.msg.self{background:#EAF1FB;border-color:#9DB6D5}
+.msg.reply{margin-left:18px;border-left:4px solid var(--xp-frame)}
+.who{font-size:11px;font-weight:bold;color:#555}
 .act2{display:flex;justify-content:space-between;gap:6px;margin-top:5px}
-.act2 .b{padding:0 6px;font-size:12px}
+.act2 .b{min-height:20px;padding:0 6px;font-size:12px}
+/* Scrollbar bernuansa olive */
+::-webkit-scrollbar{width:17px;height:17px}
+::-webkit-scrollbar-track{background:#F3F1E6;border-left:1px solid #E6E3D2}
+::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#E3EBC9 0%,#BFD18A 40%,#A6BE67 100%);border:1px solid #fff;border-radius:3px;box-shadow:inset 0 0 0 1px #8DA24D}
+::-webkit-scrollbar-button:single-button{display:block;width:17px;height:17px;border:1px solid #fff;border-radius:3px;background:linear-gradient(135deg,#E8EFD0,#B6CB7B);box-shadow:inset 0 0 0 1px #8DA24D}
 </style>
 </head>
 <body>
@@ -130,58 +151,67 @@ textarea{width:100%;height:68px;resize:none;padding:6px;border:2px solid;border-
 <symbol id="i-eye" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M2 16c4-7 9-10 14-10s10 3 14 10c-4 7-9 10-14 10S6 23 2 16z" fill="#fff"/><circle cx="16" cy="16" r="5.5" fill="#2a7de1"/><circle cx="16" cy="16" r="2.3" fill="#000"/></symbol>
 </svg>
 
-<!-- ===== HEADER: nama + jumlah pengunjung (angka diisi Firebase di bagian paling bawah) ===== -->
-<header id="top"><div class="hin"><b>Rana Arifin</b><span class="vis" title="Total pengunjung"><svg><use href="#i-eye"/></svg><b id="viewers-count">…</b></span></div></header>
+<!-- ===== HALAMAN UTAMA (jendela XP): Judul+pengunjung → Banner → Pemutar Media → Menu =====
+  Susunan dari atas ke bawah; semua isinya dibuat JS dari daftar di "1. KONFIGURASI". -->
+<div class="window main">
 
-<main class="page">
+  <!-- JUDUL: nama + jumlah pengunjung (ikon mata; angka diisi Firebase di bagian paling bawah) -->
+  <div class="title-bar" id="top"><span class="title-text"><svg class="ico"><use href="#i-user"/></svg> Rana Arifin - Dashboard</span><span class="vis" title="Total pengunjung"><svg class="ico"><use href="#i-eye"/></svg><b id="viewers-count">…</b></span></div>
 
-<!-- ===== 1) BANNER INFORMASI (permanen, bergulir otomatis) =====
-  Slide, titik, dan panah dibuat otomatis oleh JS dari daftar BANNERS.
-  Banner yang punya href bisa diklik (tautan ala e-commerce). -->
-<section class="frame banner" id="banner" aria-label="Informasi">
-  <div class="bn-view" id="bn-view"><div class="bn-track" id="bn-track"></div></div>
-  <button class="bn-ar" id="prev" aria-label="Sebelumnya">‹</button>
-  <button class="bn-ar" id="next" aria-label="Berikutnya">›</button>
-  <div class="bn-dots" id="bn-dots"></div>
-</section>
+  <div class="window-body">
 
-<!-- ===== 2) PEMUTAR MEDIA (permanen, tepat di bawah banner) =====
-  Tombol pilihan diisi JS dari MEDIA; rasio kotak mengikuti video asli. -->
-<section class="frame" id="media" aria-label="Pemutar media">
-  <div class="tbar"><svg><use href="#i-media"/></svg><span class="tt">Pemutar Media</span></div>
-  <div class="wb">
-    <div class="stage" id="stage"><video id="vid" controls playsinline preload="metadata"></video><iframe id="yt" hidden title="Video YouTube" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>
-    <div id="now">Sedang diputar: <b id="now-t"></b></div>
-    <div id="chips"></div>
+    <!-- 1) BANNER INFORMASI (permanen, bergulir otomatis). Slide, titik, dan panah dibuat JS dari BANNERS.
+         Banner yang punya href bisa diklik (tautan ala e-commerce). -->
+    <fieldset class="banner" id="banner">
+      <legend>Informasi</legend>
+      <div class="bn-wrap">
+        <div class="bn-view" id="bn-view"><div class="bn-track" id="bn-track"></div></div>
+        <button class="bn-ar" id="prev" aria-label="Sebelumnya">‹</button>
+        <button class="bn-ar" id="next" aria-label="Berikutnya">›</button>
+      </div>
+      <div class="bn-dots" id="bn-dots"></div>
+    </fieldset>
+
+    <!-- 2) PEMUTAR MEDIA (permanen, tepat di bawah banner). Tombol pilihan diisi JS dari MEDIA;
+         rasio kotak mengikuti video asli. -->
+    <fieldset id="media">
+      <legend>Pemutar Media</legend>
+      <div class="stage" id="stage"><video id="vid" controls playsinline preload="metadata"></video><iframe id="yt" hidden title="Video YouTube" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div>
+      <div id="now">Sedang diputar: <b id="now-t"></b></div>
+      <div id="chips"></div>
+    </fieldset>
+
+    <!-- 3) MENU (di bawah pemutar video; ikon dibuat JS dari MENU, COLS per baris) -->
+    <fieldset style="margin-bottom:0">
+      <legend>Menu</legend>
+      <nav id="menu" aria-label="Menu utama"></nav>
+    </fieldset>
+
   </div>
-</section>
-
-<!-- ===== 3) MENU (di bawah pemutar video; ikon dibuat JS dari MENU, COLS per baris) ===== -->
-<nav id="menu" aria-label="Menu utama"></nav>
-</main>
+</div>
 
 <!-- ===== LAPISAN JENDELA =====
   Jendela dibuka lewat menu {open:'id-jendela'}. Untuk jendela baru: salin blok,
-  ganti id (awali "w-"), judul, dan isi .wb -->
+  ganti id (awali "w-"), judul, ikon, dan isi .window-body -->
 <div id="desk">
 
 <!-- JENDELA ARTIKEL — tombol judul diisi JS dari ARTICLES -->
 <section class="win" id="w-artikel" aria-label="Artikel">
-  <div class="tbar"><svg><use href="#i-note"/></svg><span class="tt">Artikel</span><button class="b x" aria-label="Tutup">✕</button></div>
-  <div class="wb">
+  <div class="title-bar"><span class="title-text"><svg class="ico"><use href="#i-note"/></svg> Artikel</span><div class="caps"><button type="button" class="cap close" aria-label="Tutup"><svg viewBox="0 0 21 21"><path d="M5.5 5.5L14.5 14.5M14.5 5.5L5.5 14.5" stroke="#fff" stroke-width="2.4" fill="none"/></svg></button></div></div>
+  <div class="window-body">
     <div id="art-btns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-    <div class="sunk" id="abody">Pilih salah satu artikel di atas untuk membaca.</div>
+    <div class="sunk" id="abody">Pilih artikel</div>
   </div>
 </section>
 
 <!-- JENDELA INTERAKSI — chat anonim (logika Firebase ada di <script type="module"> paling bawah) -->
 <section class="win" id="w-chat" aria-label="Interaksi anonim">
-  <div class="tbar"><svg><use href="#i-chat"/></svg><span class="tt">Interaksi anonim</span><button class="b x" aria-label="Tutup">✕</button></div>
-  <div class="wb">
-    <div><b id="user-identity"></b> · Pesan publik: <b id="msg-count">0</b></div>
+  <div class="title-bar"><span class="title-text"><svg class="ico"><use href="#i-chat"/></svg> Interaksi anonim</span><div class="caps"><button type="button" class="cap close" aria-label="Tutup"><svg viewBox="0 0 21 21"><path d="M5.5 5.5L14.5 14.5M14.5 5.5L5.5 14.5" stroke="#fff" stroke-width="2.4" fill="none"/></svg></button></div></div>
+  <div class="window-body">
+    <div><b id="user-identity"></b> · komentar anonim: <b id="msg-count">0</b></div>
     <div class="reply-ind" id="reply-indicator"><span id="reply-text">Membalas…</span><button id="cancel-reply" aria-label="Batalkan balasan">✕</button></div>
     <textarea id="chat-input" placeholder="Tulis pesan…"></textarea>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><button class="b" id="send-chat-btn">Kirim pesan</button><span id="send-status" class="live" style="display:none">Pesan terkirim</span></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><button class="b btn-primary" id="send-chat-btn">Kirim pesan</button><span id="send-status" class="live" style="display:none">Pesan terkirim</span></div>
     <div id="chat-list"><div class="msg">Memuat pesan…</div></div>
   </div>
 </section>
@@ -216,7 +246,7 @@ const BANNERS=[
   {src:'banner2.png'},
   {src:'banner3.png'},
   {src:'banner4.png'},
-  {src:'banner5.png'},
+  {src:'banner5.png', href:'https://vercel.com/rana-arifin-s-projects', alt:'Promo'},
   {src:'banner6.png'}
 ];
 
@@ -231,7 +261,7 @@ const MEDIA=[
   {t:'Default',        src:'opening.mp4'},
   {t:'Trial.muv',      src:'iklan.mp4'},
   {t:'#81 🇮🇩',         src:'hutri.mp4'},
-  {t:'September',      src:'020901.mp3'},
+  {t:'Info',      src:'iklan.mp3'},
   {t:'Trial.YTM-PI7U', src:'https://youtu.be/b-QHj32B4SQ?si=e0y5lG8PqKFBIvMu'},
   {t:'● Live',         src:'https://www.youtube.com/live/PDDOkUq33Sw?si=rah16KaUo2trL9Mp'}
 ];
@@ -439,9 +469,9 @@ function openW(id){
 }
 const closeW=w=>{w.style.display='none';delete w.dataset.p};
 W.forEach(w=>{
-  w.querySelector('.x').onclick=()=>closeW(w);
+  w.querySelector('.close').onclick=()=>closeW(w);
   w.addEventListener('pointerdown',()=>front(w));
-  mv(w,w.querySelector('.tbar'),e=>innerWidth>700&&!e.target.closest('button'));
+  mv(w,w.querySelector('.title-bar'),e=>innerWidth>700&&!e.target.closest('button'));
 });
 
 /* ===================================================================
