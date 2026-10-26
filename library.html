@@ -1,1 +1,461 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6F8A35">
+<title>Library SVG</title>
+<!--
+=====================================================================
+ LIBRARY SVG — PANDUAN UPDATE CEPAT
+ Semua ikon ada di bagian "1. KONFIGURASI" pada <script> (objek LIB).
+ • Tambah ikon      → tambah satu baris "nama-ikon=bentuk" di kategori yang diinginkan
+ • Tambah kategori  → tambah di CATS, lalu buat kunci baru dengan id yang sama di LIB
+ • Format ikon      → kanvas 24x24, garis 2px, warna mengikuti teks (currentColor)
+ • Pakai di project → klik ikon → "Salin kode SVG", atau "Salin sprite" lalu pakai <use href="#i-nama">
+ TEMA: Windows XP Luna Olive Green — warna di :root (--xp-*) pada <style>.
+=====================================================================
+-->
+<style>
+/* ===== 1. TEMA: WINDOWS XP LUNA — OLIVE GREEN =====
+   Warna tema ada di :root (--xp-*). Latar langit + bukit ada di body{background}. */
+:root{--xp-face:#ECE9D8;--xp-frame:#6F8A35;--xp-frame-dark:#4E6724;--xp-border:#003C74;--xp-input-border:#7F9DB9;--xp-group:#D0D0BF;--xp-shadow:#ACA899;--xp-select:#316AC5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none} /* teks tidak bisa diseleksi */
+textarea{-webkit-user-select:text;user-select:text} /* kolom ketik chat tetap bisa dipakai */
+svg,img,a{-webkit-user-drag:none}
+button,a{font:inherit;color:inherit}
+:focus-visible{outline:1px dotted #000;outline-offset:2px}
+body{font-family:Tahoma,'Segoe UI',Verdana,sans-serif;font-size:12px;color:#000;min-height:100vh;padding:calc(16px + env(safe-area-inset-top,0px)) 10px calc(24px + env(safe-area-inset-bottom,0px));
+  background:
+    radial-gradient(60px 22px at 18% 22%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%),
+    radial-gradient(90px 28px at 30% 28%,rgba(255,255,255,.75),rgba(255,255,255,0) 70%),
+    radial-gradient(80px 24px at 72% 16%,rgba(255,255,255,.8),rgba(255,255,255,0) 70%),
+    radial-gradient(130% 55% at 22% 112%,#7cc03a 0%,#58a024 42%,rgba(88,160,36,0) 43%),
+    radial-gradient(120% 50% at 88% 114%,#66ae2c 0%,#3f8a1a 46%,rgba(63,138,26,0) 47%),
+    linear-gradient(180deg,#1f5fd0 0%,#4a8fe3 38%,#8ec2f1 62%,#c7e3f8 78%,#6fa83c 78.2%,#4b9122 100%);
+  background-attachment:fixed}
+
+/* ===== 2. JENDELA XP (.window = halaman utama, .win = jendela Artikel/Interaksi) ===== */
+.window,.win{background:var(--xp-frame);border:1px solid var(--xp-frame-dark);border-radius:8px 8px 0 0;padding:0 3px 3px;box-shadow:2px 3px 12px rgba(0,0,0,.55)}
+.main{max-width:640px;margin:0 auto}
+.title-bar{height:29px;margin:0 -3px;padding:0 5px 0 8px;border-radius:7px 7px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px;color:#fff;font-family:'Trebuchet MS',Tahoma,sans-serif;font-weight:bold;font-size:13px;text-shadow:1px 1px 0 #3B4D1A;
+  background:linear-gradient(180deg,#C2D58A 0%,#9CB45B 4%,#8FAA4F 8%,#83A044 14%,#7A9839 24%,#7A993C 56%,#86A444 70%,#7C9A40 86%,#66812F 94%,#4E6724 100%)}
+.main .title-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50} /* judul halaman menempel di atas saat digulir */
+.title-text{display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden;white-space:nowrap}
+.ico{width:16px;height:16px;flex:none}
+.vis{display:flex;align-items:center;gap:5px;font-size:12px} /* jumlah pengunjung (ikon mata) */
+.caps{display:flex;gap:2px}
+.cap{width:21px;height:21px;padding:0;border:1px solid #fff;border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-shadow:none;background:radial-gradient(120% 120% at 85% 90%,#E4977A 0%,#D2552B 45%,#B8391A 100%)}
+.cap svg{width:19px;height:19px;display:block}
+.cap:hover{filter:brightness(1.12)}
+.window-body{background:var(--xp-face);padding:12px}
+/* Jendela yang bisa digeser: muncul di atas halaman, digeser lewat judulnya */
+#desk{position:fixed;inset:0;z-index:60;pointer-events:none}
+.win{position:absolute;display:none;flex-direction:column;pointer-events:auto;width:min(560px,calc(100% - 8px));max-height:calc(100% - 8px)}
+.win .window-body{overflow:auto;flex:1}
+.win .title-bar{cursor:move;touch-action:none}
+.win:not(.act) .title-bar{background:linear-gradient(180deg,#D7E0BB 0%,#B9C795 8%,#AFBE88 50%,#A3B37B 90%,#8E9F66 100%);text-shadow:1px 1px 0 #6D7A4F} /* jendela tidak aktif lebih pucat */
+@media (max-width:700px){.win{left:4px!important;top:4px!important;height:calc(100% - 8px)}} /* HP: jendela penuh layar */
+@media (max-width:640px){body{padding-left:6px;padding-right:6px}.window-body{padding:8px}}
+
+fieldset{border:1px solid var(--xp-group);border-radius:3px;margin:0 0 12px;padding:10px 12px;min-width:0}
+legend{margin-left:6px;padding:0 3px;color:#0046D5;font-size:12px}
+
+/* ===== 3. LIBRARY: pencarian, kategori, kisi ikon, jendela detail ===== */
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.tools input[type=search]{flex:1 1 180px;min-width:0;min-height:24px;padding:3px 6px;font:12px Tahoma,sans-serif;border:1px solid var(--xp-input-border);background:#fff;outline:none;-webkit-user-select:text;user-select:text}
+.tools input:focus{box-shadow:0 0 0 1px #fff,0 0 0 2px #9DB6D5}
+#sum{margin-left:auto;font-size:11px;color:#444}
+#cats{display:flex;flex-wrap:wrap;gap:6px}
+#cats .b{min-height:22px;padding:1px 10px}
+#cats small{color:#666;margin-left:4px}
+#cats .on small{color:#000}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;max-height:58vh;overflow:auto;background:#fff;border:1px solid var(--xp-input-border);padding:8px}
+.card{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;padding:10px 4px 6px;background:none;border:1px solid transparent;border-radius:3px;cursor:pointer;font:11px/1.2 Tahoma,sans-serif;color:#000;text-align:center}
+.card svg{width:28px;height:28px;color:#2B3A1A}
+.card .nm{overflow-wrap:anywhere}
+.card:hover,.card:focus-visible{background:rgba(49,106,197,.12);border-color:#9DB6D5}
+.card:hover svg{color:#003C74}
+.empty{grid-column:1/-1;text-align:center;color:#555;padding:26px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.tip{background:#FFFFE1;border:1px solid #000;padding:5px 8px;box-shadow:2px 2px 0 rgba(0,0,0,.25);line-height:1.45}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:999;font-weight:bold}
+#w-detail{width:min(420px,calc(100% - 8px))}
+#d-prev{display:flex;align-items:center;justify-content:center;min-height:140px;max-height:200px;overflow:auto;background:#fff;color:#000;border:1px solid var(--xp-input-border);margin-bottom:8px}
+.ctrl{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px}
+.ctrl label{display:flex;align-items:center;gap:6px}
+.ctrl input[type=range]{width:100px}
+#d-code{height:96px;resize:vertical;font:11px/1.35 Consolas,'Courier New',monospace}
+textarea,input{-webkit-user-select:text;user-select:text} /* kode SVG & kolom cari bisa diseleksi/disalin */
+
+/* ===== 6. KOMPONEN: tombol XP, panel, artikel, chat ===== */
+.b{font-family:Tahoma,sans-serif;font-size:12px;color:#000;min-height:23px;padding:2px 12px;cursor:pointer;border:1px solid var(--xp-border);border-radius:3px;background:linear-gradient(180deg,#FFF 0%,#F4F3EE 40%,#ECEBE6 86%,#D6D0C5 100%)}
+.b:hover:not(:active){box-shadow:inset 0 0 0 1px #F8B330,inset 0 0 0 2px #FDD889}
+.b:active,.b.on{background:linear-gradient(180deg,#CDCABB 0%,#E3E3DB 8%,#E5E5DE 94%,#F2F2F1 100%);box-shadow:inset 1px 1px 0 #B3AF9C}
+.b.on{font-weight:bold}
+.btn-primary{font-weight:bold;box-shadow:inset 0 0 0 2px #98B8EA}
+.sunk{background:#fff;border:1px solid var(--xp-input-border);padding:8px}
+.live{color:#2E7D1E;font-weight:bold}
+#abody{margin-top:8px;line-height:1.7;max-height:48vh;overflow:auto}
+#abody h2,#abody h3{margin:12px 0 4px}
+#abody blockquote{margin:10px 0;padding:8px 12px;border-left:4px solid var(--xp-frame);background:#F3F1E6;font-style:italic}
+textarea{width:100%;height:68px;resize:none;padding:4px 6px;font:12px Tahoma,sans-serif;border:1px solid var(--xp-input-border);border-radius:0;background:#fff;outline:none}
+textarea:focus{box-shadow:0 0 0 1px #fff,0 0 0 2px #9DB6D5}
+.reply-ind{display:none;justify-content:space-between;background:#FFFFE1;border:1px solid #000;padding:3px 6px;margin-bottom:6px}
+.reply-ind button{border:0;background:none;cursor:pointer}
+#chat-list{max-height:260px;overflow:auto;margin-top:8px;border:1px solid var(--xp-input-border);background:#fff;padding:6px}
+.msg{border:1px solid #D6D2C2;background:#fff;padding:6px 8px;margin-bottom:6px;word-break:break-word}
+.msg.self{background:#EAF1FB;border-color:#9DB6D5}
+.msg.reply{margin-left:18px;border-left:4px solid var(--xp-frame)}
+.who{font-size:11px;font-weight:bold;color:#555}
+.act2{display:flex;justify-content:space-between;gap:6px;margin-top:5px}
+.act2 .b{min-height:20px;padding:0 6px;font-size:12px}
+/* Scrollbar bernuansa olive */
+::-webkit-scrollbar{width:17px;height:17px}
+::-webkit-scrollbar-track{background:#F3F1E6;border-left:1px solid #E6E3D2}
+::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#E3EBC9 0%,#BFD18A 40%,#A6BE67 100%);border:1px solid #fff;border-radius:3px;box-shadow:inset 0 0 0 1px #8DA24D}
+::-webkit-scrollbar-button:single-button{display:block;width:17px;height:17px;border:1px solid #fff;border-radius:3px;background:linear-gradient(135deg,#E8EFD0,#B6CB7B);box-shadow:inset 0 0 0 1px #8DA24D}
+</style>
+</head>
+<body>
+<!-- Sprite ikon bawaan tema (i-lib, i-eye, dst.) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs><g id="pad"><rect x="6" y="6" width="20" height="23" fill="#fff6a8"/><rect x="6" y="6" width="20" height="5" fill="#e0525e"/><path d="M10 16h12M10 20h12M10 24h7" fill="none" stroke="#6b8bd6"/><path d="M9.5 3v6M14 3v6M18.5 3v6M23 3v6" fill="none" stroke-width="2.4" stroke-linecap="round"/></g></defs>
+<symbol id="i-user" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><circle cx="16" cy="10" r="6" fill="#ffd58a"/><path d="M4 29c0-8 5-12 12-12s12 4 12 12z" fill="#3a7bd5"/></symbol>
+<symbol id="i-media" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="26" height="18" rx="1" fill="#c0c0c0"/><rect x="5.5" y="6.5" width="21" height="13" fill="#0a2a6b"/><path d="M13 9.5l8 3.5-8 3.5z" fill="#ffe14d"/><path d="M13 22h6v3h4v4H9v-4h4z" fill="#c0c0c0"/></symbol>
+<symbol id="i-note" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><use href="#pad"/></symbol>
+<symbol id="i-noti" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><use href="#pad"/><circle cx="23" cy="24" r="6.5" fill="#2a7de1"/><path d="M23 20.5v.2M23 23.3v4.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="i-chat" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M3 5h26v17H14l-7 6v-6H3z" fill="#ffe14d"/><path d="M8 11h16M8 15h10" fill="none"/></symbol>
+<symbol id="i-lib" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="26" width="26" height="3" fill="#8a5a2b"/><rect x="5" y="8" width="5" height="18" fill="#d9453d"/><rect x="11" y="5" width="5" height="21" fill="#3a7bd5"/><rect x="17" y="9" width="5" height="17" fill="#3fa34d"/><rect x="23" y="7" width="5" height="19" fill="#f5c542"/><path d="M5 12h5M11 10h5M17 13h5M23 12h5" fill="none"/></symbol>
+<symbol id="i-folder" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M3 8h9l3 3h14v16H3z" fill="#f5c542"/><path d="M3 14h26" fill="none"/></symbol>
+<symbol id="i-hat" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M5 22a11 11 0 0122 0z" fill="#ffd21f"/><rect x="3" y="22" width="26" height="4" fill="#ffd21f"/><path d="M14 11v11M18 11v11" fill="none"/></symbol>
+<symbol id="i-clip" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><rect x="5" y="6" width="22" height="23" fill="#fff"/><rect x="11" y="3" width="10" height="6" fill="#999"/><path d="M9 15l3 3 5-6" fill="none" stroke="#1a8a2e" stroke-width="2"/><path d="M9 24h14" fill="none"/></symbol>
+<symbol id="i-db" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M5 8v16c0 3 5 5 11 5s11-2 11-5V8z" fill="#6aa7e0"/><ellipse cx="16" cy="8" rx="11" ry="4" fill="#a9d1f5"/><path d="M5 16c0 3 5 5 11 5s11-2 11-5" fill="none"/></symbol>
+<symbol id="i-group" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><circle cx="11" cy="11" r="5" fill="#ffd58a"/><path d="M2 28c0-7 4-10 9-10s9 3 9 10z" fill="#e0525e"/><circle cx="22" cy="10" r="4.5" fill="#ffd58a"/><path d="M17 20c1-1.5 3-2 5-2 5 0 8 3 8 10h-9" fill="#3fa34d"/></symbol>
+<symbol id="i-eye" viewBox="0 0 32 32" stroke="#111" stroke-width="1.5" stroke-linejoin="round"><path d="M2 16c4-7 9-10 14-10s10 3 14 10c-4 7-9 10-14 10S6 23 2 16z" fill="#fff"/><circle cx="16" cy="16" r="5.5" fill="#2a7de1"/><circle cx="16" cy="16" r="2.3" fill="#000"/></symbol>
+</svg>
+
+<!-- ===== HALAMAN UTAMA: Judul → Cari + Kategori → Kisi ikon → Cara pakai ===== -->
+<div class="window main">
+  <div class="title-bar" id="top"><span class="title-text"><svg class="ico"><use href="#i-lib"/></svg> Library SVG</span><span class="vis"><b id="total">0</b> ikon</span></div>
+  <div class="window-body">
+
+    <div class="tools">
+      <button class="b" type="button" onclick="location.href='dashboard.html'">◄ Dashboard</button>
+      <input type="search" id="q" placeholder="Cari ikon… (mis. kartu, toko, kereta)" autocomplete="off" aria-label="Cari ikon">
+      <span id="sum" aria-live="polite"></span>
+    </div>
+
+    <!-- Filter kategori: tombol dibuat JS dari CATS -->
+    <fieldset><legend>Kategori</legend><div id="cats"></div></fieldset>
+
+    <!-- Kisi ikon: kartu dibuat JS dari LIB. Klik kartu → jendela detail (ukuran, tebal garis, warna, kode) -->
+    <fieldset>
+      <legend>Ikon</legend>
+      <div class="grid" id="grid"></div>
+      <div class="row"><button class="b" type="button" id="spr">Salin sprite (ikon yang tampil)</button></div>
+    </fieldset>
+
+    <fieldset style="margin-bottom:0">
+      <legend>Cara Pakai</legend>
+      <div class="tip">1) Klik ikon &nbsp;2) Atur ukuran / tebal garis / warna &nbsp;3) <b>Salin kode SVG</b>, tempel ke HTML, JSX, atau Vue. Warna default <b>currentColor</b> = mengikuti warna teks sekitarnya, jadi cukup atur lewat CSS <b>color</b>.</div>
+    </fieldset>
+  </div>
+</div>
+
+<!-- ===== LAPISAN JENDELA: detail ikon (bisa digeser lewat judulnya) ===== -->
+<div id="desk">
+<section class="win" id="w-detail" aria-label="Detail ikon">
+  <div class="title-bar"><span class="title-text"><svg class="ico"><use href="#i-lib"/></svg> <span id="d-title">Ikon</span></span><div class="caps"><button type="button" class="cap close" aria-label="Tutup"><svg viewBox="0 0 21 21"><path d="M5.5 5.5L14.5 14.5M14.5 5.5L5.5 14.5" stroke="#fff" stroke-width="2.4" fill="none"/></svg></button></div></div>
+  <div class="window-body">
+    <div id="d-prev"></div>
+    <div class="ctrl">
+      <label>Ukuran <input type="range" id="c-size" min="16" max="128" value="48"><b id="c-size-v"></b></label>
+      <label>Garis <input type="range" id="c-sw" min="1" max="3" step=".5" value="2"><b id="c-sw-v"></b></label>
+      <label>Warna <input type="color" id="c-col" value="#000000"></label>
+      <button class="b" type="button" id="c-reset" title="Kembali ke currentColor">currentColor</button>
+    </div>
+    <textarea id="d-code" readonly aria-label="Kode SVG"></textarea>
+    <div class="row"><button class="b btn-primary" type="button" id="d-copy">Salin kode SVG</button><button class="b" type="button" id="d-dl">Unduh .svg</button></div>
+  </div>
+</section>
+</div>
+<div id="toast" class="tip" hidden></div>
+
+<script>
+/* ===================================================================
+   1. KONFIGURASI — kategori & ikon (bagian yang paling sering diedit)
+   =================================================================== */
+
+/* CATS: daftar kategori (urutan = urutan tombol filter). id harus sama dengan kunci di LIB. */
+const CATS=[
+  {id:'tek',t:'Teknologi'},{id:'ret',t:'Retail & E-commerce'},{id:'dly',t:'Profil & Daily'},{id:'trn',t:'Transportasi'},
+  {id:'ofc',t:'Administrasi Kantor'},{id:'prp',t:'Property'},{id:'cst',t:'Customer Care'},{id:'svc',t:'Pelayanan'}
+];
+
+/* LIB: satu baris = satu ikon →  nama-ikon=bentuk   (nama dipakai sebagai id/nama file)
+   Bentuk digambar di kanvas 24x24, garis 2px; bagian dipisah tanda |
+     c X Y R        → lingkaran                          contoh: c12 12 5
+     r X Y W H [R]  → persegi (R = sudut membulat)       contoh: r3 4 18 14 2
+     M...           → path SVG biasa                     contoh: M4 12h16
+   Contoh menambah ikon di kategori Teknologi:  speaker=r6 2 12 20 2|c12 15 3|M12 6h.01 */
+const LIB={
+tek:`monitor=r2 4 20 13 2|M8 21h8|M12 17v4
+laptop=r4 5 16 11 2|M2 20h20
+smartphone=r7 2 10 20 2|M11 18h2
+tablet=r4 2 16 20 2|M12 18h.01
+server=r3 3 18 7 2|r3 14 18 7 2|M7 6.5h.01|M7 17.5h.01
+database=M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3z|M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6|M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3
+cloud=M16 18H6a4 4 0 0 1 0-8 5 5 0 0 1 10 0 4 4 0 0 1 0 8z
+kode=M8 7l-5 5 5 5|M16 7l5 5-5 5|M14 4l-4 16
+terminal=r2 4 20 16 2|M6 9l3 3-3 3|M12 15h6
+wifi=M2 9a15 15 0 0 1 20 0|M5.5 12.5a10 10 0 0 1 13 0|M9 16a5 5 0 0 1 6 0|M12 20h.01
+prosesor=r5 5 14 14 2|r9 9 6 6|M9 2v3|M15 2v3|M9 19v3|M15 19v3|M2 9h3|M2 15h3|M19 9h3|M19 15h3
+gembok=r4 11 16 10 2|M8 11V7a4 4 0 0 1 8 0v4
+keamanan=M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z|M9 12l2 2 4-4
+internet=c12 12 10|M2 12h20|M12 2c3 3 4.5 6.5 4.5 10S15 19 12 22c-3-3-4.5-6.5-4.5-10S9 5 12 2z
+daya=M12 3v9|M6.3 6.5a8 8 0 1 0 11.4 0
+robot=r4 8 16 12 3|M12 4v4|c12 3 1|M9 14h.01|M15 14h.01|M9 17h6
+jaringan=r9 2 6 6 1|r2 16 6 6 1|r16 16 6 6 1|M12 8v4|M5 16v-4h14v4
+keyboard=r2 6 20 12 2|M6 10h.01|M10 10h.01|M14 10h.01|M18 10h.01|M7 14h10
+unduh=M12 3v12|M7 10l5 5 5-5|M4 20h16
+kunci=c8 15 4|M11 12l9-9|M16 7l3 3`,
+ret:`keranjang=M2 3h3l2.7 12h11L21.5 7H6|c10 20 1.5|c17 20 1.5
+tas-belanja=M5 8h14l1 13H4z|M9 8V6a3 3 0 0 1 6 0v2
+toko=M3 9l2-5h14l2 5|M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0|M5 12v9h14v-9|M10 21v-5h4v5
+label-harga=M3 3h8l10 10-8 8L3 11z|c7.5 7.5 1.5
+diskon=M19 5L5 19|c7 7 2|c17 17 2
+kartu-kredit=r2 5 20 14 2|M2 10h20|M6 15h4
+dompet=r3 7 18 14 2|M17 7V4H5a2 2 0 0 0-2 2|M21 12h-4a2 2 0 0 0 0 4h4
+barcode=M3 5v14|M6 5v14|M9 5v14|M13 5v14|M16 5v14|M21 5v14
+kode-qr=r3 3 7 7 1|r14 3 7 7 1|r3 14 7 7 1|M14 14h3v3|M21 14v3|M14 21h3|M21 21h-2
+paket=M3 8l9-5 9 5v8l-9 5-9-5z|M3 8l9 5 9-5|M12 13v8
+pengiriman=r1 6 13 10 1|M14 9h4l4 4v3h-8|c6 18 2|c17 18 2
+struk=M5 3h14v18l-3.5-2-3.5 2-3.5-2L5 21z|M9 8h6|M9 12h6
+hadiah=r3 8 18 4|M5 12v9h14v-9|M12 8v13|M12 8C9 8 8 4 10.5 4S12 8 12 8z|M12 8c3 0 4-4 1.5-4S12 8 12 8z
+favorit=M12 20C5 14.5 3 11.5 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5c0 3-2 6-9 11.5z
+bintang=M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z
+mesin-kasir=r4 3 16 6 1|M7 6h10|r3 11 18 10 2|M7 15h.01|M12 15h.01|M17 15h.01|M7 18h.01|M12 18h.01|M17 18h.01
+promo=M3 9v6h4l8 5V4L7 9z|M18 9a4 4 0 0 1 0 6
+pencarian=c11 11 7|M21 21l-5-5`,
+dly:`pengguna=c12 8 4|M4 21a8 8 0 0 1 16 0
+grup=c9 8 3.5|M2 20a7 7 0 0 1 14 0|M16 4.5a3.5 3.5 0 0 1 0 7|M17 14a6 6 0 0 1 5 6
+profil=c12 12 10|c12 10 3|M6 19c1.5-3 4-4 6-4s4.5 1 6 4
+kartu-identitas=r2 5 20 14 2|c8 11 2|M5 17a3 3 0 0 1 6 0|M14 10h5|M14 14h4
+rumah=M3 11l9-8 9 8|M5 10v11h14V10|M10 21v-6h4v6
+surel=r2 4 20 16 2|M2 6l10 8 10-8
+telepon=M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z
+kalender=r3 4 18 17 2|M3 9h18|M8 2v4|M16 2v4
+jam=c12 12 10|M12 6v6l4 2
+lokasi=M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z|c12 10 2.5
+kamera=M3 8h4l2-3h6l2 3h4v12H3z|c12 14 4
+pengaturan=c12 12 3|c12 12 7|M12 2v3|M12 19v3|M2 12h3|M19 12h3
+notifikasi=M6 17v-6a6 6 0 0 1 12 0v6l2 2H4z|M10 21h4
+kopi=M4 8h13v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z|M17 10h2a2 2 0 0 1 0 4h-2|M7 2v3|M11 2v3`,
+trn:`mobil=M3 12l2-5a2 2 0 0 1 2-1h10a2 2 0 0 1 2 1l2 5v6H3z|M3 12h18|M6 18v2|M18 18v2|M7 15h.01|M17 15h.01
+bus=r4 3 16 15 3|M4 11h16|M8 18v3|M16 18v3|M8 15h.01|M16 15h.01
+kereta=r5 3 14 14 3|M5 11h14|M8 17l-2 4|M16 17l2 4|M9 14h.01|M15 14h.01
+pesawat=M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z
+kapal=M2 16l3 5h14l3-5z|M6 16v-5h12v5|M10 11V6h4v5
+sepeda=c6 17 4|c18 17 4|M6 17l4-8h5l3 8|M10 9l2 8|M8 5h3
+motor=c5.5 17 3|c18.5 17 3|M5.5 17h5l3-6h4|M14 11l1-4h3|M8 11h4
+truk=M1 7h14v9H1z|M5 7v9|M9 7v9|M15 10h4l4 4v2h-8z|c6 18 2|c18 18 2
+pom-bensin=r4 3 10 18 1|M4 10h10|M14 8h2a2 2 0 0 1 2 2v7a1.5 1.5 0 0 0 3 0V8l-3-3|M7 6h4
+lampu-lalu-lintas=r8 2 8 20 3|c12 7 1.5|c12 12 1.5|c12 17 1.5
+peta=M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z|M9 3v15|M15 6v15
+kompas=c12 12 10|M16 8l-2 6-6 2 2-6z
+tiket=M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z|M14 6v2|M14 11v2|M14 16v2`,
+ofc:`dokumen=M14 3H6v18h12V7z|M14 3v4h4|M9 12h6|M9 16h6
+folder=M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z
+papan-klip=r5 4 14 18 2|r9 2 6 4 1|M9 12h6|M9 16h6
+printer=M6 9V3h12v6|r3 9 18 9 2|r7 14 10 7|M17 12h.01
+kalkulator=r4 2 16 20 2|r8 5 8 4|M8 13h.01|M12 13h.01|M16 13h.01|M8 17h.01|M12 17h.01|M16 17h.01
+pena=M4 20l1-4L17 4l3 3L8 19z|M14 7l3 3
+arsip=r3 3 18 5 1|M5 8v12h14V8|M10 12h4
+koper=r3 7 18 13 2|M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2|M3 13h18
+grafik-batang=M3 3v18h18|r7 12 3 6|r12 8 3 10|r17 5 3 13
+diagram-lingkaran=c12 12 9|M12 12V3|M12 12l7.8 4.5
+grafik-garis=M3 3v18h18|M7 15l4-5 3 3 5-6
+kotak-masuk=M3 13l3-8h12l3 8v6H3z|M3 13h5l1 3h6l1-3h5
+jadwal=r3 4 18 17 2|M3 9h18|M8 2v4|M16 2v4|M9 15l2 2 4-4
+presentasi=r3 3 18 12 1|M12 15v5|M8 21l4-1 4 1|M7 11l3-3 3 2 3-3
+tabel=r3 4 18 16 2|M3 10h18|M3 15h18|M9 4v16|M15 4v16`,
+prp:`rumah-tinggal=M3 12l9-8 9 8|M5 10v11h14V10|M16 7V4h2v5|r10 14 4 7
+gedung=r5 3 14 18 1|M9 7h.01|M15 7h.01|M9 11h.01|M15 11h.01|M9 15h.01|M15 15h.01|M10 21v-3h4v3
+apartemen=r3 8 8 13 1|r11 3 10 18 1|M6 12h2|M6 16h2|M14 7h4|M14 11h4|M14 15h4
+pintu=r6 2 12 19 1|M15 12h.01|M3 21h18
+pagar=M4 21V8l2-3 2 3v13|M10 21V8l2-3 2 3v13|M16 21V8l2-3 2 3v13|M4 13h16|M4 18h16
+denah=r3 3 18 18 1|M3 12h8|M11 3v5|M11 12v9|M11 16h10
+sofa=M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3|M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z|M6 18v2|M18 18v2
+tempat-tidur=M3 20V5|M3 16h18v4|M21 16v-3a3 3 0 0 0-3-3h-8v6|c6.5 12 2
+lampu=M12 3a6 6 0 0 0-3.5 10.8c.7.6 1 1.3 1 2.2h5c0-.9.3-1.6 1-2.2A6 6 0 0 0 12 3z|M10 19h4|M10.5 22h3
+sertifikat=M14 3H6v18h12V7z|M14 3v4h4|M9 11h6|M9 14h2|c14 18 1.5
+papan-dijual=M6 21V3|M6 5h13v8H6|M10 9h5|M3 21h6`,
+cst:`headset=M4 14v-2a8 8 0 0 1 16 0v2|r3 14 4 6 1|r17 14 4 6 1|M20 20v1a2 2 0 0 1-2 2h-4
+obrolan=M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z|M8 12h.01|M12 12h.01|M16 12h.01
+hotline=M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z|M15 3a6 6 0 0 1 6 6|M15 7a2 2 0 0 1 2 2
+bantuan=c12 12 10|M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.5 2-2.5 4|M12 17h.01
+informasi=c12 12 10|M12 11v6|M12 7h.01
+jempol=M7 11v10H3V11z|M7 11l4-8a2.5 2.5 0 0 1 3 3l-1 4h6a2 2 0 0 1 2 2.3l-1.2 6a2 2 0 0 1-2 1.7H7
+keluhan=M12 20h9|M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z
+garansi=c12 9 6|M8.5 14L7 22l5-3 5 3-1.5-8
+pelanggan-terverifikasi=c9 8 4|M2 21a7 7 0 0 1 14 0|M16 11l2 2 4-4
+bahasa=M5 8h8|M9 4v4|M7 8c0 3 2.5 5.5 6 6|M13 8c0 3-3 5.5-6 6|M12 20l4-9 4 9|M13.5 17h5`,
+svc:`bel-layanan=M3 18h18|M5 18a7 7 0 0 1 14 0|M12 8V6|M10 6h4
+restoran=M6 14v6h12v-6|M6 14a4 4 0 0 1 1-7.8 5 5 0 0 1 10 0 4 4 0 0 1 1 7.8|M6 17h12
+perbaikan=M14 6l4 4-3 3-4-4z|M12 9L4 17a1.5 1.5 0 0 0 3 3l8-8|M16 3l5 5
+salon=c6 6 3|c6 18 3|M8.1 8.1L20 20|M8.1 15.9L20 4
+stetoskop=M5 3v6a4 4 0 0 0 8 0V3|M9 13v2a5 5 0 0 0 10 0v-2|c19 11 2
+kotak-p3k=r3 6 18 15 2|M9 6V4h6v2|M12 11v6|M9 14h6
+pendidikan=M2 9l10-5 10 5-10 5z|M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5|M22 9v6
+timbangan-hukum=M12 3v18|M6 21h12|M5 7h14|M5 7l-3 7a3 3 0 0 0 6 0z|M19 7l-3 7a3 3 0 0 0 6 0z
+sirene=M7 18v-6a5 5 0 0 1 10 0v6|M4 18h16v3H4z|M12 2v2|M4.9 4.9l1.4 1.4|M19.1 4.9l-1.4 1.4
+laundry=r4 2 16 20 2|c12 14 5|M8 6h.01|M11 6h.01
+reservasi=r3 4 18 17 2|M3 9h18|M8 2v4|M16 2v4|c12 15 3|M12 14v1.5l1 .5`
+};
+
+/* ===================================================================
+   2. UTILITAS UMUM
+   =================================================================== */
+const $=id=>document.getElementById(id);
+const D=$('desk');
+const load=k=>{try{return JSON.parse(localStorage.getItem(k))||{}}catch{return{}}}; // baca pengaturan tersimpan
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};           // simpan pengaturan
+
+/* Letakkan elemen di (x,y) dan jaga agar tetap di dalam induknya (menu / lapisan jendela) */
+const put=(el,x,y)=>{
+  const P=el.offsetParent||D;
+  el.style.left=Math.max(0,Math.min(x,P.clientWidth-el.offsetWidth))+'px';
+  el.style.top=Math.max(0,Math.min(y,P.clientHeight-el.offsetHeight))+'px';
+};
+
+/* Penggeser serba guna (mouse & sentuh).
+   el=elemen yang bergerak, h=bagian yang ditarik, ok(e)=boleh mulai tarik?,
+   onMove(el)=dipanggil saat bergerak, onEnd(el)=dipanggil saat dilepas,
+   hold=(opsional) lama tekan-tahan di layar sentuh sebelum bisa digeser (ms) — agar halaman tetap bisa digulir */
+function mv(el,h,ok,onMove,onEnd,hold){
+  let s,go,tm,armed=false;
+  h.addEventListener('pointerdown',e=>{
+    if(e.button||!ok(e))return;
+    s=[e.clientX,e.clientY,el.offsetLeft,el.offsetTop];go=false;
+    armed=!(hold&&e.pointerType==='touch');
+    if(!armed)tm=setTimeout(()=>{armed=true;el.classList.add('drag')},hold);
+    try{h.setPointerCapture(e.pointerId)}catch{}
+  });
+  h.addEventListener('pointermove',e=>{
+    if(!s)return;
+    const dx=e.clientX-s[0],dy=e.clientY-s[1],d=Math.hypot(dx,dy);
+    if(!armed){if(d>8){clearTimeout(tm);s=null}return} // bergerak sebelum tahan → biarkan halaman menggulir
+    if(!go&&d<6)return;                                  // abaikan getaran kecil (klik biasa tetap jalan)
+    go=true;el.classList.add('drag');put(el,s[2]+dx,s[3]+dy);onMove&&onMove(el);
+  });
+  const up=()=>{clearTimeout(tm);if(!s)return;s=null;armed=false;el.classList.remove('drag');if(go){h._t=Date.now();onEnd&&onEnd(el)}};
+  h.addEventListener('pointerup',up);h.addEventListener('pointercancel',up);
+  h.addEventListener('touchmove',e=>{if(armed&&e.cancelable)e.preventDefault()},{passive:false}); // saat menggeser, jangan gulir halaman
+}
+
+/* ===================================================================
+   3. PROTEKSI TAMPILAN — teks halaman tidak bisa diseleksi & klik kanan diblokir,
+   KECUALI di kolom cari dan kotak kode SVG (supaya kode tetap bisa disalin).
+   =================================================================== */
+const inField=e=>{const t=e.target&&(e.target.nodeType===1?e.target:e.target.parentElement);return !!(t&&t.closest&&t.closest('textarea,input'))};
+['contextmenu','selectstart','copy','cut'].forEach(ev=>addEventListener(ev,e=>{if(!inField(e))e.preventDefault()}));
+
+/* ===================================================================
+   4. JENDELA (.win) — dibuka dari menu {open:'id'}, bisa digeser lewat judul
+   =================================================================== */
+const W=[...document.querySelectorAll('.win')];
+let z=10,n=0;
+const front=w=>{w.style.zIndex=++z;W.forEach(x=>x.classList.toggle('act',x===w))};
+function openW(id){
+  const w=$(id);
+  if(!w.dataset.p){w.dataset.p=1;if(innerWidth>700){w.style.left=30+n%6*30+'px';w.style.top=56+n%6*30+'px'}n++} // posisi bertingkat
+  w.style.display='flex';front(w);
+}
+const closeW=w=>{w.style.display='none';delete w.dataset.p};
+W.forEach(w=>{
+  w.querySelector('.close').onclick=()=>closeW(w);
+  w.addEventListener('pointerdown',()=>front(w));
+  mv(w,w.querySelector('.title-bar'),e=>innerWidth>700&&!e.target.closest('button'));
+});
+
+/* ===================================================================
+   5. DATA → DAFTAR IKON & PEMBUAT KODE SVG
+   =================================================================== */
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1).replace(/-/g,' ');
+const ICONS=[]; // {id, cat, d, name}
+CATS.forEach(c=>(LIB[c.id]||'').trim().split('\n').forEach(l=>{
+  const p=l.trim().split(/=(.+)/);if(p.length<2)return;
+  ICONS.push({id:p[0],cat:c.id,d:p[1],name:cap(p[0])});
+}));
+/* bentuk (c / r / path) → elemen SVG */
+const els=d=>d.split('|').map(s=>{
+  const t=s[0],n=s.slice(1).split(' ').map(Number);
+  if(t==='c')return '<circle cx="'+n[0]+'" cy="'+n[1]+'" r="'+n[2]+'"/>';
+  if(t==='r')return '<rect x="'+n[0]+'" y="'+n[1]+'" width="'+n[2]+'" height="'+n[3]+'"'+(n[4]?' rx="'+n[4]+'"':'')+'/>';
+  return '<path d="'+s+'"/>';
+}).join('');
+/* kode SVG lengkap (siap tempel di project mana pun) */
+const svgOf=(d,size,sw,color)=>'<svg xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="'+(color||'currentColor')+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-linejoin="round">'+els(d)+'</svg>';
+/* sprite <symbol>: pakai dengan <svg><use href="#i-nama"/></svg> */
+const sprite=l=>'<svg xmlns="http://www.w3.org/2000/svg" style="display:none">'+l.map(i=>'<symbol id="i-'+i.id+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+els(i.d)+'</symbol>').join('')+'</svg>';
+
+/* ===================================================================
+   6. TAMPILAN — filter kategori, pencarian, kisi ikon
+   =================================================================== */
+let cat='all',q='',shown=[];
+const catBtns=[{id:'all',t:'Semua'}].concat(CATS).map(c=>{
+  const b=document.createElement('button'),s=document.createElement('small');
+  b.type='button';b.className='b'+(c.id==='all'?' on':'');
+  s.textContent=c.id==='all'?ICONS.length:ICONS.filter(i=>i.cat===c.id).length;
+  b.append(c.t,s);
+  b.onclick=()=>{cat=c.id;catBtns.forEach(x=>x.classList.toggle('on',x===b));render()};
+  $('cats').append(b);return b;
+});
+function render(){
+  const k=q.trim().toLowerCase();
+  shown=ICONS.filter(i=>(cat==='all'||i.cat===cat)&&(!k||i.id.includes(k)||i.name.toLowerCase().includes(k)));
+  $('grid').innerHTML=shown.length?shown.map((i,x)=>'<button type="button" class="card" data-x="'+x+'" title="'+i.id+'">'+svgOf(i.d,28,2)+'<span class="nm">'+i.name+'</span></button>').join(''):'<div class="empty">Ikon tidak ditemukan.</div>';
+  $('sum').textContent='Menampilkan '+shown.length+' dari '+ICONS.length+' ikon';
+}
+$('q').oninput=e=>{q=e.target.value;render()};
+$('grid').onclick=e=>{const c=e.target.closest('.card');if(c)openD(shown[+c.dataset.x])};
+
+/* ===================================================================
+   7. DETAIL IKON & SALIN KODE — jendela detail (ukuran, tebal garis, warna)
+   =================================================================== */
+let cur=null,col=null; // ikon terbuka; warna pilihan (null = currentColor)
+function upd(){
+  if(!cur)return;
+  const sz=$('c-size').value,sw=$('c-sw').value,code=svgOf(cur.d,sz,sw,col);
+  $('d-prev').innerHTML=code;$('d-code').value=code;
+  $('c-size-v').textContent=sz+'px';$('c-sw-v').textContent=sw;
+}
+function openD(i){cur=i;$('d-title').textContent=i.name;upd();openW('w-detail')}
+['c-size','c-sw'].forEach(id=>$(id).oninput=upd);
+$('c-col').oninput=e=>{col=e.target.value;upd()};
+$('c-reset').onclick=()=>{col=null;upd()};
+$('d-code').onfocus=e=>e.target.select(); // klik kotak kode → otomatis terpilih semua
+
+const toast=m=>{const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,1800)};
+async function copy(txt,msg){
+  try{await navigator.clipboard.writeText(txt)}
+  catch{const t=document.createElement('textarea');t.value=txt;document.body.append(t);t.select();try{document.execCommand('copy')}catch{}t.remove()}
+  toast(msg);
+}
+$('d-copy').onclick=()=>copy($('d-code').value,'Kode SVG disalin ✓');
+$('spr').onclick=()=>copy(sprite(shown),'Sprite '+shown.length+' ikon disalin ✓');
+$('d-dl').onclick=()=>{
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([$('d-code').value],{type:'image/svg+xml'}));
+  a.download=cur.id+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+
+$('total').textContent=ICONS.length;
+render();
+</script>
+</body>
+</html>
