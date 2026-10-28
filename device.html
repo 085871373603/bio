@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Identitas Perangkat</title>
+<title>Uji Perangkat</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#1d2433;--mut:#667085;--line:#e3e7ef;--ok:#16a34a;--wait:#d97706;--bad:#dc2626;--acc:#2563eb}
 @media(prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171e2e;--ink:#e8ecf5;--mut:#9aa6bd;--line:#2a3347;--acc:#6ea0ff}}
@@ -125,13 +125,13 @@ async function collect() {
 }
 
 /* ===== 3. DAFTARKAN KE FIREBASE & TAMPILKAN ===== */
-const ST = { pending: "Menunggu persetujuan", allowed: "Diizinkan", blocked: "Diblokir" };
+const ST = { pending: "Request Aproval", allowed: "Aproval", blocked: "Diblokir" };
 function show(id, info, bound) {
-  const rows = [["Status", `<span class="badge" id="st">…</span>`], ["ID perangkat", `<code>${esc(id)}</code> <button class="sec" id="cp">Salin</button>`],
-    ["Perangkat", esc(info.deviceName)], ["Sistem", esc(info.os + " " + info.osVersion)], ["Browser", esc(info.browser)], ["Layar", esc(info.screen)],
-    ["Kunci perangkat", bound ? "Terikat di perangkat ✓" : "Tidak tersedia (mode terbatas)"]];
+  const rows = [["Status", `<span class="badge" id="st">…</span>`], ["Device ID", `<code>${esc(id)}</code> <button class="sec" id="cp">Salin</button>`],
+    ["Device", esc(info.deviceName)], ["OS", esc(info.os + " " + info.osVersion)], ["Browser", esc(info.browser)], ["Screen", esc(info.screen)],
+    ["Fingerprint", bound ? "Connect to device ✓" : "Not available (limited mode)"]];
   $("info").innerHTML = rows.map(r => `<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join("");
-  $("cp").onclick = () => navigator.clipboard.writeText(id).then(() => { $("cp").textContent = "Tersalin ✓"; }).catch(() => {});
+  $("cp").onclick = () => navigator.clipboard.writeText(id).then(() => { $("cp").textContent = "Coppyed ✓"; }).catch(() => {});
 }
 (async () => {
   let idn = null;
@@ -147,13 +147,13 @@ function show(id, info, bound) {
     await update(ref(db, "devices/" + id), data);
     onValue(ref(db, `devices/${id}/status`), s => { const v = s.val() || "pending"; $("st").textContent = ST[v] || v; $("st").className = "badge " + v; });
   } catch (e) {
-    $("msg").innerHTML = `<span class="err">Gagal menyimpan ke Firebase (${esc(e.code || e.message)}). Periksa Rules.</span>`;
+    $("msg").innerHTML = `<span class="err">Gagal menyimpan ke Server (${esc(e.code || e.message)}). Periksa Rules server.</span>`;
   }
   if (idn) {
     $("test").hidden = false;
     $("test").onclick = async () => {
       const r = await prove(idn.kp, crypto.getRandomValues(new Uint8Array(16)));
-      $("msg").textContent = r.ok ? "✓ Perangkat ini terbukti memegang kunci pribadinya." : "✗ Verifikasi gagal.";
+      $("msg").textContent = r.ok ? "✓ Perangkat ini terbukti memegang kunci." : "✗ Verifikasi gagal.";
     };
   }
 })();
