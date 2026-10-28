@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitung Mundur 11 Nov 2026</title>
+    <style>
+        body {
+            margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; overflow: hidden; color: #333; text-align: center;
+        }
+        #slide-container {
+            width: 300px; height: 300px; margin-bottom: 20px;
+            border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background-color: #fff;
+        }
+        #slide-container img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        #countdown {
+            font-size: 2.5rem; font-weight: bold; background: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px;
+        }
+        .btn-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 12px 24px; font-size: 1.1rem; color: white; background: #ff4757;
+            border: none; border-radius: 30px; cursor: pointer; text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-3px); background: #ff6b81; }
+        .btn-back { background: #2ed573; }
+        .btn-back:hover { background: #7bed9f; }
+        
+        /* Overlay untuk Autoplay Policy Browser */
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); display: flex; align-items: center;
+            justify-content: center; z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tombol Inisiasi untuk mengizinkan Autoplay Audio di Browser -->
+    <div id="start-overlay">
+        <button class="btn" onclick="startApp()">Masuk & Mainkan Musik</button>
+    </div>
+
+    <!-- Media -->
+    <video id="bgMusic" loop style="display:none;">
+        <source src="media/musikbg.mp4" type="video/mp4">
+    </video>
+
+    <!-- Slideshow -->
+    <div id="slide-container">
+        <img id="slideImg" src="media/1.png" alt="Slideshow">
+    </div>
+
+    <!-- Countdown -->
+    <div id="countdown">Memuat Waktu...</div>
+
+    <!-- Tombol Aksi -->
+    <div class="btn-container">
+        <button class="btn" onclick="addToCalendar()">Peringati (Simpan ke Kalender)</button>
+        <a href="https://bio-beta-two.vercel.app" class="btn btn-back">Kembali</a>
+    </div>
+
+    <!-- Firebase SDK Modular -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
+            authDomain: "operational-e52ed.firebaseapp.com",
+            databaseURL: "https://operational-e52ed-default-rtdb.firebaseio.com",
+            projectId: "operational-e52ed",
+            storageBucket: "operational-e52ed.firebasestorage.app",
+            messagingSenderId: "378782286599",
+            appId: "1:378782286599:web:056bb7ec127a1a56163ba2",
+            measurementId: "G-QRH7DH84EE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Fungsi Deteksi Device Sederhana
+        const ua = navigator.userAgent;
+        let deviceType = "Desktop";
+        if (/Android/i.test(ua)) deviceType = "Android";
+        else if (/iPhone|iPad|iPod/i.test(ua)) deviceType = "iOS";
+
+        // Catat Kunjungan ke Firebase Realtime Database
+        function logVisit() {
+            const logsRef = ref(db, 'visitor_logs');
+            push(logsRef, {
+                userAgent: ua,
+                device: deviceType,
+                language: navigator.language,
+                platform: navigator.platform,
+                waktuKunjungan: new Date().toLocaleString("id-ID"),
+                timestamp: serverTimestamp()
+            }).then(() => console.log("Data akses terekam.")).catch(e => console.error(e));
+        }
+
+        // Panggil log saat halaman dimuat
+        window.addEventListener('load', logVisit);
+    </script>
+
+    <script>
+        // --- Sistem Mulai & Autoplay ---
+        function startApp() {
+            document.getElementById('start-overlay').style.display = 'none';
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Autoplay diblokir:", e));
+        }
+
+        // --- Sistem Slideshow ---
+        let currentImage = 1;
+        const totalImages = 16;
+        const slideImg = document.getElementById('slideImg');
+        setInterval(() => {
+            currentImage = currentImage >= totalImages ? 1 : currentImage + 1;
+            slideImg.src = `media/${currentImage}.png`;
+        }, 3000); // Ganti gambar tiap 3 detik
+
+        // --- Sistem Hitung Mundur ---
+        const targetDate = new Date("Nov 11, 2026 00:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "HARI H TIBA!";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = 
+                `${days}h ${hours}j ${minutes}m ${seconds}d`;
+        }, 1000);
+
+        // --- Sistem Kalender (.ics file) ---
+        function addToCalendar() {
+            // Waktu dalam UTC. 11 Nov 00:00 WIB = 10 Nov 17:00 UTC
+            const icsData = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:Puncak 11.11 Tahun 2026
+DTSTART:20261110T170000Z
+DTEND:20261111T170000Z
+DESCRIPTION:Peringatan dan alarm masuk pada hari H tanggal 11 November 2026!
+BEGIN:VALARM
+TRIGGER:-PT0M
+ACTION:DISPLAY
+DESCRIPTION:Sudah waktunya 11.11!
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+            
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Peringatan_11_Nov_2026.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitung Mundur 11 Nov 2026</title>
+    <style>
+        body {
+            margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; overflow: hidden; color: #333; text-align: center;
+        }
+        #slide-container {
+            width: 300px; height: 300px; margin-bottom: 20px;
+            border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background-color: #fff;
+        }
+        #slide-container img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        #countdown {
+            font-size: 2.5rem; font-weight: bold; background: white; padding: 20px;
+            border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px;
+        }
+        .btn-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 12px 24px; font-size: 1.1rem; color: white; background: #ff4757;
+            border: none; border-radius: 30px; cursor: pointer; text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-3px); background: #ff6b81; }
+        .btn-back { background: #2ed573; }
+        .btn-back:hover { background: #7bed9f; }
+        
+        /* Overlay untuk Autoplay Policy Browser */
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); display: flex; align-items: center;
+            justify-content: center; z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tombol Inisiasi untuk mengizinkan Autoplay Audio di Browser -->
+    <div id="start-overlay">
+        <button class="btn" onclick="startApp()">Masuk & Mainkan Musik</button>
+    </div>
+
+    <!-- Media -->
+    <video id="bgMusic" loop style="display:none;">
+        <source src="media/musikbg.mp4" type="video/mp4">
+    </video>
+
+    <!-- Slideshow -->
+    <div id="slide-container">
+        <img id="slideImg" src="media/1.png" alt="Slideshow">
+    </div>
+
+    <!-- Countdown -->
+    <div id="countdown">Memuat Waktu...</div>
+
+    <!-- Tombol Aksi -->
+    <div class="btn-container">
+        <button class="btn" onclick="addToCalendar()">Peringati (Simpan ke Kalender)</button>
+        <a href="https://bio-beta-two.vercel.app" class="btn btn-back">Kembali</a>
+    </div>
+
+    <!-- Firebase SDK Modular -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
+            authDomain: "operational-e52ed.firebaseapp.com",
+            databaseURL: "https://operational-e52ed-default-rtdb.firebaseio.com",
+            projectId: "operational-e52ed",
+            storageBucket: "operational-e52ed.firebasestorage.app",
+            messagingSenderId: "378782286599",
+            appId: "1:378782286599:web:056bb7ec127a1a56163ba2",
+            measurementId: "G-QRH7DH84EE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Fungsi Deteksi Device Sederhana
+        const ua = navigator.userAgent;
+        let deviceType = "Desktop";
+        if (/Android/i.test(ua)) deviceType = "Android";
+        else if (/iPhone|iPad|iPod/i.test(ua)) deviceType = "iOS";
+
+        // Catat Kunjungan ke Firebase Realtime Database
+        function logVisit() {
+            const logsRef = ref(db, 'visitor_logs');
+            push(logsRef, {
+                userAgent: ua,
+                device: deviceType,
+                language: navigator.language,
+                platform: navigator.platform,
+                waktuKunjungan: new Date().toLocaleString("id-ID"),
+                timestamp: serverTimestamp()
+            }).then(() => console.log("Data akses terekam.")).catch(e => console.error(e));
+        }
+
+        // Panggil log saat halaman dimuat
+        window.addEventListener('load', logVisit);
+    </script>
+
+    <script>
+        // --- Sistem Mulai & Autoplay ---
+        function startApp() {
+            document.getElementById('start-overlay').style.display = 'none';
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Autoplay diblokir:", e));
+        }
+
+        // --- Sistem Slideshow ---
+        let currentImage = 1;
+        const totalImages = 16;
+        const slideImg = document.getElementById('slideImg');
+        setInterval(() => {
+            currentImage = currentImage >= totalImages ? 1 : currentImage + 1;
+            slideImg.src = `media/${currentImage}.png`;
+        }, 3000); // Ganti gambar tiap 3 detik
+
+        // --- Sistem Hitung Mundur ---
+        const targetDate = new Date("Nov 11, 2026 00:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "HARI H TIBA!";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = 
+                `${days}h ${hours}j ${minutes}m ${seconds}d`;
+        }, 1000);
+
+        // --- Sistem Kalender (.ics file) ---
+        function addToCalendar() {
+            // Waktu dalam UTC. 11 Nov 00:00 WIB = 10 Nov 17:00 UTC
+            const icsData = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:Puncak 11.11 Tahun 2026
+DTSTART:20261110T170000Z
+DTEND:20261111T170000Z
+DESCRIPTION:Peringatan dan alarm masuk pada hari H tanggal 11 November 2026!
+BEGIN:VALARM
+TRIGGER:-PT0M
+ACTION:DISPLAY
+DESCRIPTION:Sudah waktunya 11.11!
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+            
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Peringatan_11_Nov_2026.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
