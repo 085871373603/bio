@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Panel Perangkat</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1d2433;--mut:#667085;--line:#e3e7ef;--ok:#16a34a;--wait:#d97706;--bad:#dc2626;--acc:#2563eb}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171e2e;--ink:#e8ecf5;--mut:#9aa6bd;--line:#2a3347;--acc:#6ea0ff}}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1250px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;margin:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:1.6rem}
+.stat span{color:var(--mut)}
+input{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;width:100%}
+button{font:inherit;font-weight:600;color:#fff;background:var(--acc);border:0;border-radius:8px;padding:6px 12px;cursor:pointer}
+button.ok{background:var(--ok)}button.bad{background:var(--bad)}button.ghost{background:transparent;color:var(--mut);border:1px solid var(--line)}
+#login{max-width:360px;margin:12vh auto 0;display:grid;gap:10px;text-align:center}
+#msg{color:var(--bad);min-height:1.2em}
+.tw{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;white-space:nowrap}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--mut);font-weight:600;font-size:.85rem}
+code{font:.82rem ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padding:2px 6px;border-radius:6px;cursor:pointer}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600;font-size:.8rem;color:#fff;background:var(--wait)}
+.badge.allowed{background:var(--ok)}.badge.blocked{background:var(--bad)}
+td.act{display:flex;gap:6px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<form id="login" class="card">
+  <h1>🔒 Panel Perangkat</h1>
+  <input id="em" type="email" placeholder="Email admin" autocomplete="username" required>
+  <input id="pw" type="password" placeholder="Kata sandi" autocomplete="current-password" required>
+  <button type="submit">Masuk</button>
+  <div id="msg"></div>
+</form>
+
+<div id="app" hidden>
+  <div class="top"><h1>📱 Perangkat yang Mengakses</h1><button class="ghost" id="out">Keluar</button></div>
+  <div class="stats">
+    <div class="stat"><b id="s1">0</b><span>Total perangkat</span></div>
+    <div class="stat"><b id="s2">0</b><span>Diizinkan</span></div>
+    <div class="stat"><b id="s3">0</b><span>Menunggu</span></div>
+    <div class="stat"><b id="s4">0</b><span>Diblokir</span></div>
+  </div>
+  <div class="card">
+    <input id="q" placeholder="Cari ID, merek, model, OS, browser…">
+    <div class="tw"><table>
+      <thead><tr><th>Status</th><th>ID perangkat</th><th>Merek</th><th>Model</th><th>OS</th><th>Browser</th><th>Layar</th><th>Kunci</th><th>Kunjungan</th><th>Pertama</th><th>Terakhir</th><th>Aksi</th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table></div>
+  </div>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
+  authDomain: "operational-e52ed.firebaseapp.com",
+  databaseURL: "https://operational-e52ed-default-rtdb.firebaseio.com",
+  projectId: "operational-e52ed",
+  appId: "1:378782286599:web:056bb7ec127a1a56163ba2"
+});
+const auth = getAuth(app), db = getDatabase(app);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => "&#" + c.charCodeAt(0) + ";");
+const fmt = t => typeof t === "number" ? new Date(t).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) : "-";
+const ST = { pending: "Menunggu", allowed: "Diizinkan", blocked: "Diblokir" };
+let rows = [], off = null;
+
+$("login").onsubmit = async e => {
+  e.preventDefault(); $("msg").textContent = "";
+  try { await signInWithEmailAndPassword(auth, $("em").value, $("pw").value); }
+  catch (err) { $("msg").textContent = /invalid|wrong|user-not/.test(err.code) ? "Email atau kata sandi salah." : "Gagal masuk: " + err.code; }
+};
+$("out").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, u => {
+  $("login").hidden = !!u; $("app").hidden = !u;
+  if (off) { off(); off = null; }
+  if (!u) return;
+  off = onValue(ref(db, "devices"), snap => {
+    rows = []; snap.forEach(c => { rows.push({ id: c.key, ...c.val() }); });
+    rows.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
+    render();
+  }, err => { $("tb").innerHTML = `<tr><td colspan="12">Akses ditolak. Periksa Rules Firebase dan akun admin. (${esc(err.code)})</td></tr>`; });
+});
+
+function render() {
+  const n = s => rows.filter(r => (r.status || "pending") === s).length;
+  $("s1").textContent = rows.length; $("s2").textContent = n("allowed"); $("s3").textContent = n("pending"); $("s4").textContent = n("blocked");
+  const q = $("q").value.trim().toLowerCase();
+  const list = q ? rows.filter(r => JSON.stringify([r.id, r.info]).toLowerCase().includes(q)) : rows;
+  $("tb").innerHTML = list.length ? list.map(r => {
+    const i = r.info || {}, s = r.status || "pending";
+    return `<tr>
+      <td><span class="badge ${esc(s)}">${esc(ST[s] || s)}</span></td>
+      <td><code data-copy="${esc(r.id)}" title="Klik untuk menyalin ID lengkap">${esc(r.id.slice(0, 10))}…</code></td>
+      <td>${esc(i.brand || "-")}</td><td>${esc(i.model || "-")}</td><td>${esc((i.os || "-") + " " + (i.osVersion || ""))}</td>
+      <td>${esc(i.browser || "-")}</td><td>${esc(i.screen || "-")}</td>
+      <td>${r.keyBound ? "✓ terikat" : "—"}</td><td>${esc(r.visits || 0)}</td><td>${esc(fmt(r.firstSeen))}</td><td>${esc(fmt(r.lastSeen))}</td>
+      <td class="act">
+        ${s !== "allowed" ? `<button class="ok" data-a="allowed" data-id="${esc(r.id)}">Izinkan</button>` : ""}
+        ${s !== "blocked" ? `<button class="bad" data-a="blocked" data-id="${esc(r.id)}">Blokir</button>` : ""}
+        <button class="ghost" data-a="del" data-id="${esc(r.id)}">Hapus</button>
+      </td></tr>`;
+  }).join("") : '<tr><td colspan="12">Belum ada perangkat.</td></tr>';
+}
+$("q").oninput = render;
+
+$("tb").onclick = async e => {
+  const c = e.target.closest("[data-copy]");
+  if (c) { navigator.clipboard.writeText(c.dataset.copy).then(() => { c.textContent = "tersalin ✓"; setTimeout(render, 900); }).catch(() => {}); return; }
+  const b = e.target.closest("button[data-a]");
+  if (!b) return;
+  const id = b.dataset.id, a = b.dataset.a;
+  try {
+    if (a === "del") { if (confirm("Hapus perangkat ini dari daftar?")) await remove(ref(db, "devices/" + id)); }
+    else await update(ref(db, "devices/" + id), { status: a });
+  } catch (err) { alert("Gagal: " + (err.code || err.message)); }
+};
+</script>
+</body>
+</html>
