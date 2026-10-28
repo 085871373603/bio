@@ -21,6 +21,7 @@
                       atau open:'id-jendela' untuk membuka jendela. Jumlah per baris: COLS
  • Tambah ARTIKEL   → tambah <template id="a3"> berisi teks, lalu daftarkan di ARTICLES
  • Tambah JENDELA   → salin blok <section class="win" id="w-..."> lalu buat menu open:'w-...'
+ • BALON 11.11      → <a id="bln" href="ulangtahun.html"> di atas "LAPISAN JENDELA" (ubah href untuk tujuan lain)
  • Reset urutan menu→ hapus data situs di browser (localStorage: menu_order)
 =====================================================================
 -->
@@ -129,6 +130,18 @@ textarea:focus{box-shadow:0 0 0 1px #fff,0 0 0 2px #9DB6D5}
 ::-webkit-scrollbar-track{background:#F3F1E6;border-left:1px solid #E6E3D2}
 ::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#E3EBC9 0%,#BFD18A 40%,#A6BE67 100%);border:1px solid #fff;border-radius:3px;box-shadow:inset 0 0 0 1px #8DA24D}
 ::-webkit-scrollbar-button:single-button{display:block;width:17px;height:17px;border:1px solid #fff;border-radius:3px;background:linear-gradient(135deg,#E8EFD0,#B6CB7B);box-shadow:inset 0 0 0 1px #8DA24D}
+
+/* ===== 7. BALON 11.11 (melayang; klik → terbang menuju ulangtahun.html) ===== */
+#bln{position:fixed;right:12px;bottom:calc(96px + env(safe-area-inset-bottom,0px));width:86px;z-index:30;display:block;text-decoration:none;color:#000;text-align:center;animation:blnFloat 7s ease-in-out infinite}
+#bln svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(2px 4px 3px rgba(0,0,0,.3))}
+#bln .hang{transform-box:view-box;transform-origin:60px 118px;animation:blnSwing 3.2s ease-in-out infinite} /* tali + kado berayun */
+#bln b{display:block;margin-top:-2px;padding:1px 6px;font-size:11px;background:#FFFFE1;border:1px solid #000;border-radius:2px}
+#bln.go{animation:blnFly .95s cubic-bezier(.45,0,.85,.35) forwards;pointer-events:none} /* kelas .go dipasang JS saat diklik */
+@keyframes blnFloat{0%,100%{transform:translate(0,0) rotate(-3deg)}25%{transform:translate(-12px,-20px) rotate(2deg)}50%{transform:translate(4px,-34px) rotate(3deg)}75%{transform:translate(12px,-16px) rotate(-2deg)}}
+@keyframes blnSwing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+@keyframes blnFly{to{transform:translate(-35vw,-125vh) scale(.35) rotate(-14deg);opacity:0}}
+@media (max-width:640px){#bln{width:72px}}
+@media (prefers-reduced-motion:reduce){#bln,#bln .hang{animation:none}}
 </style>
 </head>
 <body>
@@ -156,7 +169,7 @@ textarea:focus{box-shadow:0 0 0 1px #fff,0 0 0 2px #9DB6D5}
 <div class="window main">
 
   <!-- JUDUL: nama + jumlah pengunjung (ikon mata; angka diisi Firebase di bagian paling bawah) -->
-  <div class="title-bar" id="top"><span class="title-text"><svg class="ico"><use href="#i-user"/></svg> Rana Arifin - Dashboard</span><span class="vis" title="Total pengunjung"><svg class="ico"><use href="#i-eye"/></svg><b id="viewers-count">…</b></span></div>
+  <div class="title-bar" id="top"><span class="title-text"><svg class="ico"><use href="#i-user"/></svg> Rana Arifin - Dashboard</span><span class="vis" title="Total pengunjung (per perangkat)"><svg class="ico"><use href="#i-eye"/></svg><b id="viewers-count">…</b></span></div>
 
   <div class="window-body">
 
@@ -189,6 +202,33 @@ textarea:focus{box-shadow:0 0 0 1px #fff,0 0 0 2px #9DB6D5}
 
   </div>
 </div>
+
+<!-- ===== BALON 11.11 =====
+  Melayang terus; saat diklik balon terbang dulu lalu membuka ulangtahun.html.
+  Ganti tujuan dengan mengubah href. Logika klik ada di script (bagian 10). -->
+<a id="bln" href="ulangtahun.html" aria-label="11.11" draggable="false">
+  <svg viewBox="0 0 120 190" aria-hidden="true">
+    <defs>
+      <radialGradient id="blnG" cx="35%" cy="30%" r="75%">
+        <stop offset="0" stop-color="#ff9db9"/><stop offset=".55" stop-color="#ff5f86"/><stop offset="1" stop-color="#d93a66"/>
+      </radialGradient>
+    </defs>
+    <!-- tali + kado (ikut berayun) -->
+    <g class="hang">
+      <path d="M60 120c-6 10 6 18 0 28" fill="none" stroke="#4a2010" stroke-width="1.6"/>
+      <rect x="42" y="158" width="36" height="26" fill="#2f8cff" stroke="#4a2010" stroke-width="2.5"/>
+      <rect x="39" y="149" width="42" height="11" fill="#4aa0ff" stroke="#4a2010" stroke-width="2.5"/>
+      <rect x="56" y="149" width="8" height="35" fill="#ffc41f" stroke="#4a2010" stroke-width="1.5"/>
+      <path d="M60 149c-10-12-20-2-12 3 4 2 9 1 12-3zM60 149c10-12 20-2 12 3-4 2-9 1-12-3z" fill="#ffc41f" stroke="#4a2010" stroke-width="1.5" stroke-linejoin="round"/>
+    </g>
+    <!-- balon -->
+    <path d="M60 6C34 6 16 26 16 52c0 28 22 52 44 60 22-8 44-32 44-60C104 26 86 6 60 6z" fill="url(#blnG)" stroke="#4a2010" stroke-width="3"/>
+    <ellipse cx="38" cy="32" rx="7" ry="12" fill="#fff" opacity=".55" transform="rotate(-25 38 32)"/>
+    <path d="M60 112l-6 8h12z" fill="#d93a66" stroke="#4a2010" stroke-width="2" stroke-linejoin="round"/>
+    <text x="60" y="64" text-anchor="middle" font-family="'Trebuchet MS',Tahoma,sans-serif" font-weight="bold" font-size="25" fill="#ffc41f" stroke="#4a2010" stroke-width="5" stroke-linejoin="round" paint-order="stroke">11.11</text>
+  </svg>
+  <b>11.11</b>
+</a>
 
 <!-- ===== LAPISAN JENDELA =====
   Jendela dibuka lewat menu {open:'id-jendela'}. Untuk jendela baru: salin blok,
@@ -483,15 +523,29 @@ ARTICLES.forEach(a=>{
   b.onclick=()=>{[...$('art-btns').children].forEach(x=>x.classList.toggle('on',x===b));$('abody').innerHTML=$(a.id).innerHTML};
   $('art-btns').append(b);
 });
+
+/* ===================================================================
+   10. BALON 11.11 — klik: balon terbang dulu, lalu membuka ulangtahun.html
+   =================================================================== */
+const BLN=$('bln');
+BLN.addEventListener('click',e=>{
+  if(e.ctrlKey||e.metaKey||e.shiftKey||e.button)return;                 // buka di tab baru → biarkan normal
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;      // tanpa animasi → langsung pindah
+  e.preventDefault();
+  BLN.classList.add('go');
+  setTimeout(()=>{location.href=BLN.href},850);
+});
+addEventListener('pageshow',()=>BLN.classList.remove('go'));            // tombol Kembali: balon muncul lagi
 </script>
 
 <script type="module">
 /* ===== 9. FIREBASE — jumlah pengunjung (header) & chat anonim =====
-   • Pengunjung : dihitung 1x per browser, ditulis ke statistik_web/total_viewers
+   • Pengunjung : hanya PERANGKAT BARU yang dihitung. ID perangkat disimpan di localStorage + cookie,
+                  didaftarkan di statistik_web/devices/<id>, lalu total ditulis ke statistik_web/total_viewers
    • Chat       : pesan di pesan_anonim (balasan memakai parentId, reaksi wow/super/haha)
    Ganti konfigurasi Firebase di initializeApp({...}) bila memakai proyek lain. */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, serverTimestamp, update, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, serverTimestamp, update, increment, runTransaction, remove } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 const app = initializeApp({
   apiKey: "AIzaSyAxf2w0makvkXAD1zBMSJyV4ZD0f05FvDc",
@@ -514,15 +568,35 @@ let uid = store.get('arinex_anon_id');
 if (!uid) { uid = 'ID-' + Math.random().toString(36).substring(2, 7).toUpperCase(); store.set('arinex_anon_id', uid); }
 $('user-identity').textContent = 'Kamu: ' + uid;
 
-/* Pengunjung */
-if (!store.get('arinex_has_viewed')) {
-  update(ref(db, 'statistik_web'), { total_viewers: increment(1) })
-    .then(() => store.set('arinex_has_viewed', 'true'))
-    .catch(e => console.error('Gagal mencatat viewer:', e));
+/* Pengunjung: hanya PERANGKAT BARU yang dihitung.
+   ID perangkat disimpan di localStorage + cookie (saling memulihkan bila salah satunya hilang),
+   lalu didaftarkan di statistik_web/devices/<id> lewat transaksi, jadi dua tab yang terbuka
+   bersamaan pun tidak menghitung dua kali. */
+function deviceId() {
+  const ck = (document.cookie.match(/(?:^|; )arinex_did=([\w-]+)/) || [])[1];
+  let id = store.get('arinex_device_id') || ck;
+  if (!/^[\w-]{8,64}$/.test(id || '')) id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+  store.set('arinex_device_id', id);
+  try { document.cookie = 'arinex_did=' + id + ';max-age=63072000;path=/;SameSite=Lax' + (location.protocol === 'https:' ? ';Secure' : ''); } catch {}
+  const saved = store.get('arinex_device_id') === id || document.cookie.includes('arinex_did=' + id);
+  return { id, saved };
 }
-onValue(ref(db, 'statistik_web/total_viewers'), s => {
-  if (s.exists()) $('viewers-count').textContent = Number(s.val()).toLocaleString('id-ID');
-});
+async function countViewer() {
+  const { id, saved } = deviceId();
+  if (!saved) return;                                          // penyimpanan diblokir → tidak bisa dikenali, jangan dihitung
+  const legacy = store.get('arinex_has_viewed') === 'true';    // pengunjung lama sudah ikut terhitung sebelumnya
+  const dref = ref(db, 'statistik_web/devices/' + id);
+  const res = await runTransaction(dref, cur => cur === null ? { first: Date.now(), legacy } : undefined);
+  if (!res.committed || legacy) return;                        // perangkat ini sudah pernah tercatat
+  try { await update(ref(db, 'statistik_web'), { total_viewers: increment(1) }); }
+  catch (e) { await remove(dref).catch(() => {}); throw e; }   // gagal menambah angka → batalkan pendaftaran, coba lagi nanti
+}
+countViewer().catch(e => console.error('Gagal mencatat viewer:', e));
+
+/* Angka di header (langsung berubah tanpa refresh) */
+onValue(ref(db, 'statistik_web/total_viewers'),
+  s => { $('viewers-count').textContent = Number(s.val() || 0).toLocaleString('id-ID'); },
+  () => { $('viewers-count').textContent = '–'; });
 
 /* Chat */
 const chatRef = ref(db, 'pesan_anonim'), input = $('chat-input'), btn = $('send-chat-btn'), list = $('chat-list'), ind = $('reply-indicator');
