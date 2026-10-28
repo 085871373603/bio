@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Tes Autentikasi Perangkat</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1d2433;--mut:#667085;--line:#e3e7ef;--ok:#16a34a;--bad:#dc2626;--acc:#2563eb}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171e2e;--ink:#e8ecf5;--mut:#9aa6bd;--line:#2a3347;--acc:#6ea0ff}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
+main{max-width:520px;margin:0 auto}
+h1{font-size:1.4rem;margin:0 0 12px}
+h2{margin:0 0 6px;font-size:1.15rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 16px;margin:14px 0}
+.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row .mut{margin-left:auto;text-align:right;font-size:.85rem}
+.mut{color:var(--mut)}
+.note{border-radius:16px;padding:16px;margin:14px 0;border:2px solid}
+.note.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--card))}
+.note.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,var(--card))}
+.note p{margin:4px 0}
+code{font:.82rem ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+button,a.btn{font:inherit;font-weight:600;color:#fff;background:var(--acc);border:0;border-radius:10px;padding:8px 14px;cursor:pointer;text-decoration:none;display:inline-block;margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+  <h1>🧪 Tes Autentikasi Perangkat</h1>
+  <div class="card" id="steps"></div>
+  <div id="out" role="alert" aria-live="assertive"></div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
+  authDomain: "operational-e52ed.firebaseapp.com",
+  databaseURL: "https://operational-e52ed-default-rtdb.firebaseio.com",
+  projectId: "operational-e52ed",
+  storageBucket: "operational-e52ed.firebasestorage.app",
+  messagingSenderId: "378782286599",
+  appId: "1:378782286599:web:056bb7ec127a1a56163ba2",
+  measurementId: "G-QRH7DH84EE"
+});
+const db = getDatabase(app), auth = getAuth(app);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => "&#" + c.charCodeAt(0) + ";");
+const b64u = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+
+/* ===== tampilan langkah & notifikasi ===== */
+const LABEL = ["Firebase Authentication", "Data perangkat ditemukan?", "Bukti kepemilikan kunci", "Status izin"];
+$("steps").innerHTML = LABEL.map((l, i) => `<div class="row"><span id="i${i}">⬜</span><span>${l}</span><span class="mut" id="t${i}"></span></div>`).join("");
+const mark = (i, st, t = "") => { $("i" + i).textContent = { run: "⏳", ok: "✅", bad: "❌" }[st]; $("t" + i).textContent = t; };
+const note = (kind, title, html) => { $("out").innerHTML = `<div class="note ${kind}"><h2>${title}</h2>${html}</div>`; };
+const HALT = {};
+const halt = (i, title, html) => { mark(i, "bad"); note("bad", "⛔ " + title, html); throw HALT; };
+const idBox = id => `<p class="mut">ID perangkat ini:</p><code>${esc(id)}</code><br><button id="cp">Salin ID</button>`;
+const bindCopy = id => { const b = $("cp"); if (b) b.onclick = () => navigator.clipboard.writeText(id).then(() => { b.textContent = "Tersalin ✓"; }).catch(() => {}); };
+
+/* ===== kunci perangkat (dibuat oleh device.html; di sini hanya DIBACA, tidak dibuat) ===== */
+const getKey = () => new Promise((ok, no) => {
+  const r = indexedDB.open("device-identity", 1);
+  r.onupgradeneeded = () => r.result.createObjectStore("k");
+  r.onerror = () => no(r.error);
+  r.onsuccess = () => { const q = r.result.transaction("k", "readonly").objectStore("k").get("kp"); q.onsuccess = () => ok(q.result); q.onerror = () => no(q.error); };
+});
+const thumb = async j => b64u(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify({ crv: j.crv, kty: j.kty, x: j.x, y: j.y })))));
+
+/* ===== alur autentikasi ===== */
+async function run() {
+  /* 1. Firebase Authentication (sesi anonim per browser) */
+  mark(0, "run");
+  let uid;
+  try { uid = (await signInAnonymously(auth)).user.uid; mark(0, "ok", "sesi aktif"); }
+  catch (e) { halt(0, "Gagal masuk Firebase Authentication", `<p>${esc(e.code || e.message)}. Pastikan metode <b>Anonymous</b> sudah diaktifkan di Firebase → Authentication.</p>`); }
+
+  /* 2. Data perangkat: kunci lokal ada, dan terdaftar di Firebase? */
+  mark(1, "run");
+  let kp = null;
+  try { kp = await getKey(); } catch (e) {}
+  if (!kp) halt(1, "Izin perangkat tidak ditemukan", `<p>Perangkat ini belum terdaftar.</p><a class="btn" href="device.html">Daftarkan perangkat</a>`);
+  const id = await thumb(await crypto.subtle.exportKey("jwk", kp.publicKey));
+  let rec;
+  try { const s = await get(ref(db, "devices/" + id)); rec = s.exists() ? s.val() : null; }
+  catch (e) { halt(1, "Gagal membaca data perangkat", `<p>${esc(e.code || e.message)}. Periksa Rules Firebase.</p>`); }
+  if (!rec) halt(1, "Izin perangkat tidak ditemukan", `<p>Data perangkat tidak ada di Firebase.</p><a class="btn" href="device.html">Daftarkan perangkat</a>`);
+  mark(1, "ok", id.slice(0, 8) + "…");
+
+  /* 3. Bukti kepemilikan: tanda tangan perangkat diverifikasi dengan kunci publik yang tersimpan di Firebase */
+  mark(2, "run");
+  let proven = false;
+  try {
+    if (!rec.publicKey || (await thumb(rec.publicKey)) !== id) throw 0;
+    const alg = { name: "ECDSA", hash: "SHA-256" }, ch = crypto.getRandomValues(new Uint8Array(16));
+    const sig = await crypto.subtle.sign(alg, kp.privateKey, ch);
+    const pub = await crypto.subtle.importKey("jwk", { kty: rec.publicKey.kty, crv: rec.publicKey.crv, x: rec.publicKey.x, y: rec.publicKey.y, ext: true }, { name: "ECDSA", namedCurve: "P-256" }, false, ["verify"]);
+    proven = await crypto.subtle.verify(alg, pub, sig, ch);
+  } catch (e) {}
+  if (!proven) halt(2, "Bukti kepemilikan gagal", `<p>Data perangkat tidak cocok dengan kunci di perangkat ini.</p>`);
+  mark(2, "ok", "tanda tangan valid");
+
+  /* 4. Status izin */
+  mark(3, "run");
+  if (rec.status !== "allowed") {
+    mark(3, "bad", rec.status === "blocked" ? "diblokir" : "menunggu");
+    note("bad", "⛔ Perangkat tidak memiliki hak", `<p>${rec.status === "blocked" ? "Perangkat ini diblokir oleh admin." : "Perangkat ini belum disetujui admin."} Kirim ID perangkat ke admin untuk meminta izin.</p>${idBox(id)}`);
+    bindCopy(id); throw HALT;
+  }
+  mark(3, "ok", "diizinkan");
+
+  /* Lolos: hubungkan sesi ini ke perangkat (dipakai Rules untuk melindungi konten), lalu buka konten */
+  try { await set(ref(db, "uidMap/" + uid), id); } catch (e) {}
+  let isi = "Halaman terlindungi terbuka. (Isi belum diatur di Firebase: konten/isi)", judul = "Selamat datang!";
+  try { const k = await get(ref(db, "konten")); if (k.exists()) { judul = k.val().judul || judul; isi = k.val().isi || isi; } }
+  catch (e) { isi = "Firebase menolak membaca konten (" + (e.code || e.message) + "). Periksa Rules."; }
+  note("ok", "✅ " + esc(judul), `<p>${esc(isi)}</p><p class="mut">Perangkat: <code>${esc(id.slice(0, 12))}…</code></p>`);
+
+  /* Izin dicabut admin saat halaman terbuka → langsung dikunci kembali */
+  onValue(ref(db, `devices/${id}/status`), s => { if (s.val() !== "allowed") location.reload(); });
+}
+run().catch(e => { if (e !== HALT) note("bad", "⛔ Terjadi kesalahan", `<p>${esc(e.code || e.message || e)}</p>`); });
+</script>
+</body>
+</html>
