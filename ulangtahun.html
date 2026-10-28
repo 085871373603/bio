@@ -38,6 +38,7 @@ small{display:block;margin-top:22px;opacity:.7}
 #mu{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;width:50px;height:50px;padding:0;font-size:1.4rem;display:none;background:var(--yellow)}
 .cf{position:fixed;top:-20px;z-index:5;pointer-events:none;width:8px;height:18px;border-radius:4px;animation:fall var(--d) linear forwards}
 @keyframes fall{to{transform:translate(var(--x),110vh) rotate(var(--r))}}
+#toast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:30;width:max-content;max-width:min(92vw,420px);background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;box-shadow:0 5px 0 var(--ink);padding:10px 14px;text-align:center;font-size:.95rem}
 @media print{body{display:none}}
 </style>
 </head>
@@ -46,7 +47,6 @@ small{display:block;margin-top:22px;opacity:.7}
 <div id="ov">
   <div style="font-size:3rem">🎉🎂🎈</div>
   <button class="btn" id="go">Ketuk untuk mulai</button>
-  
 </div>
 
 <header class="hero">
@@ -81,6 +81,7 @@ small{display:block;margin-top:22px;opacity:.7}
   <small>Halaman ini mencatat statistik kunjungan.</small>
 </main>
 <button class="btn" id="mu" aria-label="Musik">🔊</button>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
@@ -167,6 +168,7 @@ function confetti(n) {
 /* mulai + musik */
 const bgm = $("bgm");
 $("go").onclick = () => {
+  unlockAudio();
   $("ov").style.display = "none"; $("mu").style.display = "block";
   bgm.play().catch(() => { $("mu").textContent = "🔇"; });
   confetti(50);
@@ -202,36 +204,75 @@ Promise.all(Array.from({ length: TOTAL }, (_, k) => new Promise(r => {
 /* hitung mundur: 11 Nov 2026 00:00 WIB */
 const T = new Date("2026-11-11T00:00:00+07:00").getTime();
 const pad = n => String(n).padStart(2, "0");
-let iv;
+let iv, seen = false;
 function tick() {
   const d = T - Date.now();
   if (d <= 0) {
     clearInterval(iv);
     $("cd").innerHTML = '<div class="done">HARI H TIBA! 🎉</div>';
     confetti(80);
+    if (seen) ring();   // berbunyi hanya bila halaman sedang terbuka saat jam 00.00
     return;
   }
+  seen = true;
   $("d").textContent = Math.floor(d / 864e5);
   $("h").textContent = pad(Math.floor(d % 864e5 / 36e5));
   $("m").textContent = pad(Math.floor(d % 36e5 / 6e4));
   $("s").textContent = pad(Math.floor(d % 6e4 / 1e3));
 }
-tick(); iv = setInterval(tick, 1000);
+iv = setInterval(tick, 1000); tick();
 
-/* kalender (.ics) */
+/* kalender (.ics): acara 11 Nov 2026 pukul 00.00 WIB + alarm tepat pukul 00.00 */
+const UA = navigator.userAgent;
+const IOS = /iPhone|iPad|iPod/.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+const INAPP = /Instagram|FBAN|FBAV|TikTok|musical_ly|Line\//i.test(UA);
+let tt;
+function toast(t) { const e = $("toast"); e.textContent = t; e.style.display = "block"; clearTimeout(tt); tt = setTimeout(() => { e.style.display = "none"; }, 9000); }
+
 $("cal").onclick = () => {
+  unlockAudio();
   const stamp = new Date().toISOString().replace(/[-:]|\.\d{3}/g, "");
-  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Hitung Mundur 11.11//ID", "BEGIN:VEVENT",
-    "UID:1111-2026@hitung-mundur", "DTSTAMP:" + stamp, "DTSTART;VALUE=DATE:20261111", "DTEND;VALUE=DATE:20261112",
-    "SUMMARY:Puncak 11.11 Tahun 2026", "DESCRIPTION:Hari H 11 November 2026!",
-    "BEGIN:VALARM", "TRIGGER:-PT0M", "ACTION:DISPLAY", "DESCRIPTION:Sudah waktunya 11.11!", "END:VALARM",
-    "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Hitung Mundur 11.11//ID", "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT", "UID:1111-2026@hitung-mundur", "DTSTAMP:" + stamp,
+    "DTSTART:20261110T170000Z", "DTEND:20261110T180000Z",   // = 11 Nov 2026 pukul 00.00-01.00 WIB
+    "SUMMARY:Puncak 11.11 Tahun 2026", "DESCRIPTION:Hari H 11 November 2026!", "STATUS:CONFIRMED", "TRANSP:OPAQUE",
+    ...(/^https?:/.test(location.href) ? ["URL:" + location.href] : []),
+    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Sudah waktunya 11.11!", "TRIGGER:-PT0M", "REPEAT:3", "DURATION:PT2M", "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
   const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-  const a = document.createElement("a");
-  a.href = url; a.download = "Peringatan_11_Nov_2026.ics";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  if (IOS) location.assign(url);                            // iPhone/iPad: langsung membuka sheet "Tambah ke Kalender"
+  else {
+    const a = document.createElement("a");
+    a.href = url; a.download = "Peringatan_11_Nov_2026.ics";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  toast(INAPP ? "Browser ini sering memblokir unduhan. Buka halaman ini lewat Chrome atau Safari agar kalender bisa terpasang."
+    : IOS ? "Ketuk “Tambah” agar acara dan alarm pukul 00.00 masuk ke Kalender."
+    : "File kalender diunduh. Buka file-nya lalu simpan ke Kalender agar alarm pukul 00.00 aktif.");
+  try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch (e) {}
 };
+
+/* alarm cadangan: berbunyi pukul 00.00 selama halaman masih terbuka (ketuk layar untuk mematikan) */
+let ac;
+function unlockAudio() {
+  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); } catch (e) {}
+}
+function ring() {
+  let off = false; const until = Date.now() + 25000;
+  addEventListener("pointerdown", () => { off = true; }, { once: true });
+  try { navigator.vibrate && navigator.vibrate([400, 200, 400, 200, 800]); } catch (e) {}
+  try { if ("Notification" in window && Notification.permission === "granted") new Notification("11.11 sudah tiba! 🎉", { body: "Hari H telah tiba.", tag: "1111" }); } catch (e) {}
+  if (!ac) return;
+  let k = 0;
+  (function beep() {
+    if (off || Date.now() > until) return;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "square"; o.frequency.value = k++ % 2 ? 660 : 880; g.gain.value = .15;
+    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .25);
+    setTimeout(beep, 450);
+  })();
+}
 
 /* proteksi: klik kanan, salin, seleksi, seret, zoom */
 const stop = e => e.preventDefault();
