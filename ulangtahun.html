@@ -1,288 +1,1474 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Hitung Mundur 11.11</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-:root{--ink:#4a2010;--yellow:#ffc41f;--pink:#ff5f86;--blue:#2f8cff;--green:#27c47a}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#4a2010;
+  --yellow:#ffc41f;
+  --pink:#ff5f86;
+  --blue:#2f8cff;
+  --green:#27c47a;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
 html,body{touch-action:pan-y}
-body{margin:0;min-height:100vh;font-family:Fredoka,"Trebuchet MS",sans-serif;color:var(--ink);background:linear-gradient(180deg,#fff6e6,#ffe3d6) fixed;overflow-x:hidden;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-img{-webkit-user-drag:none;pointer-events:none}
-.hero{max-width:1100px;margin:0 auto;padding:12px 12px 0}
-.hero img{display:block;width:100%;height:auto;border:4px solid var(--ink);border-radius:24px;box-shadow:0 6px 0 var(--ink)}
-#fb{display:none;font-size:4rem;font-weight:600;color:var(--pink);text-shadow:3px 3px 0 var(--ink);margin:10px 0}
-.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:18px 16px 40px;text-align:center}
-h2{margin:6px 0 14px;font-size:1.25rem}
-#cd{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.t{border:3px solid var(--ink);border-radius:18px;padding:10px 2px;box-shadow:0 5px 0 var(--ink);color:#fff}
-.t b{display:block;font-size:clamp(1.6rem,8vw,2.4rem);line-height:1.1;text-shadow:2px 2px 0 var(--ink)}
-.t span{font-size:.85rem;font-weight:600}
-.t:nth-child(1){background:var(--yellow)}.t:nth-child(2){background:var(--pink)}.t:nth-child(3){background:var(--blue)}.t:nth-child(4){background:var(--green)}
-.done{grid-column:1/-1;font-size:2rem;font-weight:600;color:var(--pink);text-shadow:2px 2px 0 var(--ink);padding:14px}
-.frame{position:relative;width:min(320px,80vw);aspect-ratio:1;margin:26px auto 8px;border:4px solid var(--ink);border-radius:28px;overflow:hidden;box-shadow:0 8px 0 var(--ink);background:#fff}
-.slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Fredoka,"Trebuchet MS",sans-serif;
+  color:var(--ink);
+  background:linear-gradient(180deg,#fff6e6,#ffe3d6) fixed;
+  overflow-x:hidden;
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+
+img{
+  -webkit-user-drag:none;
+  pointer-events:none;
+}
+
+.hero{
+  max-width:1100px;
+  margin:0 auto;
+  padding:12px 12px 0;
+}
+
+.hero img{
+  display:block;
+  width:100%;
+  height:auto;
+  border:4px solid var(--ink);
+  border-radius:24px;
+  box-shadow:0 6px 0 var(--ink);
+}
+
+#fb{
+  display:none;
+  font-size:4rem;
+  font-weight:600;
+  color:var(--pink);
+  text-shadow:3px 3px 0 var(--ink);
+  margin:10px 0;
+}
+
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:560px;
+  margin:0 auto;
+  padding:18px 16px 40px;
+  text-align:center;
+}
+
+h2{
+  margin:6px 0 14px;
+  font-size:1.25rem;
+}
+
+#cd{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.t{
+  border:3px solid var(--ink);
+  border-radius:18px;
+  padding:10px 2px;
+  box-shadow:0 5px 0 var(--ink);
+  color:#fff;
+}
+
+.t b{
+  display:block;
+  font-size:clamp(1.6rem,8vw,2.4rem);
+  line-height:1.1;
+  text-shadow:2px 2px 0 var(--ink);
+}
+
+.t span{
+  font-size:.85rem;
+  font-weight:600;
+}
+
+.t:nth-child(1){background:var(--yellow)}
+.t:nth-child(2){background:var(--pink)}
+.t:nth-child(3){background:var(--blue)}
+.t:nth-child(4){background:var(--green)}
+
+.done{
+  grid-column:1/-1;
+  font-size:2rem;
+  font-weight:600;
+  color:var(--pink);
+  text-shadow:2px 2px 0 var(--ink);
+  padding:14px;
+}
+
+.frame{
+  position:relative;
+  width:min(320px,80vw);
+  aspect-ratio:1;
+  margin:26px auto 8px;
+  border:4px solid var(--ink);
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 8px 0 var(--ink);
+  background:#fff;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity .7s;
+}
+
 .slide.on{opacity:1}
-#cnt{margin-bottom:18px;font-size:.9rem}
-.btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-.btn{font:inherit;font-weight:600;font-size:1.05rem;color:#fff;background:var(--pink);border:3px solid var(--ink);border-radius:999px;padding:11px 22px;box-shadow:0 5px 0 var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
-.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+
+#cnt{
+  margin-bottom:18px;
+  font-size:.9rem;
+}
+
+.btns{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.btn{
+  font:inherit;
+  font-weight:600;
+  font-size:1.05rem;
+  color:#fff;
+  background:var(--pink);
+  border:3px solid var(--ink);
+  border-radius:999px;
+  padding:11px 22px;
+  box-shadow:0 5px 0 var(--ink);
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+}
+
+.btn:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 var(--ink);
+}
+
 .btn.g{background:var(--green)}
-.btn:focus-visible{outline:3px dashed var(--blue);outline-offset:3px}
-small{display:block;margin-top:22px;opacity:.7}
-#ov{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;background:rgba(255,246,230,.96);padding:20px;text-align:center}
-#ov .btn{font-size:1.4rem;padding:16px 34px;animation:pu 1.4s infinite}
-@keyframes pu{50%{transform:scale(1.07)}}
-#mu{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;width:50px;height:50px;padding:0;font-size:1.4rem;display:none;background:var(--yellow)}
-.cf{position:fixed;top:-20px;z-index:5;pointer-events:none;width:8px;height:18px;border-radius:4px;animation:fall var(--d) linear forwards}
-@keyframes fall{to{transform:translate(var(--x),110vh) rotate(var(--r))}}
-#toast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:30;width:max-content;max-width:min(92vw,420px);background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:18px;box-shadow:0 5px 0 var(--ink);padding:10px 14px;text-align:center;font-size:.95rem}
-@media print{body{display:none}}
+
+.btn:focus-visible{
+  outline:3px dashed var(--blue);
+  outline-offset:3px;
+}
+
+small{
+  display:block;
+  margin-top:22px;
+  opacity:.7;
+}
+
+/* INTRO */
+#ov{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,246,230,.96);
+  padding:20px;
+  text-align:center;
+}
+
+#ov .btn{
+  font-size:1.4rem;
+  padding:16px 34px;
+  animation:pu 1.4s infinite;
+}
+
+@keyframes pu{
+  50%{transform:scale(1.07)}
+}
+
+/* MUSIC */
+#mu{
+  position:fixed;
+  right:14px;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  z-index:20;
+  width:50px;
+  height:50px;
+  padding:0;
+  font-size:1.4rem;
+  display:none;
+  background:var(--yellow);
+}
+
+/* CONFETTI */
+.cf{
+  position:fixed;
+  top:-20px;
+  z-index:5;
+  pointer-events:none;
+  width:8px;
+  height:18px;
+  border-radius:4px;
+  animation:fall var(--d) linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translate(var(--x),110vh) rotate(var(--r));
+  }
+}
+
+/* TOAST */
+#toast{
+  display:none;
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(74px + env(safe-area-inset-bottom,0px));
+  z-index:30;
+  width:max-content;
+  max-width:min(92vw,420px);
+  background:#fff;
+  color:var(--ink);
+  border:3px solid var(--ink);
+  border-radius:18px;
+  box-shadow:0 5px 0 var(--ink);
+  padding:10px 14px;
+  text-align:center;
+  font-size:.95rem;
+}
+
+/* DEVICE POPUP */
+.device-popup[hidden]{
+  display:none!important;
+}
+
+.device-popup{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(74,32,16,.72);
+}
+
+.device-card{
+  width:min(420px,100%);
+  padding:25px 20px;
+  background:#fff6e6;
+  border:4px solid var(--ink);
+  border-radius:26px;
+  text-align:center;
+  box-shadow:0 8px 0 var(--ink);
+  animation:popIn .3s ease;
+}
+
+.device-card .emoji{
+  font-size:3.5rem;
+}
+
+.device-card h2{
+  font-size:1.4rem;
+  margin:10px 0;
+}
+
+.device-card p{
+  font-size:1rem;
+  line-height:1.6;
+  white-space:pre-line;
+  overflow-wrap:anywhere;
+}
+
+@keyframes popIn{
+  from{
+    opacity:0;
+    transform:scale(.8);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+@media print{
+  body{display:none}
+}
 </style>
 </head>
+
 <body>
 
+<!-- INTRO -->
 <div id="ov">
   <div style="font-size:3rem">🎉🎂🎈</div>
-  <button class="btn" id="go">Ketuk untuk mulai</button>
+  <button class="btn" id="go">
+    Ketuk untuk mulai 🎁
+  </button>
 </div>
 
+<!-- HEADER -->
 <header class="hero">
-  <img src="1111.png" alt="11.11" onerror="this.style.display='none';document.getElementById('fb').style.display='block'">
+  <img
+    src="1111.png"
+    alt="11.11"
+    onerror="this.style.display='none';document.getElementById('fb').style.display='block'"
+  >
   <div id="fb">11.11</div>
 </header>
 
+<!-- MUSIK -->
 <audio id="bgm" loop preload="auto">
   <source src="media/musikbg.mp3" type="audio/mpeg">
   <source src="media/musikbg.mp4" type="video/mp4">
 </audio>
 
+<!-- CONTENT -->
 <main class="wrap">
+
   <h2>Menuju 11 November 2026</h2>
+
   <div id="cd">
-    <div class="t"><b id="d">--</b><span>Hari</span></div>
-    <div class="t"><b id="h">--</b><span>Jam</span></div>
-    <div class="t"><b id="m">--</b><span>Menit</span></div>
-    <div class="t"><b id="s">--</b><span>Detik</span></div>
+    <div class="t">
+      <b id="d">--</b>
+      <span>Hari</span>
+    </div>
+
+    <div class="t">
+      <b id="h">--</b>
+      <span>Jam</span>
+    </div>
+
+    <div class="t">
+      <b id="m">--</b>
+      <span>Menit</span>
+    </div>
+
+    <div class="t">
+      <b id="s">--</b>
+      <span>Detik</span>
+    </div>
   </div>
 
+  <!-- SLIDESHOW -->
   <div class="frame">
     <img class="slide" id="s0" alt="" draggable="false">
     <img class="slide" id="s1" alt="" draggable="false">
   </div>
+
   <div id="cnt">Memuat foto…</div>
 
   <div class="btns">
-    <button class="btn" id="cal">🔔 Ingatkan saya</button>
-    <a class="btn g" href="https://bio-beta-two.vercel.app">Kembali</a>
+    <button class="btn" id="cal">
+      🔔 Ingatkan saya
+    </button>
+
+    <a class="btn g" href="https://bio-beta-two.vercel.app">
+      Kembali
+    </a>
   </div>
+
   <small>Halaman ini mencatat statistik kunjungan.</small>
+
 </main>
+
+<!-- MUSIC BUTTON -->
 <button class="btn" id="mu" aria-label="Musik">🔊</button>
+
+<!-- TOAST -->
 <div id="toast" role="status" aria-live="polite"></div>
 
+<!-- DEVICE POPUP -->
+<div id="devicePopup" class="device-popup" hidden>
+  <div class="device-card">
+
+    <div class="emoji" id="popupEmoji">🎁</div>
+
+    <h2 id="popupTitle">Informasi</h2>
+
+    <p id="popupMessage"></p>
+
+    <button class="btn" id="popupClose">
+      Tutup
+    </button>
+
+  </div>
+</div>
+
+<!-- FIREBASE VISITOR LOG -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  push,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
 const app = initializeApp({
-  apiKey: "AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
-  authDomain: "operational-e52ed.firebaseapp.com",
-  databaseURL: "https://operational-e52ed-default-rtdb.firebaseio.com",
-  projectId: "operational-e52ed",
-  storageBucket: "operational-e52ed.firebasestorage.app",
-  messagingSenderId: "378782286599",
-  appId: "1:378782286599:web:056bb7ec127a1a56163ba2",
-  measurementId: "G-QRH7DH84EE"
+  apiKey:"AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
+  authDomain:"operational-e52ed.firebaseapp.com",
+  databaseURL:"https://operational-e52ed-default-rtdb.firebaseio.com",
+  projectId:"operational-e52ed",
+  storageBucket:"operational-e52ed.firebasestorage.app",
+  messagingSenderId:"378782286599",
+  appId:"1:378782286599:web:056bb7ec127a1a56163ba2",
+  measurementId:"G-QRH7DH84EE"
 });
+
 const db = getDatabase(app);
+
 const ua = navigator.userAgent;
+
 const P = re => (ua.match(re) || [])[1] || "";
-const BR = [[/SM-|GT-|SAMSUNG/i,"Samsung"],[/Pixel/i,"Google"],[/RMX|realme/i,"Realme"],[/CPH|OPPO/i,"OPPO"],[/vivo|\bV\d{4}/i,"vivo"],[/Redmi|POCO|Xiaomi|\bMI \d|\b2\d{6}[A-Z]{1,2}\b|\bM\d{4}[A-Z]\d/i,"Xiaomi"],[/Infinix|\bX\d{3,4}[A-Z]?\b/i,"Infinix"],[/TECNO|\bK[A-Z]\d\b|\bCK\d|\bCL\d/i,"Tecno"],[/itel/i,"itel"],[/ASUS|ZenFone|\bI00[A-Z]/i,"ASUS"],[/OnePlus|\bIN20|\bLE2/i,"OnePlus"],[/HUAWEI|HONOR/i,"Huawei/Honor"],[/moto|\bXT\d{4}/i,"Motorola"],[/Nokia/i,"Nokia"]];
-const IPH = {"320x568":"iPhone SE/5s","375x667":"iPhone 6/7/8/SE","375x812":"iPhone X/XS/11 Pro","414x896":"iPhone XR/11/XS Max","390x844":"iPhone 12/13/14","393x852":"iPhone 14 Pro/15/16","428x926":"iPhone 12-14 Plus","430x932":"iPhone 15/16 Plus","402x874":"iPhone 16 Pro","440x956":"iPhone 16 Pro Max"};
 
-function deviceId() {
-  try {
+const BR = [
+  [/SM-|GT-|SAMSUNG/i,"Samsung"],
+  [/Pixel/i,"Google"],
+  [/RMX|realme/i,"Realme"],
+  [/CPH|OPPO/i,"OPPO"],
+  [/vivo|\bV\d{4}/i,"vivo"],
+  [/Redmi|POCO|Xiaomi|\bMI \d|\b2\d{6}[A-Z]{1,2}\b|\bM\d{4}[A-Z]\d/i,"Xiaomi"],
+  [/Infinix|\bX\d{3,4}[A-Z]?\b/i,"Infinix"],
+  [/TECNO|\bK[A-Z]\d\b|\bCK\d|\bCL\d/i,"Tecno"],
+  [/itel/i,"itel"],
+  [/ASUS|ZenFone|\bI00[A-Z]/i,"ASUS"],
+  [/OnePlus|\bIN20|\bLE2/i,"OnePlus"],
+  [/HUAWEI|HONOR/i,"Huawei/Honor"],
+  [/moto|\bXT\d{4}/i,"Motorola"],
+  [/Nokia/i,"Nokia"]
+];
+
+const IPH = {
+  "320x568":"iPhone SE/5s",
+  "375x667":"iPhone 6/7/8/SE",
+  "375x812":"iPhone X/XS/11 Pro",
+  "414x896":"iPhone XR/11/XS Max",
+  "390x844":"iPhone 12/13/14",
+  "393x852":"iPhone 14 Pro/15/16",
+  "428x926":"iPhone 12-14 Plus",
+  "430x932":"iPhone 15/16 Plus",
+  "402x874":"iPhone 16 Pro",
+  "440x956":"iPhone 16 Pro Max"
+};
+
+function deviceId(){
+
+  try{
+
     let i = localStorage.getItem("did");
-    if (!i) { i = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 10); localStorage.setItem("did", i); }
+
+    if(!i){
+
+      i = crypto.randomUUID
+        ? crypto.randomUUID()
+        : Date.now().toString(36) +
+          Math.random().toString(36).slice(2,10);
+
+      localStorage.setItem("did",i);
+    }
+
     return i;
-  } catch (e) { return "tanpa-penyimpanan"; }
-}
-function visitNo() {
-  try { const n = (+localStorage.getItem("vn") || 0) + 1; localStorage.setItem("vn", n); return n; } catch (e) { return 1; }
+
+  }catch(e){
+
+    return "tanpa-penyimpanan";
+
+  }
+
 }
 
-async function collect() {
-  let model = "", pv = "";
-  try {
-    const u = navigator.userAgentData;
-    if (u) { const h = await u.getHighEntropyValues(["model", "platformVersion"]); model = h.model || ""; pv = h.platformVersion || ""; }
-  } catch (e) {}
-  const tablet = /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-  const ios = /iPhone|iPod/.test(ua) || tablet, android = /Android/.test(ua);
-  let brand = "PC", os = "", osv = "", type = "Desktop";
-  if (android) {
-    if (!model) { const m = ua.match(/Android [\d.]+;\s*([^;)]+?)(?:\s+Build|\))/); model = m ? m[1] : ""; }
-    if (model === "K") model = "";
-    os = "Android"; osv = P(/Android ([\d.]+)/); type = /Mobile/.test(ua) ? "Ponsel" : "Tablet";
-    brand = (BR.find(b => b[0].test(model || ua)) || [0, "Android"])[1];
-    model = model || "Tidak terdeteksi";
-  } else if (ios) {
-    const s = [screen.width, screen.height].sort((a, b) => a - b).join("x");
-    brand = "Apple"; os = tablet ? "iPadOS" : "iOS"; osv = P(/OS (\d+[_\d]*) like/).replace(/_/g, ".");
-    type = tablet ? "Tablet" : "Ponsel"; model = tablet ? "iPad" : (IPH[s] ? "≈ " + IPH[s] : "iPhone");
-  } else if (/Windows/.test(ua)) { os = "Windows"; osv = parseInt(pv) >= 13 ? "11" : P(/Windows NT ([\d.]+)/); model = "Windows"; }
-  else if (/Mac OS X/.test(ua)) { brand = "Apple"; os = "macOS"; osv = P(/Mac OS X ([\d_]+)/).replace(/_/g, "."); model = "Mac"; }
-  else { os = /CrOS/.test(ua) ? "ChromeOS" : /Linux/.test(ua) ? "Linux" : "Lainnya"; model = os; }
-  const browser = /Instagram/.test(ua) ? "Instagram (in-app)" : /FBAN|FBAV/.test(ua) ? "Facebook (in-app)" : /TikTok|musical_ly|Bytedance/i.test(ua) ? "TikTok (in-app)" : /Line\//.test(ua) ? "LINE (in-app)" : /EdgA?\//.test(ua) ? "Edge" : /OPR\//.test(ua) ? "Opera" : /SamsungBrowser/.test(ua) ? "Samsung Internet" : /Firefox|FxiOS/.test(ua) ? "Firefox" : /CriOS|Chrome/.test(ua) ? "Chrome" : /Safari/.test(ua) ? "Safari" : "Lainnya";
-  return {
-    deviceId: deviceId(), visitNo: visitNo(), brand, model, deviceName: brand + " " + model, type,
-    os, osVersion: osv, browser, screen: `${screen.width}x${screen.height}@${devicePixelRatio}`,
-    language: navigator.language || "", timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
-    referrer: document.referrer.slice(0, 200), cores: navigator.hardwareConcurrency || 0, ram: navigator.deviceMemory || 0,
-    userAgent: ua.slice(0, 300), waktuKunjungan: new Date().toLocaleString("id-ID"), timestamp: serverTimestamp()
-  };
+function visitNo(){
+
+  try{
+
+    const n = (+localStorage.getItem("vn") || 0) + 1;
+
+    localStorage.setItem("vn",n);
+
+    return n;
+
+  }catch(e){
+
+    return 1;
+
+  }
+
 }
-collect().then(d => push(ref(db, "visitor_logs"), d)).catch(e => console.warn("Log kunjungan gagal:", e));
+
+async function collect(){
+
+  let model = "";
+  let pv = "";
+
+  try{
+
+    const u = navigator.userAgentData;
+
+    if(u){
+
+      const h = await u.getHighEntropyValues([
+        "model",
+        "platformVersion"
+      ]);
+
+      model = h.model || "";
+      pv = h.platformVersion || "";
+
+    }
+
+  }catch(e){}
+
+  const tablet =
+    /iPad/.test(ua) ||
+    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+
+  const ios = /iPhone|iPod/.test(ua) || tablet;
+  const android = /Android/.test(ua);
+
+  let brand = "PC";
+  let os = "";
+  let osv = "";
+  let type = "Desktop";
+
+  if(android){
+
+    if(!model){
+
+      const m = ua.match(
+        /Android [\d.]+;\s*([^;)]+?)(?:\s+Build|\))/
+      );
+
+      model = m ? m[1] : "";
+
+    }
+
+    if(model === "K") model = "";
+
+    os = "Android";
+
+    osv = P(/Android ([\d.]+)/);
+
+    type = /Mobile/.test(ua) ? "Ponsel" : "Tablet";
+
+    brand = (BR.find(b => b[0].test(model || ua)) || [0,"Android"])[1];
+
+    model = model || "Tidak terdeteksi";
+
+  }else if(ios){
+
+    const s = [screen.width,screen.height]
+      .sort((a,b) => a-b)
+      .join("x");
+
+    brand = "Apple";
+    os = tablet ? "iPadOS" : "iOS";
+    osv = P(/OS (\d+[_\d]*) like/).replace(/_/g,".");
+    type = tablet ? "Tablet" : "Ponsel";
+
+    model = tablet
+      ? "iPad"
+      : (IPH[s] ? "≈ " + IPH[s] : "iPhone");
+
+  }else if(/Windows/.test(ua)){
+
+    os = "Windows";
+
+    osv = parseInt(pv) >= 13
+      ? "11"
+      : P(/Windows NT ([\d.]+)/);
+
+    model = "Windows";
+
+  }else if(/Mac OS X/.test(ua)){
+
+    brand = "Apple";
+    os = "macOS";
+    osv = P(/Mac OS X ([\d_]+)/).replace(/_/g,".");
+    model = "Mac";
+
+  }else{
+
+    os = /CrOS/.test(ua)
+      ? "ChromeOS"
+      : /Linux/.test(ua)
+        ? "Linux"
+        : "Lainnya";
+
+    model = os;
+
+  }
+
+  const browser =
+    /Instagram/.test(ua)
+      ? "Instagram (in-app)"
+      : /FBAN|FBAV/.test(ua)
+        ? "Facebook (in-app)"
+        : /TikTok|musical_ly|Bytedance/i.test(ua)
+          ? "TikTok (in-app)"
+          : /Line\//.test(ua)
+            ? "LINE (in-app)"
+            : /EdgA?\//.test(ua)
+              ? "Edge"
+              : /OPR\//.test(ua)
+                ? "Opera"
+                : /SamsungBrowser/.test(ua)
+                  ? "Samsung Internet"
+                  : /Firefox|FxiOS/.test(ua)
+                    ? "Firefox"
+                    : /CriOS|Chrome/.test(ua)
+                      ? "Chrome"
+                      : /Safari/.test(ua)
+                        ? "Safari"
+                        : "Lainnya";
+
+  return {
+
+    deviceId:deviceId(),
+
+    visitNo:visitNo(),
+
+    brand,
+
+    model,
+
+    deviceName:brand + " " + model,
+
+    type,
+
+    os,
+
+    osVersion:osv,
+
+    browser,
+
+    screen:`${screen.width}x${screen.height}@${devicePixelRatio}`,
+
+    language:navigator.language || "",
+
+    timezone:Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+
+    referrer:document.referrer.slice(0,200),
+
+    cores:navigator.hardwareConcurrency || 0,
+
+    ram:navigator.deviceMemory || 0,
+
+    userAgent:ua.slice(0,300),
+
+    waktuKunjungan:new Date().toLocaleString("id-ID"),
+
+    timestamp:serverTimestamp()
+
+  };
+
+}
+
+collect()
+  .then(d => push(ref(db,"visitor_logs"),d))
+  .catch(e => console.warn("Log kunjungan gagal:",e));
+
 </script>
 
+<!-- MAIN JAVASCRIPT -->
 <script>
+
 const $ = id => document.getElementById(id);
-const calm = matchMedia("(prefers-reduced-motion:reduce)").matches;
 
-/* confetti */
-function confetti(n) {
-  n = calm ? Math.min(n, 6) : n;
-  const C = ["#ffc41f", "#ff5f86", "#2f8cff", "#27c47a"];
-  for (let i = 0; i < n; i++) {
-    const e = document.createElement("span");
-    e.className = "cf";
-    e.style.cssText = `left:${Math.random() * 100}vw;background:${C[i % 4]};--x:${(Math.random() - .5) * 140}px;--r:${Math.random() * 720}deg;--d:${3 + Math.random() * 3}s;animation-delay:${Math.random() * .8}s`;
-    document.body.appendChild(e);
-    setTimeout(() => e.remove(), 7500);
+const calm = matchMedia(
+  "(prefers-reduced-motion:reduce)"
+).matches;
+
+/* =================================
+   WHITELIST PERANGKAT
+================================= */
+
+const allowedDevices = [
+
+  {
+    id:"78a6bc82",
+    model:"SM-A226B",
+    android:"10",
+    screen:"384x857",
+    dpr:2.8125,
+    language:"id-ID"
+  },
+
+  {
+    id:"838cafae",
+    model:"SM-A057F",
+    android:"10",
+    screen:"360x800",
+    dpr:3,
+    language:"id-ID"
   }
+
+];
+
+/* AMBIL ID PERANGKAT */
+
+function getLocalDeviceId(){
+
+  try{
+
+    let id = localStorage.getItem("did");
+
+    if(!id){
+
+      id = crypto.randomUUID
+        ? crypto.randomUUID()
+        : Date.now().toString(36) +
+          Math.random().toString(36).slice(2,10);
+
+      localStorage.setItem("did",id);
+
+    }
+
+    return id.slice(0,8).toLowerCase();
+
+  }catch(e){
+
+    return "";
+
+  }
+
 }
 
-/* mulai + musik */
+/* DETEKSI IDENTITAS */
+
+function getDeviceIdentity(){
+
+  const ua = navigator.userAgent;
+
+  const modelMatch = ua.match(/\bSM-[A-Z0-9]+\b/i);
+
+  const model = modelMatch
+    ? modelMatch[0].toUpperCase()
+    : "";
+
+  const androidMatch = ua.match(/Android\s+([\d.]+)/i);
+
+  const android = androidMatch
+    ? androidMatch[1]
+    : "";
+
+  const isChrome =
+    /Chrome\/[\d.]+/i.test(ua) &&
+    !/EdgA?\/|OPR\/|SamsungBrowser|Instagram|FBAN|FBAV|TikTok|musical_ly|Line\/|;\s*wv\)/i.test(ua);
+
+  return {
+
+    id:getLocalDeviceId(),
+
+    model:model,
+
+    android:android,
+
+    browser:isChrome ? "Chrome" : "Bukan Chrome",
+
+    screen:`${screen.width}x${screen.height}`,
+
+    dpr:Number((devicePixelRatio || 1).toFixed(4)),
+
+    language:navigator.language || ""
+
+  };
+
+}
+
+/* VALIDASI */
+
+function checkDevice(x){
+
+  return allowedDevices.some(d =>
+
+    d.id.toLowerCase() === x.id &&
+
+    d.model === x.model &&
+
+    d.android === x.android &&
+
+    x.browser === "Chrome" &&
+
+    d.screen === x.screen &&
+
+    Math.abs(d.dpr - x.dpr) < 0.001 &&
+
+    d.language === x.language
+
+  );
+
+}
+
+/* =================================
+   POPUP
+================================= */
+
+function devicePopup(title,message,emoji){
+
+  $("popupTitle").textContent = title;
+
+  $("popupMessage").textContent = message;
+
+  $("popupEmoji").textContent = emoji;
+
+  $("devicePopup").hidden = false;
+
+}
+
+$("popupClose").onclick = () => {
+
+  $("devicePopup").hidden = true;
+
+};
+
+/* =================================
+   DOWNLOAD VOUCHER
+================================= */
+
+function downloadVoucher(){
+
+  const a = document.createElement("a");
+
+  a.href = new URL(
+    "voucher.png",
+    document.baseURI
+  ).href;
+
+  a.download = "Voucher_Alfamart_Rp100000.png";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+}
+
+/* =================================
+   CONFETTI
+================================= */
+
+function confetti(n){
+
+  n = calm ? Math.min(n,6) : n;
+
+  const C = [
+    "#ffc41f",
+    "#ff5f86",
+    "#2f8cff",
+    "#27c47a"
+  ];
+
+  for(let i=0;i<n;i++){
+
+    const e = document.createElement("span");
+
+    e.className = "cf";
+
+    e.style.cssText = `
+      left:${Math.random()*100}vw;
+      background:${C[i%4]};
+      --x:${(Math.random()-.5)*140}px;
+      --r:${Math.random()*720}deg;
+      --d:${3+Math.random()*3}s;
+      animation-delay:${Math.random()*.8}s
+    `;
+
+    document.body.appendChild(e);
+
+    setTimeout(() => e.remove(),7500);
+
+  }
+
+}
+
+/* =================================
+   MUSIK
+================================= */
+
 const bgm = $("bgm");
+
+let ac;
+
+function unlockAudio(){
+
+  try{
+
+    ac = ac || new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+
+    if(ac.state === "suspended"){
+      ac.resume();
+    }
+
+  }catch(e){}
+
+}
+
+/* =================================
+   MULAI + VALIDASI
+================================= */
+
 $("go").onclick = () => {
+
+  const device = getDeviceIdentity();
+
+  /* PERANGKAT DITOLAK */
+
+  if(!checkDevice(device)){
+
+    const identity =
+
+      `${device.model || "Model tidak terdeteksi"}
+Android ${device.android || "-"}
+${device.browser}
+${device.screen}@${device.dpr}
+${device.language}
+ID: ${device.id || "Tidak tersedia"}`;
+
+    devicePopup(
+
+      "Akses Tidak Diizinkan",
+
+      "Maaf, perangkat berikut belum terdaftar. Silakan kembali.\n\n" + identity,
+
+      "🚫"
+
+    );
+
+    return;
+
+  }
+
+  /* PERANGKAT DIIZINKAN */
+
   unlockAudio();
-  $("ov").style.display = "none"; $("mu").style.display = "block";
-  bgm.play().catch(() => { $("mu").textContent = "🔇"; });
+
+  $("ov").style.display = "none";
+
+  $("mu").style.display = "block";
+
+  bgm.play().catch(() => {
+
+    $("mu").textContent = "🔇";
+
+  });
+
+  /* DOWNLOAD VOUCHER */
+
+  downloadVoucher();
+
+  /* POPUP SUKSES */
+
+  devicePopup(
+
+    "Yeay! Kamu Beruntung! 🎉",
+
+    "Voucher Alfamart Rp100.000 berhasil diminta untuk diunduh! 🎁\n\nSilakan periksa folder Download perangkatmu.",
+
+    "🎊"
+
+  );
+
   confetti(50);
-  if (!calm) setInterval(() => confetti(2), 1800);
-};
-$("mu").onclick = () => {
-  if (bgm.paused) { bgm.play().catch(() => {}); $("mu").textContent = "🔊"; } else { bgm.pause(); $("mu").textContent = "🔇"; }
+
+  if(!calm){
+
+    setInterval(() => confetti(2),1800);
+
+  }
+
 };
 
-/* slideshow 1-16 dari media/ (preload, lewati yang tidak ada) */
-const TOTAL = 16, els = [$("s0"), $("s1")];
-let good = [], cur = 0, front = 1;
-function show(n) {
+/* TOMBOL MUSIK */
+
+$("mu").onclick = () => {
+
+  if(bgm.paused){
+
+    bgm.play().catch(() => {});
+
+    $("mu").textContent = "🔊";
+
+  }else{
+
+    bgm.pause();
+
+    $("mu").textContent = "🔇";
+
+  }
+
+};
+
+/* =================================
+   SLIDESHOW 1-16
+================================= */
+
+const TOTAL = 16;
+
+const els = [
+  $("s0"),
+  $("s1")
+];
+
+let good = [];
+
+let cur = 0;
+
+let front = 1;
+
+function show(n){
+
   cur = n;
-  const nx = els[1 - front];
+
+  const nx = els[1-front];
+
   nx.src = `media/${good[n]}.png`;
-  nx.classList.add("on"); els[front].classList.remove("on");
-  front = 1 - front;
-  $("cnt").textContent = `Foto ${good[n]} dari ${TOTAL}`;
+
+  nx.classList.add("on");
+
+  els[front].classList.remove("on");
+
+  front = 1-front;
+
+  $("cnt").textContent =
+    `Foto ${good[n]} dari ${TOTAL}`;
+
 }
-Promise.all(Array.from({ length: TOTAL }, (_, k) => new Promise(r => {
-  const i = new Image();
-  i.onload = () => r(k + 1);
-  i.onerror = () => { console.warn(`media/${k + 1}.png tidak ditemukan`); r(0); };
-  i.src = `media/${k + 1}.png`;
-}))).then(a => {
+
+Promise.all(
+
+  Array.from({length:TOTAL},(_,k)=>
+
+    new Promise(r => {
+
+      const i = new Image();
+
+      i.onload = () => r(k+1);
+
+      i.onerror = () => {
+
+        console.warn(
+          `media/${k+1}.png tidak ditemukan`
+        );
+
+        r(0);
+
+      };
+
+      i.src = `media/${k+1}.png`;
+
+    })
+
+  )
+
+).then(a => {
+
   good = a.filter(Boolean);
-  if (!good.length) { $("cnt").textContent = "Foto belum ada di folder media/"; return; }
+
+  if(!good.length){
+
+    $("cnt").textContent =
+      "Foto belum ada di folder media/";
+
+    return;
+
+  }
+
   show(0);
-  if (good.length > 1) setInterval(() => show((cur + 1) % good.length), 3000);
+
+  if(good.length>1){
+
+    setInterval(
+      () => show((cur+1)%good.length),
+      3000
+    );
+
+  }
+
 });
 
-/* hitung mundur: 11 Nov 2026 00:00 WIB */
-const T = new Date("2026-11-11T00:00:00+07:00").getTime();
-const pad = n => String(n).padStart(2, "0");
-let iv, seen = false;
-function tick() {
-  const d = T - Date.now();
-  if (d <= 0) {
-    clearInterval(iv);
-    $("cd").innerHTML = '<div class="done">HARI H TIBA! 🎉</div>';
-    confetti(80);
-    if (seen) ring();   // berbunyi hanya bila halaman sedang terbuka saat jam 00.00
-    return;
-  }
-  seen = true;
-  $("d").textContent = Math.floor(d / 864e5);
-  $("h").textContent = pad(Math.floor(d % 864e5 / 36e5));
-  $("m").textContent = pad(Math.floor(d % 36e5 / 6e4));
-  $("s").textContent = pad(Math.floor(d % 6e4 / 1e3));
-}
-iv = setInterval(tick, 1000); tick();
+/* =================================
+   COUNTDOWN
+================================= */
 
-/* kalender (.ics): acara 11 Nov 2026 pukul 00.00 WIB + alarm tepat pukul 00.00 */
+const T = new Date(
+  "2026-11-11T00:00:00+07:00"
+).getTime();
+
+const pad = n => String(n).padStart(2,"0");
+
+let iv;
+
+let seen = false;
+
+function tick(){
+
+  const d = T-Date.now();
+
+  if(d<=0){
+
+    clearInterval(iv);
+
+    $("cd").innerHTML =
+      '<div class="done">HARI H TIBA! 🎉</div>';
+
+    confetti(80);
+
+    if(seen) ring();
+
+    return;
+
+  }
+
+  seen = true;
+
+  $("d").textContent =
+    Math.floor(d/864e5);
+
+  $("h").textContent =
+    pad(Math.floor(d%864e5/36e5));
+
+  $("m").textContent =
+    pad(Math.floor(d%36e5/6e4));
+
+  $("s").textContent =
+    pad(Math.floor(d%6e4/1e3));
+
+}
+
+iv = setInterval(tick,1000);
+
+tick();
+
+/* =================================
+   KALENDER
+================================= */
+
 const UA = navigator.userAgent;
-const IOS = /iPhone|iPad|iPod/.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
-const INAPP = /Instagram|FBAN|FBAV|TikTok|musical_ly|Line\//i.test(UA);
+
+const IOS =
+  /iPhone|iPad|iPod/.test(UA) ||
+  (/Macintosh/.test(UA) && navigator.maxTouchPoints>1);
+
+const INAPP =
+  /Instagram|FBAN|FBAV|TikTok|musical_ly|Line\//i.test(UA);
+
 let tt;
-function toast(t) { const e = $("toast"); e.textContent = t; e.style.display = "block"; clearTimeout(tt); tt = setTimeout(() => { e.style.display = "none"; }, 9000); }
+
+function toast(t){
+
+  const e = $("toast");
+
+  e.textContent = t;
+
+  e.style.display = "block";
+
+  clearTimeout(tt);
+
+  tt = setTimeout(() => {
+
+    e.style.display = "none";
+
+  },9000);
+
+}
 
 $("cal").onclick = () => {
+
   unlockAudio();
-  const stamp = new Date().toISOString().replace(/[-:]|\.\d{3}/g, "");
-  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Hitung Mundur 11.11//ID", "CALSCALE:GREGORIAN",
-    "BEGIN:VEVENT", "UID:1111-2026@hitung-mundur", "DTSTAMP:" + stamp,
-    "DTSTART:20261110T170000Z", "DTEND:20261110T180000Z",   // = 11 Nov 2026 pukul 00.00-01.00 WIB
-    "SUMMARY:Puncak 11.11 Tahun 2026", "DESCRIPTION:Hari H 11 November 2026!", "STATUS:CONFIRMED", "TRANSP:OPAQUE",
-    ...(/^https?:/.test(location.href) ? ["URL:" + location.href] : []),
-    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Sudah waktunya 11.11!", "TRIGGER:-PT0M", "REPEAT:3", "DURATION:PT2M", "END:VALARM",
-    "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
-  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-  if (IOS) location.assign(url);                            // iPhone/iPad: langsung membuka sheet "Tambah ke Kalender"
-  else {
+
+  const stamp = new Date()
+    .toISOString()
+    .replace(/[-:]|\.\d{3}/g,"");
+
+  const ics = [
+
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Hitung Mundur 11.11//ID",
+    "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    "UID:1111-2026@hitung-mundur",
+    "DTSTAMP:"+stamp,
+    "DTSTART:20261110T170000Z",
+    "DTEND:20261110T180000Z",
+    "SUMMARY:Puncak 11.11 Tahun 2026",
+    "DESCRIPTION:Hari H 11 November 2026!",
+    "STATUS:CONFIRMED",
+    "TRANSP:OPAQUE",
+
+    ...(/^https?:/.test(location.href)
+      ? ["URL:"+location.href]
+      : []),
+
+    "BEGIN:VALARM",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Sudah waktunya 11.11!",
+    "TRIGGER:-PT0M",
+    "REPEAT:3",
+    "DURATION:PT2M",
+    "END:VALARM",
+
+    "END:VEVENT",
+    "END:VCALENDAR"
+
+  ].join("\r\n")+"\r\n";
+
+  const url = URL.createObjectURL(
+    new Blob(
+      [ics],
+      {type:"text/calendar;charset=utf-8"}
+    )
+  );
+
+  if(IOS){
+
+    location.assign(url);
+
+  }else{
+
     const a = document.createElement("a");
-    a.href = url; a.download = "Peringatan_11_Nov_2026.ics";
-    document.body.appendChild(a); a.click(); a.remove();
+
+    a.href = url;
+
+    a.download = "Peringatan_11_Nov_2026.ics";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
   }
-  setTimeout(() => URL.revokeObjectURL(url), 60000);
-  toast(INAPP ? "Browser ini sering memblokir unduhan. Buka halaman ini lewat Chrome atau Safari agar kalender bisa terpasang."
-    : IOS ? "Ketuk “Tambah” agar acara dan alarm pukul 00.00 masuk ke Kalender."
-    : "File kalender diunduh. Buka file-nya lalu simpan ke Kalender agar alarm pukul 00.00 aktif.");
-  try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch (e) {}
+
+  setTimeout(
+    () => URL.revokeObjectURL(url),
+    60000
+  );
+
+  toast(
+
+    INAPP
+
+      ? "Browser ini sering memblokir unduhan. Buka halaman lewat Chrome atau Safari."
+
+      : IOS
+
+        ? "Ketuk Tambah agar acara dan alarm masuk ke Kalender."
+
+        : "File kalender diunduh. Buka file lalu simpan ke Kalender."
+
+  );
+
+  try{
+
+    if(
+      "Notification" in window &&
+      Notification.permission === "default"
+    ){
+
+      Notification.requestPermission();
+
+    }
+
+  }catch(e){}
+
 };
 
-/* alarm cadangan: berbunyi pukul 00.00 selama halaman masih terbuka (ketuk layar untuk mematikan) */
-let ac;
-function unlockAudio() {
-  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); } catch (e) {}
-}
-function ring() {
-  let off = false; const until = Date.now() + 25000;
-  addEventListener("pointerdown", () => { off = true; }, { once: true });
-  try { navigator.vibrate && navigator.vibrate([400, 200, 400, 200, 800]); } catch (e) {}
-  try { if ("Notification" in window && Notification.permission === "granted") new Notification("11.11 sudah tiba! 🎉", { body: "Hari H telah tiba.", tag: "1111" }); } catch (e) {}
-  if (!ac) return;
+/* =================================
+   ALARM 11.11
+================================= */
+
+function ring(){
+
+  let off = false;
+
+  const until = Date.now()+25000;
+
+  addEventListener(
+    "pointerdown",
+    () => {off=true;},
+    {once:true}
+  );
+
+  try{
+
+    navigator.vibrate &&
+    navigator.vibrate([
+      400,200,400,200,800
+    ]);
+
+  }catch(e){}
+
+  try{
+
+    if(
+      "Notification" in window &&
+      Notification.permission === "granted"
+    ){
+
+      new Notification(
+        "11.11 sudah tiba! 🎉",
+        {
+          body:"Hari H telah tiba.",
+          tag:"1111"
+        }
+      );
+
+    }
+
+  }catch(e){}
+
+  if(!ac) return;
+
   let k = 0;
-  (function beep() {
-    if (off || Date.now() > until) return;
-    const o = ac.createOscillator(), g = ac.createGain();
-    o.type = "square"; o.frequency.value = k++ % 2 ? 660 : 880; g.gain.value = .15;
-    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .25);
-    setTimeout(beep, 450);
+
+  (function beep(){
+
+    if(off || Date.now()>until) return;
+
+    const o = ac.createOscillator();
+
+    const g = ac.createGain();
+
+    o.type = "square";
+
+    o.frequency.value =
+      k++%2 ? 660 : 880;
+
+    g.gain.value = .15;
+
+    o.connect(g);
+
+    g.connect(ac.destination);
+
+    o.start();
+
+    o.stop(ac.currentTime+.25);
+
+    setTimeout(beep,450);
+
   })();
+
 }
 
-/* proteksi: klik kanan, salin, seleksi, seret, zoom */
+/* =================================
+   PROTEKSI ANTARMUKA
+================================= */
+
 const stop = e => e.preventDefault();
-["contextmenu", "copy", "cut", "paste", "selectstart", "dragstart", "gesturestart", "gesturechange", "gestureend"].forEach(t => document.addEventListener(t, stop, { passive: false }));
-document.addEventListener("touchmove", e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
-addEventListener("wheel", e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
-addEventListener("keydown", e => {
-  const k = e.key.toLowerCase(), c = e.ctrlKey || e.metaKey;
-  if (e.key === "F12" || (c && ["c", "x", "a", "s", "u", "p", "+", "-", "=", "0"].includes(k)) || (c && e.shiftKey && ["i", "j", "c"].includes(k))) e.preventDefault();
+
+[
+  "contextmenu",
+  "copy",
+  "cut",
+  "paste",
+  "selectstart",
+  "dragstart",
+  "gesturestart",
+  "gesturechange",
+  "gestureend"
+].forEach(t => {
+
+  document.addEventListener(
+    t,
+    stop,
+    {passive:false}
+  );
+
 });
+
+document.addEventListener(
+  "touchmove",
+  e => {
+
+    if(e.touches.length>1){
+      e.preventDefault();
+    }
+
+  },
+  {passive:false}
+);
+
+addEventListener(
+  "wheel",
+  e => {
+
+    if(e.ctrlKey){
+      e.preventDefault();
+    }
+
+  },
+  {passive:false}
+);
+
+addEventListener(
+  "keydown",
+  e => {
+
+    const k = e.key.toLowerCase();
+
+    const c = e.ctrlKey || e.metaKey;
+
+    if(
+
+      e.key==="F12" ||
+
+      (c && [
+        "c","x","a","s","u",
+        "p","+","-","=","0"
+      ].includes(k)) ||
+
+      (c && e.shiftKey && [
+        "i","j","c"
+      ].includes(k))
+
+    ){
+
+      e.preventDefault();
+
+    }
+
+  }
+);
+
 </script>
+
 </body>
 </html>
