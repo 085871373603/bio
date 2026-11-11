@@ -5,14 +5,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Autentikasi Perangkat & Voucher</title>
+<meta name="theme-color" content="#0750b7">
+<title>Arinex | Device Authentication</title>
 
+<!-- Barcode library -->
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
 <style>
 :root{
   --bg:#f4f6fb;
-  --card:#fff;
+  --card:#ffffff;
   --ink:#1d2433;
   --mut:#667085;
   --line:#e3e7ef;
@@ -21,25 +23,19 @@
   --acc:#2563eb;
 }
 
-@media(prefers-color-scheme:dark){
-  :root{
-    --bg:#0f1420;
-    --card:#171e2e;
-    --ink:#e8ecf5;
-    --mut:#9aa6bd;
-    --line:#2a3347;
-    --acc:#6ea0ff;
-  }
+*{
+  box-sizing:border-box;
 }
-
-*{box-sizing:border-box}
 
 body{
   margin:0;
   font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   background:var(--bg);
   color:var(--ink);
-  padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));
+  padding:
+    calc(20px + env(safe-area-inset-top,0px))
+    16px
+    calc(24px + env(safe-area-inset-bottom,0px));
 }
 
 main{
@@ -50,11 +46,6 @@ main{
 h1{
   font-size:1.4rem;
   margin:0 0 12px;
-}
-
-h2{
-  margin:0 0 6px;
-  font-size:1.15rem;
 }
 
 .card{
@@ -73,7 +64,9 @@ h2{
   border-bottom:1px solid var(--line);
 }
 
-.row:last-child{border:0}
+.row:last-child{
+  border:0;
+}
 
 .row .mut{
   margin-left:auto;
@@ -81,25 +74,13 @@ h2{
   font-size:.85rem;
 }
 
-.mut{color:var(--mut)}
-
-button,a.btn{
-  font:inherit;
-  font-weight:600;
-  color:#fff;
-  background:var(--acc);
-  border:0;
-  border-radius:10px;
-  padding:8px 14px;
-  cursor:pointer;
-  text-decoration:none;
-  display:inline-block;
-  margin-top:8px;
+.mut{
+  color:var(--mut);
 }
 
-/* =================================
-   WINDOWS XP WARNING POPUP
-================================= */
+/* =========================================
+   WINDOWS XP WARNING
+========================================= */
 
 .xp-overlay{
   position:fixed;
@@ -108,39 +89,44 @@ button,a.btn{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:16px;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(3px);
-  animation:xpFade .2s ease-out;
+  padding:12px;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  animation:xpFade .2s ease;
 }
 
 .xp-window{
   width:100%;
-  max-width:460px;
+  max-width:470px;
+  max-height:92dvh;
+  display:flex;
+  flex-direction:column;
   overflow:hidden;
   background:#ece9d8;
+  color:#222;
   border:1px solid #153e83;
   border-radius:7px;
   box-shadow:
-    0 18px 55px rgba(0,0,0,.48),
-    inset 0 0 0 1px rgba(255,255,255,.55);
-  color:#222;
+    0 20px 60px rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.5);
   font-family:Tahoma,"Segoe UI",Arial,sans-serif;
-  animation:xpPop .25s ease-out;
+  animation:xpPop .25s ease;
 }
 
 .xp-titlebar{
-  min-height:37px;
+  min-height:38px;
+  flex-shrink:0;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:5px 7px 5px 10px;
-  color:#fff;
+  color:white;
   background:linear-gradient(
     180deg,
     #78a9f5 0%,
-    #3379df 12%,
-    #1765d5 50%,
+    #3379df 18%,
+    #1765d5 55%,
     #0750b7 100%
   );
   border-bottom:1px solid #003c91;
@@ -151,27 +137,33 @@ button,a.btn{
   display:flex;
   align-items:center;
   gap:8px;
-  font-size:13px;
+  min-width:0;
+  font-size:12px;
   font-weight:bold;
-  letter-spacing:.2px;
+}
+
+.xp-title-left span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .xp-logo{
-  width:20px;
-  height:20px;
+  width:21px;
+  height:21px;
   flex-shrink:0;
 }
 
 .xp-close{
   width:23px;
   height:22px;
+  flex-shrink:0;
   padding:0;
   margin:0;
-  border:1px solid #fff;
+  border:1px solid white;
   border-radius:4px;
-  background:linear-gradient(#f9b4a5,#e43d24 55%,#bd1607);
-  color:#fff;
-  font-family:Arial,sans-serif;
+  background:linear-gradient(#ffb8a6,#e43d24 55%,#bd1607);
+  color:white;
   font-size:17px;
   font-weight:bold;
   line-height:17px;
@@ -181,21 +173,23 @@ button,a.btn{
 }
 
 .xp-content{
-  padding:17px 17px 13px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:15px;
   background:#ece9d8;
 }
 
 .xp-main{
   display:flex;
   align-items:flex-start;
-  gap:14px;
-  margin-bottom:15px;
+  gap:13px;
+  margin-bottom:13px;
 }
 
 .xp-warning-icon{
-  flex:0 0 46px;
   width:46px;
   height:46px;
+  flex:0 0 46px;
 }
 
 .xp-message{
@@ -213,37 +207,46 @@ button,a.btn{
 .xp-message p{
   color:#222;
   font-size:12px;
-  line-height:1.55;
-  margin:0;
+  line-height:1.5;
+  margin:0 0 5px;
+}
+
+.xp-message .xp-denied{
+  font-weight:bold;
+  color:#9b1717;
+  margin-top:8px;
 }
 
 .xp-info{
-  padding:9px 10px;
+  padding:10px;
   background:#fff;
   border:1px solid #a5a49b;
   box-shadow:inset 1px 1px 2px rgba(0,0,0,.08);
 }
 
-.xp-info-title{
+.xp-info-title,
+.xp-storage-title{
   font-size:11px;
   font-weight:bold;
   color:#193c70;
-  margin:0 0 6px;
-  padding-bottom:5px;
+  padding-bottom:7px;
+  margin-bottom:5px;
   border-bottom:1px solid #d5d3c8;
 }
 
 .xp-info-row{
   display:grid;
   grid-template-columns:125px minmax(0,1fr);
-  gap:7px;
-  padding:5px 0;
+  gap:8px;
+  padding:6px 0;
   border-bottom:1px dotted #c9c9c9;
   font-size:11px;
-  line-height:1.4;
+  line-height:1.45;
 }
 
-.xp-info-row:last-child{border-bottom:0}
+.xp-info-row:last-child{
+  border-bottom:0;
+}
 
 .xp-info-label{
   color:#555;
@@ -251,6 +254,7 @@ button,a.btn{
 }
 
 .xp-info-value{
+  min-width:0;
   color:#111;
   overflow-wrap:anywhere;
   word-break:break-word;
@@ -262,13 +266,69 @@ button,a.btn{
   color:#123b76;
 }
 
+/* LOCAL STORAGE */
+
+.xp-storage{
+  margin-top:10px;
+  padding:10px;
+  background:#fff;
+  border:1px solid #a5a49b;
+  box-shadow:inset 1px 1px 2px rgba(0,0,0,.08);
+}
+
+.xp-storage-count{
+  float:right;
+  color:#666;
+  font-weight:normal;
+}
+
+.xp-storage-list{
+  max-height:190px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+
+.xp-storage-item{
+  padding:7px 0;
+  border-bottom:1px dotted #ccc;
+  font-size:11px;
+}
+
+.xp-storage-item:last-child{
+  border-bottom:0;
+}
+
+.xp-storage-key{
+  display:block;
+  color:#193c70;
+  font-weight:bold;
+  margin-bottom:3px;
+  overflow-wrap:anywhere;
+}
+
+.xp-storage-value{
+  display:block;
+  color:#333;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.xp-storage-empty{
+  font-size:11px;
+  color:#777;
+  padding:8px 0;
+}
+
+/* FOOTER */
+
 .xp-footer{
   display:flex;
   align-items:center;
   justify-content:space-between;
   flex-wrap:wrap;
-  gap:10px;
-  margin-top:14px;
+  gap:9px;
+  margin-top:13px;
 }
 
 .xp-footer-text{
@@ -278,14 +338,14 @@ button,a.btn{
 
 .xp-buttons{
   display:flex;
-  align-items:center;
-  justify-content:flex-end;
   gap:7px;
+  justify-content:flex-end;
+  margin-left:auto;
 }
 
 .xp-btn{
-  min-width:85px;
-  padding:6px 12px;
+  min-width:80px;
+  padding:6px 10px;
   margin:0;
   color:#111;
   font-family:Tahoma,Arial,sans-serif;
@@ -299,15 +359,14 @@ button,a.btn{
     1px 1px 1px rgba(0,0,0,.15);
 }
 
-.xp-btn:active{
-  background:linear-gradient(#ddd,#f5f2e9);
-  box-shadow:inset 1px 1px 2px rgba(0,0,0,.25);
-}
-
 .xp-btn.primary{
   border:1px solid #315d9c;
   outline:1px solid #8bb2eb;
   font-weight:bold;
+}
+
+.xp-btn:active{
+  background:#dedbd0;
 }
 
 .xp-btn:disabled{
@@ -318,12 +377,13 @@ button,a.btn{
 .xp-copy-status{
   display:block;
   width:100%;
-  min-height:13px;
   text-align:right;
-  font-size:10px;
   color:#285c19;
-  margin-top:4px;
+  font-size:10px;
+  min-height:12px;
 }
+
+/* ANIMATION */
 
 @keyframes xpFade{
   from{opacity:0}
@@ -333,7 +393,7 @@ button,a.btn{
 @keyframes xpPop{
   from{
     opacity:0;
-    transform:scale(.94) translateY(8px);
+    transform:scale(.95) translateY(8px);
   }
   to{
     opacity:1;
@@ -341,9 +401,9 @@ button,a.btn{
   }
 }
 
-/* =================================
-   VOUCHER
-================================= */
+/* =========================================
+   VOUCHER SIMULASI
+========================================= */
 
 .voucher-card{
   background:#fff;
@@ -355,21 +415,13 @@ button,a.btn{
   margin-top:20px;
   border-top:8px solid #ed1c24;
   border-bottom:8px solid #ed1c24;
-  animation:slideUp .5s ease-out forwards;
-}
-
-.voucher-header{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  margin-bottom:8px;
+  animation:slideUp .5s ease forwards;
 }
 
 .voucher-title{
   font-size:1.4rem;
   font-weight:800;
-  margin:0;
+  margin:0 0 8px;
   color:#ed1c24;
 }
 
@@ -378,7 +430,6 @@ button,a.btn{
   font-weight:600;
   color:#333;
   margin:0;
-  text-transform:uppercase;
   letter-spacing:1px;
 }
 
@@ -386,24 +437,36 @@ button,a.btn{
   font-size:2.2rem;
   font-weight:800;
   margin:10px 0 20px;
-  color:#1d2433;
+}
+
+.voucher-demo{
+  display:inline-block;
+  padding:3px 8px;
+  margin-bottom:12px;
+  border:1px solid #e5a000;
+  color:#8c5b00;
+  background:#fff5d9;
+  border-radius:5px;
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:1px;
 }
 
 .barcode-container{
-  background:#f8f9fa;
-  padding:15px;
-  border-radius:12px;
-  margin:0 auto 20px;
   display:inline-block;
-  border:1px dashed #ccc;
   max-width:100%;
   overflow:hidden;
+  background:#f8f9fa;
+  padding:15px;
+  margin:0 auto 20px;
+  border:1px dashed #ccc;
+  border-radius:12px;
 }
 
 .voucher-footer{
-  font-size:.9rem;
   color:#555;
-  line-height:1.4;
+  font-size:.9rem;
+  line-height:1.5;
 }
 
 @keyframes slideUp{
@@ -418,20 +481,25 @@ button,a.btn{
 }
 
 @media(max-width:380px){
+
+  .xp-content{
+    padding:11px;
+  }
+
   .xp-info-row{
     grid-template-columns:105px minmax(0,1fr);
   }
 
-  .xp-content{
-    padding:13px 11px;
-  }
-
-  .xp-footer{
-    justify-content:flex-end;
-  }
-
   .xp-footer-text{
     width:100%;
+  }
+
+  .xp-buttons{
+    width:100%;
+  }
+
+  .xp-btn{
+    flex:1;
   }
 }
 </style>
@@ -440,12 +508,21 @@ button,a.btn{
 <body>
 
 <main>
+
   <h1>Autentikasi</h1>
+
   <div class="card" id="steps"></div>
+
   <div id="out" role="alert" aria-live="assertive"></div>
+
 </main>
 
+
 <script type="module">
+
+/* =========================================
+   1. FIREBASE LIBRARY
+========================================= */
 
 import {
   initializeApp
@@ -465,304 +542,764 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 
-/* =================================
-   FIREBASE CONFIGURATION
-================================= */
+/* =========================================
+   2. FIREBASE CONFIGURATION
+========================================= */
 
-const app = initializeApp({
+const firebaseConfig = {
+
   apiKey: "AIzaSyA6XKIURZUBI-W9bE3X4c5wz4FFdyOSKGA",
+
   authDomain: "operational-e52ed.firebaseapp.com",
+
   databaseURL: "https://operational-e52ed-default-rtdb.firebaseio.com",
+
   projectId: "operational-e52ed",
+
   storageBucket: "operational-e52ed.firebasestorage.app",
+
   messagingSenderId: "378782286599",
+
   appId: "1:378782286599:web:056bb7ec127a1a56163ba2",
+
   measurementId: "G-QRH7DH84EE"
-});
+
+};
+
+const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
+
 const auth = getAuth(app);
+
+
+/* =========================================
+   3. GLOBAL HELPERS
+========================================= */
 
 const $ = id => document.getElementById(id);
 
-const esc = s => String(s ?? "").replace(
-  /[&<>"']/g,
-  c => "&#" + c.charCodeAt(0) + ";"
-);
+const HALT = {};
 
-const b64u = u8 => btoa(
-  String.fromCharCode(...u8)
-)
-.replace(/\+/g, "-")
-.replace(/\//g, "_")
-.replace(/=+$/, "");
+let currentDeviceId = null;
+
+let warningShown = false;
+
+let realtimeUnsubscribe = null;
 
 
-/* =================================
-   STATUS AUTENTIKASI
-================================= */
+const esc = value => {
 
-const LABEL = [
-  "Firebase Authentication",
-  "Data perangkat ditemukan?",
-  "Bukti kepemilikan kunci",
-  "Status izin"
-];
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    char => "&#" + char.charCodeAt(0) + ";"
+  );
 
-$("steps").innerHTML = LABEL.map((label, i) => `
-  <div class="row">
-    <span id="i${i}">⬜</span>
-    <span>${label}</span>
-    <span class="mut" id="t${i}"></span>
-  </div>
-`).join("");
-
-const mark = (i, status, text = "") => {
-  $("i" + i).textContent = {
-    run: "⏳",
-    ok: "✅",
-    bad: "❌"
-  }[status];
-
-  $("t" + i).textContent = text;
 };
 
 
-/* =================================
-   DATA IDENTITAS PERANGKAT
-================================= */
+const b64u = bytes => {
 
-let currentDeviceId = null;
-let warningShown = false;
+  return btoa(
+    String.fromCharCode(...bytes)
+  )
+  .replace(/\+/g,"-")
+  .replace(/\//g,"_")
+  .replace(/=+$/,"");
+
+};
 
 
-/* MODEL PERANGKAT */
+/* =========================================
+   4. AUTHENTICATION STEPS
+========================================= */
 
-function detectDeviceModel(){
+const LABEL = [
+
+  "Firebase Authentication",
+
+  "Data perangkat ditemukan?",
+
+  "Bukti kepemilikan kunci",
+
+  "Status izin perangkat"
+
+];
+
+
+$("steps").innerHTML = LABEL.map((label,index) => `
+
+  <div class="row">
+
+    <span id="i${index}">⬜</span>
+
+    <span>${label}</span>
+
+    <span class="mut" id="t${index}"></span>
+
+  </div>
+
+`).join("");
+
+
+function mark(index,status,text=""){
+
+  const icons = {
+
+    run:"⏳",
+
+    ok:"✅",
+
+    bad:"❌"
+
+  };
+
+  $("i"+index).textContent = icons[status];
+
+  $("t"+index).textContent = text;
+
+}
+
+
+/* =========================================
+   5. DETEKSI MODEL PERANGKAT
+========================================= */
+
+async function detectDeviceModel(){
 
   const ua = navigator.userAgent || "";
 
-  // Client Hints jika browser mendukungnya
-  let model = navigator.userAgentData?.model || "";
+  // Gunakan User Agent Client Hints jika tersedia.
+  try{
 
-  if(model.trim()){
-    return model.trim();
+    if(navigator.userAgentData?.getHighEntropyValues){
+
+      const result = await navigator.userAgentData
+        .getHighEntropyValues(["model"]);
+
+      if(result.model && result.model.trim()){
+
+        return result.model.trim();
+
+      }
+
+    }
+
+  }catch(error){
+
+    console.warn("Device hints unavailable.");
+
   }
 
-  // Deteksi model Samsung
-  const samsung = ua.match(/\b(SM-[A-Z0-9]+(?:-[A-Z0-9]+)*)\b/i);
+
+  // Samsung Galaxy
+  const samsung = ua.match(/\bSM-[A-Z0-9-]+\b/i);
 
   if(samsung){
-    return samsung[1].toUpperCase();
+
+    return samsung[0].toUpperCase();
+
   }
 
-  // Deteksi iPhone
-  if(/iPhone/i.test(ua)){
-    return "Apple iPhone (model tidak diekspos browser)";
-  }
 
-  // Deteksi iPad
-  if(/iPad/i.test(ua)){
-    return "Apple iPad";
-  }
-
-  // Deteksi Android umum
-  const android = ua.match(/Android\s[\d.]+;\s*([^;)]+)/i);
+  // Android generic model
+  const android = ua.match(
+    /Android\s[\d.]+;\s*([^;)]+)/i
+  );
 
   if(android){
 
-    let candidate = android[1]
-      .replace(/Build\/.*$/i, "")
+    const model = android[1]
+      .replace(/Build\/.*$/i,"")
       .trim();
 
-    if(
-      candidate &&
-      !/^(wv|mobile|[a-z]{2}-[a-z]{2})$/i.test(candidate)
-    ){
-      return candidate;
+    if(model){
+
+      return model;
+
     }
 
-    return "Android (model tidak diekspos browser)";
   }
 
-  // Deteksi platform lainnya
-  if(navigator.platform){
-    return navigator.platform;
+
+  // Apple
+  if(/iPhone/i.test(ua)){
+
+    return "iPhone (model disembunyikan browser)";
+
   }
 
-  return "Tidak dapat dideteksi browser";
+  if(/iPad/i.test(ua)){
+
+    return "iPad";
+
+  }
+
+
+  // Windows / Mac / Linux
+  if(/Windows/i.test(ua)){
+
+    return "Windows PC";
+
+  }
+
+  if(/Macintosh/i.test(ua)){
+
+    return "Macintosh";
+
+  }
+
+  if(/Linux/i.test(ua)){
+
+    return "Linux Device";
+
+  }
+
+
+  return "Tidak dapat dideteksi";
+
 }
 
 
-/* TIPE PERANGKAT */
+/* =========================================
+   6. DETEKSI MEREK
+========================================= */
 
-function detectDeviceType(){
+function detectDeviceBrand(model){
 
   const ua = navigator.userAgent || "";
 
-  if(/iPad|Tablet|PlayBook|Silk/i.test(ua)){
-    return "Tablet";
+  const data = (String(model)+" "+ua).toLowerCase();
+
+
+  if(/samsung|sm-/.test(data)){
+
+    return "Samsung";
+
   }
 
-  if(
-    /iPhone|iPod|Windows Phone|Android.*Mobile|Mobi/i.test(ua)
-  ){
-    return "Smartphone";
+  if(/iphone|ipad|ipod|apple/.test(data)){
+
+    return "Apple";
+
   }
 
-  if(/Android/i.test(ua)){
-    return "Tablet / Android";
+  if(/xiaomi|redmi|poco/.test(data)){
+
+    return "Xiaomi";
+
   }
 
-  // Beberapa iPad menggunakan UA seperti Mac
-  if(
-    /Macintosh/i.test(ua) &&
-    navigator.maxTouchPoints > 1
-  ){
-    return "Tablet";
+  if(/oppo|cph\d+/.test(data)){
+
+    return "OPPO";
+
   }
 
-  return "Komputer / Desktop";
+  if(/vivo/.test(data)){
+
+    return "vivo";
+
+  }
+
+  if(/realme|rmx\d+/.test(data)){
+
+    return "realme";
+
+  }
+
+  if(/infinix/.test(data)){
+
+    return "Infinix";
+
+  }
+
+  if(/tecno/.test(data)){
+
+    return "TECNO";
+
+  }
+
+  if(/huawei/.test(data)){
+
+    return "Huawei";
+
+  }
+
+  if(/honor/.test(data)){
+
+    return "HONOR";
+
+  }
+
+  if(/google pixel|pixel/.test(data)){
+
+    return "Google";
+
+  }
+
+  if(/oneplus/.test(data)){
+
+    return "OnePlus";
+
+  }
+
+  if(/asus/.test(data)){
+
+    return "ASUS";
+
+  }
+
+  if(/lenovo/.test(data)){
+
+    return "Lenovo";
+
+  }
+
+  if(/windows/.test(data)){
+
+    return "Microsoft";
+
+  }
+
+  if(/macintosh/.test(data)){
+
+    return "Apple";
+
+  }
+
+
+  return "Tidak dapat dideteksi";
+
 }
 
 
-/* JARINGAN SELULER */
+/* =========================================
+   7. DETEKSI JARINGAN
+========================================= */
 
 function detectNetwork(){
 
+  if(!navigator.onLine){
+
+    return {
+
+      status:"Offline",
+
+      detail:"Tidak ada koneksi internet"
+
+    };
+
+  }
+
+
   const connection =
+
     navigator.connection ||
+
     navigator.mozConnection ||
+
     navigator.webkitConnection;
+
 
   if(!connection){
 
-    return navigator.onLine
-      ? "Terhubung — jenis jaringan tidak dapat dideteksi"
-      : "Offline";
+    return {
+
+      status:"Internet aktif",
+
+      detail:"Jenis jaringan tidak diekspos browser"
+
+    };
+
   }
 
-  const type = String(connection.type || "").toLowerCase();
+
+  const type = String(
+    connection.type || ""
+  ).toLowerCase();
+
 
   const effective = connection.effectiveType
-    ? " (" + connection.effectiveType.toUpperCase() + ")"
+
+    ? connection.effectiveType.toUpperCase()
+
     : "";
 
+
   if(type === "cellular"){
-    return "Jaringan seluler" + effective;
+
+    return {
+
+      status:"Seluler",
+
+      detail:"Operator tidak dapat dibaca browser" +
+        (effective ? " / "+effective : "")
+
+    };
+
   }
+
 
   if(type === "wifi"){
-    return "Wi-Fi" + effective;
+
+    return {
+
+      status:"Wi-Fi",
+
+      detail:"SSID / nama jaringan tidak diekspos browser" +
+        (effective ? " / "+effective : "")
+
+    };
+
   }
+
 
   if(type === "ethernet"){
-    return "Ethernet";
+
+    return {
+
+      status:"LAN / Ethernet",
+
+      detail:"Terhubung melalui jaringan kabel"
+
+    };
+
   }
 
-  if(!navigator.onLine){
-    return "Offline";
+
+  if(type === "bluetooth"){
+
+    return {
+
+      status:"Bluetooth",
+
+      detail:"Koneksi melalui Bluetooth"
+
+    };
+
   }
 
-  if(connection.effectiveType){
-    return "Jenis tidak diketahui — indikasi " +
-      connection.effectiveType.toUpperCase();
-  }
-
-  return "Tidak dapat dideteksi oleh browser";
-}
-
-
-/* LOCAL STORAGE */
-
-function detectLocalStorage(){
-
-  try{
-
-    const testKey = "__arinex_storage_test__";
-
-    localStorage.setItem(testKey, "1");
-    localStorage.removeItem(testKey);
-
-    return "Tersedia / Aktif";
-
-  }catch(e){
-
-    return "Tidak tersedia / Diblokir";
-  }
-}
-
-
-/* GABUNGKAN INFORMASI PERANGKAT */
-
-function collectDeviceInfo(){
 
   return {
 
-    model: detectDeviceModel(),
+    status:"Internet aktif",
 
-    type: detectDeviceType(),
-
-    network: detectNetwork(),
-
-    id: currentDeviceId ||
-      "Tidak tersedia (kunci perangkat belum ditemukan)",
-
-    storage: detectLocalStorage()
+    detail:"Jenis koneksi tidak dapat dipastikan" +
+      (effective ? " / "+effective : "")
 
   };
+
 }
 
 
-/* =================================
-   WINDOWS XP WARNING POPUP
-================================= */
+/* Pantau perubahan jaringan untuk sesi aktif */
+
+function watchNetwork(){
+
+  const connection =
+
+    navigator.connection ||
+
+    navigator.mozConnection ||
+
+    navigator.webkitConnection;
+
+
+  if(connection?.addEventListener){
+
+    connection.addEventListener("change",() => {
+
+      console.log("Network changed:",detectNetwork());
+
+    });
+
+  }
+
+}
+
+
+/* =========================================
+   8. LOCAL STORAGE VIEWER
+========================================= */
+
+function readLocalStorage(){
+
+  try{
+
+    const entries = [];
+
+    for(let i=0;i<localStorage.length;i++){
+
+      const key = localStorage.key(i);
+
+      if(key === null){
+
+        continue;
+
+      }
+
+      const value = localStorage.getItem(key);
+
+      entries.push({
+
+        key:key,
+
+        value:value ?? ""
+
+      });
+
+    }
+
+
+    return {
+
+      available:true,
+
+      entries:entries
+
+    };
+
+
+  }catch(error){
+
+    return {
+
+      available:false,
+
+      entries:[],
+
+      error:error.message
+
+    };
+
+  }
+
+}
+
+
+/* =========================================
+   9. COLLECT ALL DEVICE INFORMATION
+========================================= */
+
+async function collectDeviceInfo(){
+
+  const model = await detectDeviceModel();
+
+  return {
+
+    brand:detectDeviceBrand(model),
+
+    model:model,
+
+    network:detectNetwork(),
+
+    id:currentDeviceId || "Belum tersedia",
+
+    localStorage:readLocalStorage()
+
+  };
+
+}
+
+
+/* =========================================
+   10. COPY HELPER
+========================================= */
+
+async function copyText(text){
+
+  if(navigator.clipboard?.writeText){
+
+    await navigator.clipboard.writeText(text);
+
+    return true;
+
+  }
+
+
+  const textarea = document.createElement("textarea");
+
+  textarea.value = text;
+
+  textarea.style.position = "fixed";
+
+  textarea.style.opacity = "0";
+
+  document.body.appendChild(textarea);
+
+  textarea.select();
+
+  const success = document.execCommand("copy");
+
+  textarea.remove();
+
+  return success;
+
+}
+
+
+/* =========================================
+   11. LEAVE PAGE
+========================================= */
 
 function leavePage(){
 
-  // Kembali ke halaman sebelumnya
+  if(realtimeUnsubscribe){
+
+    realtimeUnsubscribe();
+
+    realtimeUnsubscribe = null;
+
+  }
+
+
   if(history.length > 1){
 
     history.back();
 
   }else{
 
-    // Jika tidak memiliki riwayat halaman
-    window.location.replace("about:blank");
+    location.replace("about:blank");
 
   }
+
 }
 
 
-function showAccessWarning(title, message){
+/* =========================================
+   12. WINDOWS XP POPUP
+========================================= */
 
-  if(warningShown) return;
+async function showAccessWarning(title,message){
+
+  if(warningShown){
+
+    return;
+
+  }
 
   warningShown = true;
 
-  const info = collectDeviceInfo();
 
-  const rows = [
+  let info;
 
-    ["Model perangkat", info.model],
+  try{
 
-    ["Type perangkat", info.type],
+    info = await collectDeviceInfo();
 
-    ["Jaringan seluler", info.network],
+  }catch(error){
 
-    ["ID perangkat", info.id],
+    info = {
 
-    ["Local storage", info.storage]
+      brand:"Tidak tersedia",
+
+      model:"Tidak tersedia",
+
+      network:{
+        status:"Tidak diketahui",
+        detail:"Gagal membaca informasi jaringan"
+      },
+
+      id:currentDeviceId || "Belum tersedia",
+
+      localStorage:{
+        available:false,
+        entries:[]
+      }
+
+    };
+
+  }
+
+
+  /* DEVICE INFORMATION */
+
+  const infoRows = [
+
+    ["Merek",info.brand],
+
+    ["Model",info.model],
+
+    ["Jaringan yang dipakai",info.network.status],
+
+    ["Detail jaringan",info.network.detail],
+
+    ["ID perangkat",info.id]
 
   ];
 
-  const infoHTML = rows.map(item => `
+
+  const infoHTML = infoRows.map(item => `
+
     <div class="xp-info-row">
-      <span class="xp-info-label">${esc(item[0])}:</span>
-      <span class="xp-info-value">${esc(item[1])}</span>
+
+      <span class="xp-info-label">
+        ${esc(item[0])}:
+      </span>
+
+      <span class="xp-info-value">
+        ${esc(item[1])}
+      </span>
+
     </div>
+
   `).join("");
 
+
+  /* LOCAL STORAGE INFORMATION */
+
+  let storageHTML = "";
+
+  if(!info.localStorage.available){
+
+    storageHTML = `
+
+      <div class="xp-storage-empty">
+        Local Storage tidak dapat diakses.
+      </div>
+
+    `;
+
+  }else if(info.localStorage.entries.length === 0){
+
+    storageHTML = `
+
+      <div class="xp-storage-empty">
+        Tidak ada data Local Storage.
+      </div>
+
+    `;
+
+  }else{
+
+    storageHTML = info.localStorage.entries.map(item => `
+
+      <div class="xp-storage-item">
+
+        <span class="xp-storage-key">
+          ${esc(item.key)}
+        </span>
+
+        <span class="xp-storage-value">
+          ${esc(item.value)}
+        </span>
+
+      </div>
+
+    `).join("");
+
+  }
+
+
+  const storageCount = info.localStorage.available
+
+    ? info.localStorage.entries.length
+
+    : "Tidak tersedia";
+
+
+  /* POPUP HTML */
 
   $("out").innerHTML = `
 
@@ -775,7 +1312,8 @@ function showAccessWarning(title, message){
         aria-labelledby="xpTitle"
       >
 
-        <!-- TITLE BAR -->
+
+        <!-- WINDOWS TITLE BAR -->
 
         <div class="xp-titlebar">
 
@@ -785,22 +1323,33 @@ function showAccessWarning(title, message){
               class="xp-logo"
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
             >
-              <path fill="#f44336" d="M2 7 L18 4 L18 18 L2 18 Z"/>
-              <path fill="#7fc241" d="M21 3 L38 0 L38 18 L21 18 Z"/>
-              <path fill="#2196f3" d="M2 21 L18 21 L18 36 L2 33 Z"/>
-              <path fill="#ffcc24" d="M21 21 L38 21 L38 39 L21 36 Z"/>
+
+              <path fill="#f44336"
+                d="M2 7 L18 4 L18 18 L2 18 Z"/>
+
+              <path fill="#7fc241"
+                d="M21 3 L38 0 L38 18 L21 18 Z"/>
+
+              <path fill="#2196f3"
+                d="M2 21 L18 21 L18 36 L2 33 Z"/>
+
+              <path fill="#ffcc24"
+                d="M21 21 L38 21 L38 39 L21 36 Z"/>
+
             </svg>
 
-            <span id="xpTitle">Windows XP - Security Alert</span>
+            <span id="xpTitle">
+              Windows XP - Security Alert
+            </span>
 
           </div>
 
+
           <button
+            type="button"
             class="xp-close"
             id="xpClose"
-            type="button"
             aria-label="Tinggalkan halaman"
           >×</button>
 
@@ -811,24 +1360,36 @@ function showAccessWarning(title, message){
 
         <div class="xp-content">
 
-          <div class="xp-main">
 
-            <!-- SVG WARNING ICON -->
+          <!-- WARNING MESSAGE -->
+
+          <div class="xp-main">
 
             <svg
               class="xp-warning-icon"
               viewBox="0 0 64 64"
               xmlns="http://www.w3.org/2000/svg"
-              role="img"
               aria-label="Warning"
             >
 
               <defs>
-                <linearGradient id="warnGradient" x1="0" y1="0" x2="0" y2="1">
+
+                <linearGradient
+                  id="warnGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+
                   <stop offset="0%" stop-color="#fff59b"/>
+
                   <stop offset="100%" stop-color="#ffba16"/>
+
                 </linearGradient>
+
               </defs>
+
 
               <path
                 d="M28 5 Q32 -1 36 5 L61 51 Q65 60 55 60 H9 Q-1 60 4 51 Z"
@@ -837,6 +1398,7 @@ function showAccessWarning(title, message){
                 stroke-width="2"
               />
 
+
               <path
                 d="M32 19 V40"
                 stroke="#6c4100"
@@ -844,18 +1406,12 @@ function showAccessWarning(title, message){
                 stroke-linecap="round"
               />
 
+
               <circle
                 cx="32"
                 cy="49"
                 r="3.5"
                 fill="#6c4100"
-              />
-
-              <path
-                d="M28 6 L4 51"
-                stroke="#fff9ce"
-                stroke-width="2"
-                opacity=".8"
               />
 
             </svg>
@@ -869,11 +1425,11 @@ function showAccessWarning(title, message){
                 <b>${esc(title)}</b>
               </p>
 
-              <p style="margin-top:6px">
+              <p>
                 ${esc(message)}
               </p>
 
-              <p style="margin-top:8px;font-weight:bold">
+              <p class="xp-denied">
                 Tidak dapat mengakses halaman tersebut.
                 Silakan tinggalkan halaman ini!
               </p>
@@ -888,7 +1444,7 @@ function showAccessWarning(title, message){
           <div class="xp-info">
 
             <div class="xp-info-title">
-              INFORMASI IDENTITAS PERANGKAT
+              DEVICE IDENTIFICATION INFORMATION
             </div>
 
             ${infoHTML}
@@ -896,13 +1452,40 @@ function showAccessWarning(title, message){
           </div>
 
 
-          <!-- FOOTER -->
+          <!-- LOCAL STORAGE -->
+
+          <div class="xp-storage">
+
+            <div class="xp-storage-title">
+
+              LOCAL STORAGE
+
+              <span class="xp-storage-count">
+                ${esc(storageCount)} DATA
+              </span>
+
+              <div style="clear:both"></div>
+
+            </div>
+
+
+            <div class="xp-storage-list">
+
+              ${storageHTML}
+
+            </div>
+
+          </div>
+
+
+          <!-- POPUP FOOTER -->
 
           <div class="xp-footer">
 
             <span class="xp-footer-text">
               Arinex Device Authentication System
             </span>
+
 
             <div class="xp-buttons">
 
@@ -915,6 +1498,7 @@ function showAccessWarning(title, message){
                 Salin ID
               </button>
 
+
               <button
                 type="button"
                 class="xp-btn primary"
@@ -924,6 +1508,7 @@ function showAccessWarning(title, message){
               </button>
 
             </div>
+
 
             <span
               class="xp-copy-status"
@@ -941,246 +1526,317 @@ function showAccessWarning(title, message){
   `;
 
 
-  // Tombol keluar
+  /* =====================================
+     EVENT HANDLERS
+  ===================================== */
+
   $("xpLeave").onclick = leavePage;
 
-  // Tombol X
   $("xpClose").onclick = leavePage;
 
 
-  // Salin ID perangkat
-  const copyButton = $("xpCopy");
+  $("xpCopy").onclick = async () => {
 
-  if(copyButton && currentDeviceId){
+    if(!currentDeviceId){
 
-    copyButton.onclick = async () => {
+      return;
 
-      try{
+    }
 
-        await navigator.clipboard.writeText(currentDeviceId);
+    try{
 
-        $("xpCopyStatus").textContent = "ID perangkat berhasil disalin.";
+      await copyText(currentDeviceId);
 
-      }catch(e){
+      $("xpCopyStatus").textContent =
+        "ID perangkat berhasil disalin.";
 
-        $("xpCopyStatus").textContent =
-          "Clipboard tidak tersedia di browser ini.";
+    }catch(error){
 
-      }
+      $("xpCopyStatus").textContent =
+        "Gagal menyalin ID.";
 
-    };
+    }
 
-  }
+  };
 
+
+  // Kunci scroll halaman di belakang popup.
   document.body.style.overflow = "hidden";
 
 }
 
 
-/* =================================
-   PEMBANTU AUTENTIKASI
-================================= */
+/* =========================================
+   13. AUTHENTICATION HALT
+========================================= */
 
-const HALT = {};
+function halt(index,title,message){
 
-const halt = (i, title, message) => {
+  mark(index,"bad","akses ditolak");
 
-  mark(i, "bad", "akses ditolak");
-
-  showAccessWarning(title, message);
+  void showAccessWarning(title,message);
 
   throw HALT;
 
-};
+}
 
 
-/* =================================
-   KUNCI IDENTITAS PERANGKAT
-================================= */
+/* =========================================
+   14. INDEXED DB DEVICE KEY
+========================================= */
 
-const getKey = () => new Promise((resolve, reject) => {
+function getKey(){
 
-  const request = indexedDB.open("device-identity", 1);
+  return new Promise((resolve,reject) => {
 
-  request.onupgradeneeded = () => {
-    request.result.createObjectStore("k");
-  };
-
-  request.onerror = () => reject(request.error);
-
-  request.onsuccess = () => {
-
-    const query = request.result
-      .transaction("k", "readonly")
-      .objectStore("k")
-      .get("kp");
-
-    query.onsuccess = () => resolve(query.result);
-
-    query.onerror = () => reject(query.error);
-
-  };
-
-});
+    const request = indexedDB.open(
+      "device-identity",
+      1
+    );
 
 
-/* FINGERPRINT PUBLIC KEY */
+    request.onupgradeneeded = () => {
 
-const thumb = async jwk => {
+      if(!request.result.objectStoreNames.contains("k")){
+
+        request.result.createObjectStore("k");
+
+      }
+
+    };
+
+
+    request.onerror = () => {
+
+      reject(request.error);
+
+    };
+
+
+    request.onsuccess = () => {
+
+      const database = request.result;
+
+
+      if(!database.objectStoreNames.contains("k")){
+
+        database.close();
+
+        reject(new Error("Object Store k tidak ditemukan."));
+
+        return;
+
+      }
+
+
+      const transaction = database.transaction(
+        "k",
+        "readonly"
+      );
+
+
+      const query = transaction
+        .objectStore("k")
+        .get("kp");
+
+
+      query.onsuccess = () => {
+
+        resolve(query.result);
+
+        database.close();
+
+      };
+
+
+      query.onerror = () => {
+
+        reject(query.error);
+
+        database.close();
+
+      };
+
+    };
+
+  });
+
+}
+
+
+/* =========================================
+   15. DEVICE FINGERPRINT
+========================================= */
+
+async function thumb(jwk){
+
+  const payload = JSON.stringify({
+
+    crv:jwk.crv,
+
+    kty:jwk.kty,
+
+    x:jwk.x,
+
+    y:jwk.y
+
+  });
+
 
   const digest = await crypto.subtle.digest(
+
     "SHA-256",
-    new TextEncoder().encode(
-      JSON.stringify({
-        crv:jwk.crv,
-        kty:jwk.kty,
-        x:jwk.x,
-        y:jwk.y
-      })
-    )
+
+    new TextEncoder().encode(payload)
+
   );
+
 
   return b64u(new Uint8Array(digest));
 
-};
+}
 
 
-/* =================================
-   ALUR AUTENTIKASI
-================================= */
+/* =========================================
+   16. MAIN AUTHENTICATION PROCESS
+========================================= */
 
 async function run(){
 
-  /* -----------------------------
-     1. FIREBASE AUTHENTICATION
-  ----------------------------- */
 
-  mark(0, "run");
+  /* STEP 1: FIREBASE AUTH */
+
+  mark(0,"run");
 
   let uid;
 
+
   try{
 
-    uid = (
-      await signInAnonymously(auth)
-    ).user.uid;
+    const result = await signInAnonymously(auth);
 
-    mark(0, "ok", "sesi aktif");
+    uid = result.user.uid;
 
-  }catch(e){
+    mark(0,"ok","sesi aktif");
+
+  }catch(error){
 
     halt(
       0,
       "Gagal masuk Firebase Authentication",
-      e.code || e.message || "Autentikasi Firebase gagal."
+      error.code || error.message || "Autentikasi Firebase gagal."
     );
 
   }
 
 
-  /* -----------------------------
-     2. DATA PERANGKAT
-  ----------------------------- */
+  /* STEP 2: DEVICE DATA */
 
-  mark(1, "run");
+  mark(1,"run");
 
-  let kp = null;
+  let kp;
+
 
   try{
 
     kp = await getKey();
 
-  }catch(e){
+  }catch(error){
 
     halt(
       1,
       "Gagal membaca identitas perangkat",
-      e.message || "Database identitas perangkat tidak dapat dibaca."
+      error.message || "Database identitas tidak dapat dibaca."
     );
 
   }
 
 
-  // Kunci tidak ditemukan
   if(!kp){
 
     halt(
       1,
       "Izin perangkat tidak ditemukan",
-      "Browser ini tidak memiliki kunci identitas perangkat yang terdaftar."
+      "Kunci identitas perangkat tidak ditemukan di browser ini. Perangkat belum dikenali."
     );
 
   }
 
 
-  // Ambil ID perangkat
+  /* CALCULATE DEVICE ID */
+
   let id;
+
 
   try{
 
     id = await thumb(
-      await crypto.subtle.exportKey("jwk", kp.publicKey)
+      await crypto.subtle.exportKey(
+        "jwk",
+        kp.publicKey
+      )
     );
 
     currentDeviceId = id;
 
-  }catch(e){
+  }catch(error){
 
     halt(
       1,
-      "Identitas perangkat tidak dapat dikenali",
-      e.message || "Kunci perangkat tidak dapat diproses."
+      "Identitas perangkat tidak dikenali",
+      error.message || "Kunci perangkat tidak dapat diproses."
     );
 
   }
 
 
-  // Baca database Firebase
+  /* READ FIREBASE DEVICE DATA */
+
   let rec;
+
 
   try{
 
     const snapshot = await get(
-      ref(db, "devices/" + id)
+      ref(db,"devices/"+id)
     );
+
 
     rec = snapshot.exists()
       ? snapshot.val()
       : null;
 
-  }catch(e){
+  }catch(error){
 
     halt(
       1,
       "Gagal membaca data perangkat",
-      e.code || e.message || "Tidak dapat membaca database perangkat."
+      error.code || error.message || "Koneksi database gagal."
     );
 
   }
 
 
-  // Data tidak terdaftar
   if(!rec){
 
     halt(
       1,
       "Perangkat tidak terdaftar",
-      "ID perangkat ini tidak ditemukan dalam database Firebase. Perangkat belum memiliki izin untuk masuk."
+      "ID perangkat tidak ditemukan di database Firebase. Perangkat ini belum memiliki izin akses."
     );
 
   }
 
 
-  mark(1, "ok", id.slice(0, 8) + "…");
+  mark(1,"ok",id.slice(0,8)+"…");
 
 
-  /* -----------------------------
-     3. BUKTI KEPEMILIKAN KUNCI
-  ----------------------------- */
+  /* STEP 3: PROOF OF OWNERSHIP */
 
-  mark(2, "run");
+  mark(2,"run");
 
   let proven = false;
+
 
   try{
 
@@ -1194,40 +1850,59 @@ async function run(){
     }
 
 
-    const alg = {
+    const algorithm = {
+
       name:"ECDSA",
+
       hash:"SHA-256"
+
     };
+
 
     const challenge = crypto.getRandomValues(
       new Uint8Array(16)
     );
 
 
-    // Tandatangan menggunakan private key
+    // Sign challenge using private key
+
     const signature = await crypto.subtle.sign(
-      alg,
+
+      algorithm,
+
       kp.privateKey,
+
       challenge
+
     );
 
 
-    // Import public key dari Firebase
-    const pub = await crypto.subtle.importKey(
+    // Import registered public key
+
+    const publicKey = await crypto.subtle.importKey(
 
       "jwk",
 
       {
+
         kty:rec.publicKey.kty,
+
         crv:rec.publicKey.crv,
+
         x:rec.publicKey.x,
+
         y:rec.publicKey.y,
+
         ext:true
+
       },
 
       {
+
         name:"ECDSA",
+
         namedCurve:"P-256"
+
       },
 
       false,
@@ -1237,15 +1912,22 @@ async function run(){
     );
 
 
-    // Validasi signature
+    // Verify signature
+
     proven = await crypto.subtle.verify(
-      alg,
-      pub,
+
+      algorithm,
+
+      publicKey,
+
       signature,
+
       challenge
+
     );
 
-  }catch(e){
+
+  }catch(error){
 
     proven = false;
 
@@ -1257,30 +1939,29 @@ async function run(){
     halt(
       2,
       "Bukti kepemilikan gagal",
-      "Sidik jari perangkat tidak cocok dengan kunci autentikasi. Perangkat tidak dapat diverifikasi."
+      "Sidik jari perangkat tidak sesuai dengan kunci autentikasi terdaftar. Perangkat tidak dapat diverifikasi."
     );
 
   }
 
 
-  mark(2, "ok", "tanda tangan valid");
+  mark(2,"ok","signature valid");
 
 
-  /* -----------------------------
-     4. STATUS IZIN PERANGKAT
-  ----------------------------- */
+  /* STEP 4: DEVICE PERMISSION */
 
-  mark(3, "run");
+  mark(3,"run");
 
 
   if(rec.status !== "allowed"){
+
 
     if(rec.status === "blocked"){
 
       halt(
         3,
         "Perangkat diblokir",
-        "Administrator telah memblokir akses perangkat ini. Hubungi administrator untuk informasi lebih lanjut."
+        "Administrator telah memblokir perangkat ini. Hubungi administrator."
       );
 
     }
@@ -1289,51 +1970,46 @@ async function run(){
     halt(
       3,
       "Izin perangkat belum disetujui",
-      "Perangkat ini masih menunggu persetujuan administrator. Akses halaman belum diizinkan."
+      "Perangkat masih menunggu persetujuan administrator. Akses belum diberikan."
     );
 
   }
 
 
-  mark(3, "ok", "diizinkan");
+  mark(3,"ok","diizinkan");
 
 
-  /* -----------------------------
-     5. UID MAPPING
-  ----------------------------- */
+  /* STEP 5: UID MAPPING */
 
   try{
 
     await set(
-      ref(db, "uidMap/" + uid),
+      ref(db,"uidMap/"+uid),
       id
     );
 
-  }catch(e){
+  }catch(error){
 
-    // Mapping gagal tidak mengubah proses verifikasi perangkat
-    console.warn("UID mapping gagal:", e);
+    console.warn("UID mapping gagal:",error);
 
   }
 
 
-  /* =================================
-     6. TAMPILKAN VOUCHER
-  ================================= */
+  /* =====================================
+     STEP 6: DISPLAY SIMULATION VOUCHER
+  ===================================== */
 
   const voucherHTML = `
 
     <div class="voucher-card">
 
-      <div class="voucher-header">
+      <h2 class="voucher-title">
+        Alfamart | Alfagift
+      </h2>
 
-        <h2 class="voucher-title">
-          Alfamart
-          <span style="color:#333;font-weight:400;">|</span>
-          Alfagift
-        </h2>
-
-      </div>
+      <span class="voucher-demo">
+        VOUCHER SIMULASI
+      </span>
 
       <p class="voucher-subtitle">
         VOUCHER BELANJA
@@ -1344,19 +2020,24 @@ async function run(){
       </div>
 
       <div class="barcode-container">
+
         <svg id="barcode"></svg>
+
       </div>
 
       <div class="voucher-footer">
 
-        Tunjukkan barcode ini ke kasir Alfamart
-        atau masukkan di aplikasi Alfagift.
+        Barcode contoh untuk simulasi tampilan.
+        Bukan bukti voucher resmi atau kode penukaran.
 
         <br><br>
 
-        <span style="font-size:.75rem;color:#888;">
+        <span style="font-size:.75rem;color:#888">
+
           ID Perangkat:
+
           <code>${esc(id.slice(0,12))}…</code>
+
         </span>
 
       </div>
@@ -1369,57 +2050,82 @@ async function run(){
   $("out").innerHTML = voucherHTML;
 
 
-  // Render barcode
+  // Render demo barcode
+
   if(window.JsBarcode){
 
     window.JsBarcode(
       "#barcode",
       "AGF0134SGG6FE",
       {
+
         format:"CODE128",
+
         lineColor:"#000",
+
         width:2.5,
+
         height:70,
+
         displayValue:true,
+
         fontSize:18,
+
         fontOptions:"bold",
+
         textMargin:8,
+
         background:"transparent"
+
       }
     );
 
   }
 
 
-  /* -----------------------------
-     7. PANTAU IZIN REALTIME
-  ----------------------------- */
+  // Watch network change
+  watchNetwork();
 
-  onValue(
-    ref(db, `devices/${id}/status`),
+
+  /* =====================================
+     STEP 7: REALTIME PERMISSION MONITOR
+  ===================================== */
+
+  realtimeUnsubscribe = onValue(
+
+    ref(db,"devices/"+id+"/status"),
+
 
     snapshot => {
 
       const status = snapshot.val();
 
+
       if(status !== "allowed"){
 
-        mark(3, "bad", "akses dicabut");
+        mark(3,"bad","akses dicabut");
 
-        showAccessWarning(
+        void showAccessWarning(
+
           "Izin perangkat telah dicabut",
-          "Administrator telah mengubah status izin perangkat ini. Akses ke halaman langsung dikunci."
+
+          "Administrator telah mengubah status akses perangkat ini. Sistem mengunci halaman secara otomatis."
+
         );
 
       }
 
     },
 
+
     error => {
 
-      showAccessWarning(
+      void showAccessWarning(
+
         "Gagal memantau izin perangkat",
-        error.message || "Status izin perangkat tidak dapat diverifikasi."
+
+        error.message || "Status izin tidak dapat diverifikasi."
+
       );
 
     }
@@ -1429,21 +2135,33 @@ async function run(){
 }
 
 
-/* =================================
-   EKSEKUSI DAN ERROR HANDLER
-================================= */
+/* =========================================
+   17. EXECUTION
+========================================= */
 
-run().catch(e => {
+run().catch(error => {
 
-  if(e === HALT){
+  if(error === HALT){
+
     return;
+
   }
 
-  console.error("Authentication error:", e);
 
-  showAccessWarning(
-    "Terjadi kesalahan autentikasi",
-    e.code || e.message || "Terjadi kesalahan yang tidak diketahui."
+  console.error(
+    "Authentication error:",
+    error
+  );
+
+
+  void showAccessWarning(
+
+    "Kesalahan autentikasi",
+
+    error.code ||
+    error.message ||
+    "Terjadi kesalahan yang tidak diketahui."
+
   );
 
 });
