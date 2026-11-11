@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Tes Autentikasi Perangkat</title>
+<title>Tes Autentikasi Perangkat & Voucher</title>
+<!-- Menambahkan library JsBarcode untuk membuat barcode -->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--ink:#1d2433;--mut:#667085;--line:#e3e7ef;--ok:#16a34a;--bad:#dc2626;--acc:#2563eb}
 @media(prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171e2e;--ink:#e8ecf5;--mut:#9aa6bd;--line:#2a3347;--acc:#6ea0ff}}
@@ -24,6 +26,64 @@ h2{margin:0 0 6px;font-size:1.15rem}
 .note p{margin:4px 0}
 code{font:.82rem ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
 button,a.btn{font:inherit;font-weight:600;color:#fff;background:var(--acc);border:0;border-radius:10px;padding:8px 14px;cursor:pointer;text-decoration:none;display:inline-block;margin-top:8px}
+
+/* Styling Khusus Voucher */
+.voucher-card {
+  background: #ffffff; /* Selalu putih agar barcode kontras */
+  color: #1d2433; /* Selalu gelap */
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 24px;
+  text-align: center;
+  margin-top: 20px;
+  border-top: 8px solid #ed1c24; /* Merah khas Alfamart */
+  border-bottom: 8px solid #ed1c24;
+  animation: slideUp 0.5s ease-out forwards;
+}
+.voucher-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.voucher-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0;
+  color: #ed1c24;
+}
+.voucher-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.voucher-nominal {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 10px 0 20px;
+  color: #1d2433;
+}
+.barcode-container {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 0 auto 20px;
+  display: inline-block;
+  border: 1px dashed #ccc;
+}
+.voucher-footer {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.4;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -63,7 +123,7 @@ const halt = (i, title, html) => { mark(i, "bad"); note("bad", "⛔ " + title, h
 const idBox = id => `<p class="mut">ID perangkat ini:</p><code>${esc(id)}</code><br><button id="cp">Salin ID</button>`;
 const bindCopy = id => { const b = $("cp"); if (b) b.onclick = () => navigator.clipboard.writeText(id).then(() => { b.textContent = "Tersalin ✓"; }).catch(() => {}); };
 
-/* ===== kunci perangkat (dibuat oleh device.html; di sini hanya DIBACA, tidak dibuat) ===== */
+/* ===== kunci perangkat ===== */
 const getKey = () => new Promise((ok, no) => {
   const r = indexedDB.open("device-identity", 1);
   r.onupgradeneeded = () => r.result.createObjectStore("k");
@@ -74,13 +134,13 @@ const thumb = async j => b64u(new Uint8Array(await crypto.subtle.digest("SHA-256
 
 /* ===== alur autentikasi ===== */
 async function run() {
-  /* 1. Firebase Authentication (sesi anonim per browser) */
+  /* 1. Firebase Authentication */
   mark(0, "run");
   let uid;
   try { uid = (await signInAnonymously(auth)).user.uid; mark(0, "ok", "sesi aktif"); }
-  catch (e) { halt(0, "Gagal masuk Firebase Authentication", `<p>${esc(e.code || e.message)}. Pastikan metode <b>Anonymous</b> sudah diaktifkan di Firebase → Authentication.</p>`); }
+  catch (e) { halt(0, "Gagal masuk Firebase Authentication", `<p>${esc(e.code || e.message)}</p>`); }
 
-  /* 2. Data perangkat: kunci lokal ada, dan terdaftar di Firebase? */
+  /* 2. Data perangkat */
   mark(1, "run");
   let kp = null;
   try { kp = await getKey(); } catch (e) {}
@@ -88,11 +148,11 @@ async function run() {
   const id = await thumb(await crypto.subtle.exportKey("jwk", kp.publicKey));
   let rec;
   try { const s = await get(ref(db, "devices/" + id)); rec = s.exists() ? s.val() : null; }
-  catch (e) { halt(1, "Gagal membaca data perangkat", `<p>${esc(e.code || e.message)}. Periksa Rules Firebase.</p>`); }
+  catch (e) { halt(1, "Gagal membaca data perangkat", `<p>${esc(e.code || e.message)}.</p>`); }
   if (!rec) halt(1, "Izin perangkat tidak ditemukan", `<p>Data perangkat tidak ada di Firebase.</p><a class="btn" href="device.html">Daftarkan perangkat</a>`);
   mark(1, "ok", id.slice(0, 8) + "…");
 
-  /* 3. Bukti kepemilikan: tanda tangan perangkat diverifikasi dengan kunci publik yang tersimpan di Firebase */
+  /* 3. Bukti kepemilikan */
   mark(2, "run");
   let proven = false;
   try {
@@ -109,21 +169,55 @@ async function run() {
   mark(3, "run");
   if (rec.status !== "allowed") {
     mark(3, "bad", rec.status === "blocked" ? "diblokir" : "menunggu");
-    note("bad", "⛔ Perangkat tidak memiliki hak", `<p>${rec.status === "blocked" ? "Perangkat ini diblokir oleh admin." : "Perangkat ini belum disetujui admin."} Kirim ID perangkat ke admin untuk meminta izin.</p>${idBox(id)}`);
+    note("bad", "⛔ Perangkat tidak memiliki hak", `<p>${rec.status === "blocked" ? "Perangkat ini diblokir oleh admin." : "Perangkat ini belum disetujui admin."}</p>${idBox(id)}`);
     bindCopy(id); throw HALT;
   }
   mark(3, "ok", "diizinkan");
 
-  /* Lolos: hubungkan sesi ini ke perangkat (dipakai Rules untuk melindungi konten), lalu buka konten */
+  /* Lolos: TAMPILKAN VOUCHER */
   try { await set(ref(db, "uidMap/" + uid), id); } catch (e) {}
-  let isi = "Halaman terlindungi terbuka. (Isi belum diatur di Firebase: konten/isi)", judul = "Selamat datang!";
-  try { const k = await get(ref(db, "konten")); if (k.exists()) { judul = k.val().judul || judul; isi = k.val().isi || isi; } }
-  catch (e) { isi = "Firebase menolak membaca konten (" + (e.code || e.message) + "). Periksa Rules."; }
-  note("ok", "✅ " + esc(judul), `<p>${esc(isi)}</p><p class="mut">Perangkat: <code>${esc(id.slice(0, 12))}…</code></p>`);
+  
+  // HTML Popup Voucher
+  const voucherHTML = `
+    <div class="voucher-card">
+      <div class="voucher-header">
+        <h2 class="voucher-title">Alfamart <span style="color:#333;font-weight:400;">|</span> Alfagift</h2>
+      </div>
+      <p class="voucher-subtitle">VOUCHER BELANJA</p>
+      <div class="voucher-nominal">Rp 100.000</div>
+      
+      <div class="barcode-container">
+        <svg id="barcode"></svg>
+      </div>
+      
+      <div class="voucher-footer">
+        Tunjukkan barcode ini ke kasir Alfamart atau masukkan di aplikasi Alfagift.<br><br>
+        <span style="font-size:0.75rem; color:#888;">ID Perangkat: <code>${esc(id.slice(0, 12))}…</code></span>
+      </div>
+    </div>
+  `;
+  
+  $("out").innerHTML = voucherHTML;
+
+  // Render Barcode
+  if (window.JsBarcode) {
+    JsBarcode("#barcode", "AGF0134SGG6FE", {
+      format: "CODE128",
+      lineColor: "#000",
+      width: 2.5,
+      height: 70,
+      displayValue: true,
+      fontSize: 18,
+      fontOptions: "bold",
+      textMargin: 8,
+      background: "transparent"
+    });
+  }
 
   /* Izin dicabut admin saat halaman terbuka → langsung dikunci kembali */
   onValue(ref(db, `devices/${id}/status`), s => { if (s.val() !== "allowed") location.reload(); });
 }
+
 run().catch(e => { if (e !== HALT) note("bad", "⛔ Terjadi kesalahan", `<p>${esc(e.code || e.message || e)}</p>`); });
 </script>
 </body>
